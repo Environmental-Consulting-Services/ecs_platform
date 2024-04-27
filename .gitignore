@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+**/.env**
+**/build/*
+**/!build/build.xml
+node_modules/
+node_modules/**
+**/node_modules/**
