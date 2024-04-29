@@ -7,6 +7,7 @@ import '../model/inspection_model.dart';
 import '../services/inspection_service.dart';
 import '../widgets/drawer.dart';
 import '../widgets/navbars/navbar.dart';
+import 'sitemappainter-widget.dart';
 
 class Inspection extends StatefulWidget {
   //final double height = window.physicalSize.height;
@@ -22,6 +23,8 @@ class Inspection extends StatefulWidget {
 // homepage state
 class _InspectionState extends State<Inspection> {
   late Future<InspectionModel> inspectionFuture;
+  late InspectionFormWidget inspectionFormWidget;
+  late SiteMapPainter siteMapWidget;
 
   // function to fetch data from api and return future list of posts
   Future<InspectionModel> getInspection(String inspectionId) async {
@@ -33,10 +36,30 @@ class _InspectionState extends State<Inspection> {
   int _selectedPage = 0;
   List<Widget> pageList = [];
 
+  getInspectionFormWidget() {
+    return inspectionFormWidget;
+  }
+
+  setInspectionFormWidget(InspectionFormWidget inspectionFormWidget) {
+    this.inspectionFormWidget = inspectionFormWidget;
+  }
+
+  getSiteMapWidget() {
+    return siteMapWidget;
+  }
+
+  setSiteMapWidget(SiteMapPainter siteMapWidget) {
+    this.siteMapWidget = siteMapWidget;
+  }
+
   @override
   void initState() {
-    pageList.add(InspectionFormWidget(inspectionId: widget.inspectionId));
-    pageList.add(SiteMapWidget());
+    this.setInspectionFormWidget(
+        InspectionFormWidget(inspectionId: widget.inspectionId));
+    this.setSiteMapWidget(SiteMapPainter());
+
+    pageList.add(this.getInspectionFormWidget());
+    pageList.add(this.getSiteMapWidget());
     super.initState();
   }
 

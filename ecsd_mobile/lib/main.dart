@@ -1,4 +1,3 @@
-import 'package:ecsd_mobile/screens/onboarding.dart';
 import 'package:ecsd_mobile/screens/profile.dart';
 import 'package:ecsd_mobile/screens/projects-list.dart';
 import 'package:ecsd_mobile/screens/register.dart';
@@ -13,7 +12,6 @@ import 'package:ecsd_mobile/screens/login/login_screen.dart';
 import 'package:ecsd_mobile/screens/notifications.dart';
 import 'screens/about.dart';
 import 'screens/project.dart';
-import 'screens/search.dart';
 import 'screens/notifications-settings.dart';
 import 'screens/privacy.dart';
 
@@ -41,11 +39,8 @@ class MyApp extends StatelessWidget {
               "/projects": (BuildContext context) => new ProjectList(),
               "/about": (BuildContext context) => new About(),
               "/agreement": (BuildContext context) => new UserAgreement(),
-              "/search": (BuildContext context) => new Search(),
               "/notificationsettings": (BuildContext context) =>
                   new NotificationsSettings(),
-              "/product": (BuildContext context) => new ProjectPage(),
-              "/onboarding": (BuildContext context) => new Onboarding(),
               "/privacy": (BuildContext context) => new Privacy(),
               "/project": (BuildContext context) => new ProjectPage(),
             }));

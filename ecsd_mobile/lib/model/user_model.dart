@@ -82,7 +82,7 @@ class User {
         } catch (e) {}
       },
     );
-    getNewToken();
+    //getNewToken();
   }
 
   String toJson() {

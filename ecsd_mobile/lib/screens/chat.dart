@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ecsd_mobile/constants/Theme.dart';
@@ -17,10 +18,20 @@ class _ChatState extends State<Chat> {
   final TextEditingController controller = new TextEditingController();
   ScrollController _scrollController = new ScrollController();
 
+  _sendMessage(String message) {
+    setState(() {
+      messages.add({
+        'body': message,
+        'time': '10:37 PM',
+        'author_image': 'assets/img/profile-screen-avatar.jpg'
+      });
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: Navbar(
-          title: "Rachel Brown",
+          title: "Your Field Expert",
           backButton: false,
           getCurrentPage: () => "chat",
           tags: [],
@@ -28,7 +39,7 @@ class _ChatState extends State<Chat> {
           searchOnChanged: () {},
           rightOptions: false,
         ),
-        drawer: ArgonDrawer(currentPage: "Project"),
+        drawer: ArgonDrawer(currentPage: "chat"),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -52,14 +63,13 @@ class _ChatState extends State<Chat> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10.0),
                               child: Container(
-                                height: 35,
-                                width: 35,
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage("assets/img/chat-avatar.jpeg"),
-                                  radius: 65.0,
-                                ),
-                              ),
+                                  height: 35,
+                                  width: 35,
+                                  child: CircleAvatar(
+                                    child: const Icon(Icons.auto_awesome),
+                                    //AssetImage("assets/img/chat-avatar.jpeg"),
+                                    radius: 65.0,
+                                  )),
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -102,7 +112,7 @@ class _ChatState extends State<Chat> {
                           height: 25.0,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Column(
@@ -169,8 +179,9 @@ class _ChatState extends State<Chat> {
                                 height: 35,
                                 width: 35,
                                 child: CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage("assets/img/chat-avatar.jpeg"),
+                                  child: const Icon(Icons.auto_awesome),
+                                  /* backgroundImage:
+                                      AssetImage("assets/img/chat-avatar.jpeg"), */
                                   radius: 65.0,
                                 ),
                               ),
@@ -349,13 +360,7 @@ class _ChatState extends State<Chat> {
                   child: TextField(
                     textInputAction: TextInputAction.send,
                     onSubmitted: (value) {
-                      setState(() {
-                        messages.add({
-                          "body": value,
-                          "time": "10:40 PM",
-                          "author_image": "assets/img/profile-screen-avatar.jpg"
-                        });
-                      });
+                      _sendMessage(value);
                       _scrollController.animateTo(
                         0.0,
                         curve: Curves.easeOut,
@@ -379,13 +384,13 @@ class _ChatState extends State<Chat> {
                       ),
                       contentPadding: EdgeInsets.symmetric(
                           horizontal: 32.0, vertical: 15.0),
-                      prefixIcon: Material(
+                      /* prefixIcon: Material(
                           borderRadius: BorderRadius.circular(30.0),
                           child: Icon(
                             Icons.camera_alt,
                             color: ArgonColors.black,
                             size: 22.0,
-                          )),
+                          )), */
                     ),
                   ),
                 ),
