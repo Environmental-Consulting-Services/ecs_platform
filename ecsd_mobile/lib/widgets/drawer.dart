@@ -1,3 +1,4 @@
+import 'package:ecsd_mobile/screens/companies.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -57,8 +58,8 @@ class ArgonDrawer extends StatelessWidget {
                   icon: Icons.home,
                   onTap: () {
                     if (currentPage != "Home") {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/home', (Route<dynamic> route) => false);
+                      Navigator.of(context).pushAndRemoveUntil(
+                          Companies.route(), (Route<dynamic> route) => false);
                     } else {
                       Navigator.of(context).pop();
                     }

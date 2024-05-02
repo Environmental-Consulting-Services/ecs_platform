@@ -3,7 +3,7 @@ import 'package:ecsd_mobile/model/person_model.dart';
 import 'package:ecsd_mobile/model/user_model.dart';
 
 class CompanyModel {
-  final int id;
+  String id;
   String name;
   String status;
   AddressModel address;
@@ -23,7 +23,7 @@ class CompanyModel {
 
   factory CompanyModel.create() {
     final company = CompanyModel(
-      id: 0,
+      id: "",
       name: "",
       status: "",
       address: AddressModel.create(),
@@ -31,6 +31,21 @@ class CompanyModel {
       primary_contact: Person.create(),
       people: [],
     );
+    return company;
+  }
+
+  factory CompanyModel.fromJson(Map<String, dynamic> json) {
+    final company = CompanyModel.create();
+
+    company.id = json["id"];
+    company.name = json["attributes"]["name"];
+    company.status = json["attributes"]["status"];
+    //company.address = AddressModel.fromJson(json["attributes"]["address"]);
+    //company.owner = User.fromJson(json["attributes"]["owner"]);
+    //company.primary_contact = Person.fromJson(json["attributes"]["primary_contact"]);
+    //company.people = json["attributes"]["people"].map((person) => Person.fromJson(person)).toList();
+
+    //TODO: do the json stuff here cause its final
     return company;
   }
 }

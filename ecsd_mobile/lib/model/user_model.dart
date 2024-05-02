@@ -6,7 +6,7 @@ import '../exceptions/user_exceptions.dart';
 import '../services/auth_service.dart';
 
 class User {
-  final int id;
+  final String id;
   String email;
   String firstName;
   String lastName;
@@ -23,14 +23,14 @@ class User {
     required this.accessToken,
     required this.refreshToken,
   }) {
-    if (isValidRefreshToken()) {
+    /* if (isValidRefreshToken()) {
       getNewToken();
-    } else {}
+    } else {} */
   }
 
   factory User.create() {
     final user = User(
-      id: 0,
+      id: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -39,24 +39,6 @@ class User {
       refreshToken: "",
     );
     return user;
-  }
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    final user = User(
-      id: (json['userId'] != null) ? json['userId'] : 0,
-      email: (json['userEmail'] != null) ? json['userEmail'] : "",
-      firstName: (json['userFirstName'] != null) ? json['userFirstName'] : "",
-      lastName: (json['userLastName'] != null) ? json['userLastName'] : "",
-      cellphone: (json['userCellphone'] != null) ? json['userCellphone'] : "",
-      accessToken: (json['access_token'] != null) ? json['access_token'] : "",
-      refreshToken:
-          (json['refresh_token'] != null) ? json['refresh_token'] : "",
-    );
-    if (user.isValidRefreshToken()) {
-      return user;
-    } else {
-      throw InvalidUserException();
-    }
   }
 
   String fullName() {
@@ -68,7 +50,7 @@ class User {
     final jwtData = JwtDecoder.decode(refreshToken);
     return jwtData['exp'] < DateTime.now().millisecondsSinceEpoch;
   }
-
+/* 
   void getNewToken() async {
     final jwtData = JwtDecoder.decode(accessToken);
     await Future.delayed(
@@ -83,19 +65,46 @@ class User {
       },
     );
     //getNewToken();
-  }
+  } */
 
   String toJson() {
     return jsonEncode(
       {
-        'userId': id,
-        'userEmail': email,
-        'userCellphone': cellphone,
-        'userFirstName': firstName,
-        'userLastName': lastName,
-        "access_token": accessToken,
-        "refresh_token": refreshToken,
+        'id': id,
+        'email': email,
+        'cellphone': cellphone,
+        'firstName': firstName,
+        'lastName': lastName,
+        "accessToken": accessToken,
+        "refreshToken": refreshToken,
       },
     );
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    final user = User(
+      id: (json['id'] != null) ? json['id'] : 0,
+      email: (json['email'] != null) ? json['email'] : "",
+      firstName: (json['firstName'] != null) ? json['firstName'] : "",
+      lastName: (json['lastName'] != null) ? json['lastName'] : "",
+      cellphone: (json['cellphone'] != null) ? json['cellphone'] : "",
+      accessToken: (json['accessToken'] != null) ? json['accessToken'] : "",
+      refreshToken: (json['refreshToken'] != null) ? json['refreshToken'] : "",
+    );
+    return user;
+  }
+
+  factory User.fromAPIJson(Map<String, dynamic> json) {
+    final user = User(
+      id: (json['id'] != null) ? json['id'] : "",
+      email: (json['email'] != null) ? json['email'] : "",
+      firstName: (json['first_name'] != null) ? json['first_name'] : "",
+      lastName: (json['last_name'] != null) ? json['last_name'] : "",
+      cellphone: (json['phone'] != null) ? json['phone'] : "",
+      accessToken: (json['access_token'] != null) ? json['access_token'] : "",
+      refreshToken:
+          (json['refresh_token'] != null) ? json['refresh_token'] : "",
+    );
+    return user;
   }
 }

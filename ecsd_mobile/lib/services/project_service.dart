@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:ecsd_mobile/model/project_model.dart';
+import 'package:ecsd_mobile/services/helper_service.dart';
 import '../model/user_model.dart';
-import 'secure_storage_service.dart';
+import 'package:authentication_repository/src/secure_storage_service.dart';
+import 'package:http/http.dart' as http;
 
 class ProjectService {
-  static const String loginPath = 'login/';
-  static const String registerPath = 'register/';
-  static const String refreshPath = 'token/refresh/';
-  static const String verifyPath = 'token/verify/';
+  static const String projectPath = 'projects/';
 
   static Future<ProjectModel> loadProject(projectId) async {
     final json = null;
@@ -27,23 +26,40 @@ class ProjectService {
     }
   }
 
-  static void saveProject(User user) async {
-    await SecureStorageService.storage.write(
-      key: SecureStorageService.userKey,
-      value: user.toJson(),
-    );
-  }
+  static void saveProject(ProjectModel) async {}
 
   static Future<List<ProjectModel>> loadProjects(String companyId) async {
-    //test
-    List<ProjectModel> projects = [];
-    for (int i = 0; i < 10; i++) {
-      final project = ProjectModel.create();
-      project.number = (i * 13).toString();
-      project.name = "Project Name $i";
-      projects.add(project);
+    final storedUser = await SecureStorageService.getUser();
+    var storedToken = await SecureStorageService.getUserAccessToken();
+    var accessToken = storedToken['access_token'];
+
+    var requestPath = projectPath;
+
+    var uri = HelperService.buildUri(requestPath);
+    uri = uri.replace(queryParameters: {'filter[owner]': storedUser!['id']});
+    final response = await http.get(uri,
+        headers: HelperService.buildHeaders(
+          accessToken: accessToken,
+        ));
+
+    final statusType = (response.statusCode / 100).floor() * 100;
+    switch (statusType) {
+      case 200:
+        final List<ProjectModel> companies = [];
+        final json = jsonDecode(response.body);
+        for (var company in json['data']) {
+          companies.add(ProjectModel.fromJson(company));
+        }
+
+        return companies;
+      case 400:
+        final json = jsonDecode(response.body);
+        throw Exception(json);
+      case 300:
+      case 500:
+      default:
+        throw Exception('Error contacting the server!');
     }
-    return projects;
 /* 
     final response = await http.post(
       HelperService.buildUri(loginPath),

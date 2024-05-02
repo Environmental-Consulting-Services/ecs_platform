@@ -215,6 +215,33 @@ class CrudService {
     const endpoint = `items/${id}`;
     return await HttpService.patch(endpoint, payload);
   };
+
+  // company requests
+  getMessages = async () => {
+    const messagesEndpoint = "messages";
+    return await HttpService.get(messagesEndpoint);
+  };
+
+  deleteMessage = async (id) => {
+    const endpoint = `messages/${id}`;
+    return await HttpService.delete(endpoint);
+  };
+
+  createMessage = async (payload) => {
+    const endpoint = "messages";
+    return await HttpService.post(endpoint, payload);
+  };
+
+  getMessage = async (id) => {
+    const enpoint = `messages/${id}`;
+    return await HttpService.get(enpoint);
+  };
+
+  updateMessage = async (payload, id) => {
+    const endpoint = `messages/${id}`;
+    return await HttpService.patch(endpoint, payload);
+  };
+
 }
 
 export default new CrudService();

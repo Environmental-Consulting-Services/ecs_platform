@@ -36,18 +36,18 @@ export const getActionItemsRoute = async (req, res) => {
   let fieldsActionItems;
   if (req.query.fields) {
     if (req.query.fields.ActionItems) {
-      fieldsActionItem = req.query.fields.ActionItems.split(",");
+      fieldsActionItems = req.query.fields.ActionItems.split(",");
     }
   }
 
   const allActionItems = await ActionItemModel
     .find(filters)
-    .select(fieldsActionItem)
+    .select(fieldsActionItems)
     .limit(paginationSize)
     .skip((pageNumber - 1) * paginationSize)
     .sort(sortValue);
 
-  actionItemssObjectArray = allActionItems.map((element) => {
+    actionItemsObjectArray = allActionItems.map((element) => {
     let jsonObj = {
       type: "actionitems",
       id: element.id,

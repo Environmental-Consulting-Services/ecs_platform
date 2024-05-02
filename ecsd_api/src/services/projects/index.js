@@ -61,6 +61,7 @@ export const getProjectsRoute = async (req, res) => {
   return res.status(200).send(sentData);
 };
 
+
 export const getProjectRoute = async (req, res) => {
   const projectId = req.params.id;
 

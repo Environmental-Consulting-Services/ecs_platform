@@ -52,8 +52,21 @@ class ProjectModel {
   }
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
-    final project =
-        ProjectModel.create(); //TODO: do the json stuff here cause its final
+    final project = ProjectModel.create();
+
+    project.number = json["id"];
+    project.name = json["attributes"]["name"];
+    //project.company = json["attributes"]["company"];
+    //project.address = json["attributes"]["address"];
+    project.status = json["attributes"]["status"];
+    //project.people = json["attributes"]["people"];
+    //project.type = json["attributes"]["type"];
+    //project.owner = User.fromAPIJson(json["attributes"]["owner"]);
+    //project.primary_contact = json["attributes"]["primary_contact"];
+    //project.start_date = json["attributes"]["start_date"];
+    //project.end_date = json["attributes"]["end_date"];
+    //project.permits = json["attributes"]["permits"];
+
     return project;
   }
 }

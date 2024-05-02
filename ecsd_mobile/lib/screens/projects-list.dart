@@ -28,8 +28,8 @@ class _ProjectListState extends State<ProjectList> {
 
   @override
   void initState() {
-    super.initState();
     projectsFuture = getProjects(widget.companyId);
+    super.initState();
   }
 
   Widget createProjectList(BuildContext context, AsyncSnapshot snapshot) {

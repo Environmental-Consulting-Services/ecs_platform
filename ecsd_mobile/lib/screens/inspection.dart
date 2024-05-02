@@ -1,4 +1,4 @@
-import 'package:ecsd_mobile/screens/acions-list.dart';
+import 'package:ecsd_mobile/screens/actions-list.dart';
 import 'package:ecsd_mobile/screens/inspectionform.dart';
 import 'package:ecsd_mobile/screens/sitemap-widget.dart';
 import 'package:flutter/material.dart';

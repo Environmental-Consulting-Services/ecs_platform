@@ -1,5 +1,5 @@
 import 'package:ecsd_mobile/model/project_model.dart';
-import 'package:ecsd_mobile/screens/acions-list.dart';
+import 'package:ecsd_mobile/screens/actions-list.dart';
 import 'package:ecsd_mobile/services/project_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ecsd_mobile/constants/Theme.dart';

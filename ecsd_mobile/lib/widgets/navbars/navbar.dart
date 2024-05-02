@@ -9,8 +9,6 @@ import 'package:ecsd_mobile/screens/search.dart';
 
 import 'package:ecsd_mobile/widgets/input.dart';
 
-import '../../blocs/auth/auth_bloc.dart';
-
 class Navbar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final String categoryOne;
@@ -181,8 +179,9 @@ class _NavbarState extends State<Navbar> {
                                           child: Text("Logout"),
                                           value: "Logout",
                                           onTap: () => {
-                                            BlocProvider.of<AuthBloc>(context)
-                                                .add(AuthLogoutEvent())
+                                            /* BlocProvider.of<AuthenticationBloc>(
+                                                    context)
+                                                .add(UserLogoutEvent()) */
                                           },
                                         ),
                                       ];

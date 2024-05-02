@@ -8,9 +8,11 @@ dotenvExpand.expand(myEnv)
 export const dbConnect = () => {
   console.log(process.env.DATABASE_URL);  
    mongoose.connection.once("open", () => console.log("DB connection"));
-  return mongoose.connect(
+   mongoose.set('strictQuery', false)
+   return mongoose.connect(
     `${process.env.DATABASE_URL}&retryWrites=true&w=majority`,
     { useNEWUrlParser: true,
-      keepAlive: true }
+      keepAlive: true ,}
   );
 };
+

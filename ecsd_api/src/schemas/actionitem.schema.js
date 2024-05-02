@@ -17,6 +17,7 @@ const actionItemSchema = new mongoose.Schema({
   created_at: { type: Date },
   updated_at: { type: Date },
   inspection: { type: mongoose.Schema.Types.ObjectID, ref: "Inspection" },
+  project: { type: mongoose.Schema.Types.ObjectID, ref: "Project" },  
 });
 
 export const ActionItemModel = mongoose.model("ActionItem", actionItemSchema);
