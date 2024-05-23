@@ -2,12 +2,9 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { dbConnect } from "./index.js";
 
-import { UserModel } from "../schemas/user.schema.js";
-import { roleModel } from "../schemas/role.schema.js";
-import { permissionModel } from "../schemas/permission.schema.js";
-import { tagModel } from "../schemas/tag.schema.js";
-import { categoryModel } from "../schemas/category.schema.js";
-import { itemModel } from "../schemas/item.schema.js";
+import { UserModel } from "../apis/users/schema/user.schema";
+import { roleModel } from "../apis/roles/schema/role.schema";
+import { permissionModel } from "../apis/permissions/schema/permission.schema";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -18,9 +15,6 @@ const ReseedAction = () => {
     await roleModel.deleteMany({});
     await permissionModel.deleteMany({});
     await UserModel.deleteMany({});
-    await tagModel.deleteMany({});
-    await categoryModel.deleteMany({});
-    await itemModel.deleteMany({});
     console.log("DB cleared");
   }
 
@@ -241,99 +235,6 @@ const ReseedAction = () => {
     await roleMember.save();
     member.role = roleMember._id;
     await member.save();
-
-    const cat1 = new categoryModel({
-      name: "Travel",
-      description: "Travel ideas for everyone",
-      created_at: new Date(),
-    });
-    const cat2 = new categoryModel({
-      name: "Food",
-      description: "Our favourite recipes",
-      created_at: new Date(),
-    });
-    const cat3 = new categoryModel({
-      name: "Home",
-      description: "The latest trends in home decorations",
-      created_at: new Date(),
-    });
-    const cat4 = new categoryModel({
-      name: "Fashion",
-      description: "Stay in touch with the latest trends",
-      created_at: new Date(),
-    });
-    const cat5 = new categoryModel({
-      name: "Health",
-      description: "An apple a day keeps the doctor away",
-      created_at: new Date(),
-    });
-    const item1 = new itemModel({
-      name: "5 citybreak ideas for this year",
-      status: "published",
-      excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet nulla nulla. Donec luctus lorem justo, ut ullamcorper eros pellentesque ut. Etiam scelerisque dapibus lorem, vitae maximus ante condimentum quis. Maecenas ac arcu a lacus aliquet elementum posuere id nunc. Curabitur sem lorem, faucibus ac enim ut, vestibulum feugiat ante. Fusce hendrerit leo nibh, nec consectetur nulla venenatis et. Nulla tincidunt neque quam, sit amet tincidunt quam blandit in. Nunc fringilla rutrum tortor, sit amet bibendum augue convallis a. Etiam mauris orci, sollicitudin eu condimentum sed, dictum ut odio. Sed vel ligula in lectus scelerisque ornare.Mauris dolor nisl, finibus eget sem in, ultrices semper libero. Nullam accumsan suscipit tortor, a vestibulum sapien imperdiet quis. Donec pretium mauris quis lectus sodales accumsan. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec tincidunt semper orci eu molestie. Vivamus fermentum enim vitae magna elementum, quis iaculis augue tincidunt. Donec fermentum quam facilisis sem dictum rutrum. Nunc nec urna lectus. Nulla nec ultrices lorem. Integer ac ante massa.",
-      image: `${process.env.APP_URL_API}/public/images/product.jpg`,
-      is_on_homepage: false,
-      date_at: new Date(),
-      created_at: new Date(),
-    });
-    item1.category_id = cat1._id;
-    const item2 = new itemModel({
-      name: "Top 10 restaurants in Italy",
-      status: "published",
-      excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet nulla nulla. Donec luctus lorem justo, ut ullamcorper eros pellentesque ut. Etiam scelerisque dapibus lorem, vitae maximus ante condimentum quis. Maecenas ac arcu a lacus aliquet elementum posuere id nunc. Curabitur sem lorem, faucibus ac enim ut, vestibulum feugiat ante. Fusce hendrerit leo nibh, nec consectetur nulla venenatis et. Nulla tincidunt neque quam, sit amet tincidunt quam blandit in. Nunc fringilla rutrum tortor, sit amet bibendum augue convallis a. Etiam mauris orci, sollicitudin eu condimentum sed, dictum ut odio. Sed vel ligula in lectus scelerisque ornare.Mauris dolor nisl, finibus eget sem in, ultrices semper libero. Nullam accumsan suscipit tortor, a vestibulum sapien imperdiet quis. Donec pretium mauris quis lectus sodales accumsan. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec tincidunt semper orci eu molestie. Vivamus fermentum enim vitae magna elementum, quis iaculis augue tincidunt. Donec fermentum quam facilisis sem dictum rutrum. Nunc nec urna lectus. Nulla nec ultrices lorem. Integer ac ante massa.",
-      image: `${process.env.APP_URL_API}/public/images/product.jpg`,
-      is_on_homepage: false,
-      date_at: new Date(),
-      created_at: new Date(),
-    });
-    item2.category_id = cat2._id;
-    const item3 = new itemModel({
-      name: "Cocktail ideas for your birthday party",
-      status: "published",
-      excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet nulla nulla. Donec luctus lorem justo, ut ullamcorper eros pellentesque ut. Etiam scelerisque dapibus lorem, vitae maximus ante condimentum quis. Maecenas ac arcu a lacus aliquet elementum posuere id nunc. Curabitur sem lorem, faucibus ac enim ut, vestibulum feugiat ante. Fusce hendrerit leo nibh, nec consectetur nulla venenatis et. Nulla tincidunt neque quam, sit amet tincidunt quam blandit in. Nunc fringilla rutrum tortor, sit amet bibendum augue convallis a. Etiam mauris orci, sollicitudin eu condimentum sed, dictum ut odio. Sed vel ligula in lectus scelerisque ornare.Mauris dolor nisl, finibus eget sem in, ultrices semper libero. Nullam accumsan suscipit tortor, a vestibulum sapien imperdiet quis. Donec pretium mauris quis lectus sodales accumsan. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec tincidunt semper orci eu molestie. Vivamus fermentum enim vitae magna elementum, quis iaculis augue tincidunt. Donec fermentum quam facilisis sem dictum rutrum. Nunc nec urna lectus. Nulla nec ultrices lorem. Integer ac ante massa.",
-      image: `${process.env.APP_URL_API}/public/images/product.jpg`,
-      is_on_homepage: false,
-      date_at: new Date(),
-      created_at: new Date(),
-    });
-    item3.category_id = cat3._id;
-    const tag1 = new tagModel({
-      name: "Hot",
-      color: "#f44336",
-      created_at: new Date(),
-    });
-    const tag2 = new tagModel({
-      name: "Trending",
-      color: "#9c27b0",
-      created_at: new Date(),
-    });
-    const tag3 = new tagModel({
-      name: "New",
-      color: "#00bcd4",
-      created_at: new Date(),
-    });
-    tag1.items.push(item1, item3);
-    tag2.items.push(item1, item2, item3);
-    tag3.items.push(item2, item3);
-    cat1.items.push(item1);
-    cat2.items.push(item2);
-    cat3.items.push(item3);
-    await categoryModel.insertMany([cat1, cat2, cat3, cat4, cat5]);
-    await tagModel.insertMany([tag1, tag2, tag3]);
-    item1.tags.push(tag1);
-    item1.tags.push(tag2);
-    item2.tags.push(tag3);
-    item2.tags.push(tag2);
-    item3.tags.push(tag1);
-    item3.tags.push(tag2);
-    item3.tags.push(tag3);
-    await itemModel.insertMany([item1, item2, item3]);
 
     console.log("DB seeded");
   }

@@ -26,8 +26,19 @@ import CrudService from "services/cruds-service";
 import HTMLReactParser from "html-react-parser";
 import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
+import "survey-core/defaultV2.min.css";
+import "survey-creator-core/survey-creator-core.min.css";
 
-function ProjectManagement() {
+
+
+function InspectionFormManagement() {
+
+  const creatorOptions = {
+    showLogicTab: true,
+    isAutoSave: true
+  };
+
+
   let { state } = useLocation();
   const ability = useAbility(AbilityContext);
   const [data, setData] = useState([]);
@@ -217,4 +228,4 @@ function ProjectManagement() {
   );
 }
 
-export default ProjectManagement;
+export default InspectionFormManagement;

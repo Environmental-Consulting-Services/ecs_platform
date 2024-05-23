@@ -69,4 +69,21 @@ class ProjectModel {
 
     return project;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": number,
+      "name": name,
+      "company": company.toJson(),
+      "address": address.toJson(),
+      "status": status,
+      "people": people,
+      "type": type,
+      "owner": owner.toJson(),
+      "primary_contact": primary_contact.toJson(),
+      "start_date": start_date.toIso8601String(),
+      "end_date": end_date.toIso8601String(),
+      "permits": permits,
+    };
+  }
 }

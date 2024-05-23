@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class HelperService {
-  static const String host = "192.168.0.133";
-  static const int port = 8080;
-  static const String scheme = "http";
-  //static const String apiPath = "/api/";
-  static const String apiPath = "/";
+  static const String host = "app.ecscompliance.com";
+  static const int port = 443;
+  static const String scheme = "https";
+  static const String apiPath = "/api/";
+  //static const String apiPath = "/";
 
   static Uri buildUri(String path) {
     var uri = Uri(

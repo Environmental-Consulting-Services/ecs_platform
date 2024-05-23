@@ -23,21 +23,17 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import CrudService from "services/cruds-service";
 
-const EditProject = () => {
+const EditInspection = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [roles, setRoles] = useState([]);
   const [ownerID, setOwnerId] = useState("");
   const [owner, setOwner] = useState("");
-  const [projectActive, setProjectActive] = useState(false);
-  const [project, setProject] = useState({
+  const [inspectionActive, setInspectionActive] = useState(false);
+  const [inspection, setInspection] = useState({
     name: "",
     status: "",
-    street_one: "",
-    street_two: "",
-    city: "",
-    state: "",
-    zip_code: "",
+    
   });
 
  
@@ -46,11 +42,7 @@ const EditProject = () => {
   const [error, setError] = useState({
     name: false,
     status: false,
-    street_one: false,
-    street_two: false,
-    city: false,
-    state: false,
-    zip_code: false,
+   
     error: false,
     textError: "",
   });
@@ -72,18 +64,13 @@ const EditProject = () => {
     if (!id) return;
     (async () => {
       try {
-        const res = await CrudService.getProject(id);
-        setProjectActive(res.data.attributes.status === "active" ? true : false)
-        setProject({
+        const res = await CrudService.getInspection(id);
+        setInspectionActive(res.data.attributes.status === "active" ? true : false)
+        setInspection({
           id: res.data.id,
           name: res.data.attributes.name,
           status: res.data.attributes.status,
-          street_one: res.data.attributes.address.street_one,
-          street_two: res.data.attributes.address.street_two,
-          city: res.data.attributes.address.city,
-          state: res.data.attributes.address.state,
-          zip_code: res.data.attributes.address.zip_code,
-          owner: res.data.attributes.owner,
+          
         });
       } catch (err) {
         console.error(err);
@@ -93,50 +80,42 @@ const EditProject = () => {
 
 
   const changeHandler = (e) => {
-    setProject({
-      ...project,
+    setInspection({
+      ...inspection,
       [e.target.name]: e.target.value,
     });
   };
 
 
-  const changeProjectActiveHandler = (e) => {
-    setProjectActive(e.target.checked);
+  const changeInspectionActiveHandler = (e) => {
+    setInspectionActive(e.target.checked);
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
 
-    if (project.name.trim().length < 1) {
-      setError({ name:true,  textError: "The project name is required" });
+    if (inspection.name.trim().length < 1) {
+      setError({ name:true,  textError: "The inspection name is required" });
       return;
     }
 
-    const projectToSave = {
+    const inspectionToSave = {
       data: {
-              type: "projects",
+              type: "inspections",
               attributes: {
                   id: id,
-                  name: project.name,
-                  status: (projectActive) ? "active" : "inactive",
-                  address: {
-                      street_one: project.street_one,
-                      street_two: project.street_two,
-                      city: project.city,
-                      state: project.state,
-                      zip_code: project.zip_code,
-                  },
-                  owner: {_id: ownerID},
-                  primary_contact: {_id:""}
+                  name: inspection.name,
+                  status: (inspectionActive) ? "active" : "inactive",
+                 
               }
           }
   };
 
     try {
-      await CrudService.updateProject(projectToSave, id);
-      navigate("/project-management", {
-        state: { value: true, text: "The project was sucesfully created" },
+      await CrudService.updateInspection(inspectionToSave, id);
+      navigate("/inspection-management", {
+        state: { value: true, text: "The inspection was sucesfully created" },
       });
     } catch (err) {
       if (err.hasOwnProperty("errors")) {
@@ -147,18 +126,18 @@ const EditProject = () => {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar breadcrumbTitle={project.name}/>
+      <DashboardNavbar breadcrumbTitle={inspection.name}/>
       <MDBox mt={5} mb={9}>
         <Grid container justifyContent="center">
           <Grid item xs={12} lg={8}>
             <MDBox mt={6} mb={8} textAlign="center">
               <MDBox mb={1}>
                 <MDTypography variant="h3" fontWeight="bold">
-                  Edit Project
+                  Edit Inspection
                 </MDTypography>
               </MDBox>
               <MDTypography variant="h5" fontWeight="regular" color="secondary">
-                This information describes more about the project.
+                This information describes more about the inspection.
               </MDTypography>
             </MDBox>
             <Card>
@@ -169,7 +148,7 @@ const EditProject = () => {
                       type="text"
                       label="Name"
                       name="name"
-                      value={project.name}
+                      value={inspection.name}
                       onChange={changeHandler}
                       error={error.name}
                     />
@@ -180,97 +159,13 @@ const EditProject = () => {
                     )}
                   </MDBox>
                   
-                  <MDBox p={1}>
-                    <FormField
-                      type="text"
-                      label="Street Address"
-                      name="street_one"
-                      value={project.street_one}
-                      onChange={changeHandler}
-                      error={error.street_one}
-                    />
-                    {error.street_one && (
-                      <MDTypography variant="caption" color="error" fontWeight="light">
-                         {error.textError}
-                      </MDTypography>
-                    )}
-                  </MDBox>
-                  <MDBox p={1}>
-                    <FormField
-                      type="text"
-                      label="Street Address 2"
-                      name="street_two"
-                      value={project.street_two}
-                      onChange={changeHandler}
-                      error={error.street_two}
-                    />
-                    {error.street_two && (
-                      <MDTypography variant="caption" color="error" fontWeight="light">
-                       {error.textError}
-                      </MDTypography>
-                    )}
-                  </MDBox>
-                  <MDBox p={1}>
-                    <FormField
-                      type="text"
-                      label="City"
-                      name="city"
-                      value={project.city}
-                      onChange={changeHandler}
-                      error={error.city}
-                    />
-                    {error.city && (
-                      <MDTypography variant="caption" color="error" fontWeight="light">
-                        {error.textError}
-                      </MDTypography>
-                    )}
-                  </MDBox>
-                  <MDBox p={1}>
-                    <FormField
-                      type="text"
-                      label="State"
-                      name="state"
-                      value={project.state}
-                      onChange={changeHandler}
-                      error={error.state}
-                    />
-                    {error.state && (
-                      <MDTypography variant="caption" color="error" fontWeight="light">
-                        {error.textError}
-                      </MDTypography>
-                    )}
-                  </MDBox>
-                  <MDBox p={1}>
-                    <FormField
-                      type="text"
-                      label="Zip Code"
-                      name="zip_code"
-                      value={project.zip_code}
-                      onChange={changeHandler}
-                      error={error.zip_code}
-                    />
-                    {error.zip_code && (
-                      <MDTypography variant="caption" color="error" fontWeight="light">
-                        {error.textError}
-                      </MDTypography>
-                    )}
-                  </MDBox>
-                  <MDBox p={1}>
-                    <FormField
-                      type="text"
-                      label="Owner"
-                      name="owner"
-                      value={owner}
-                      editable={false.toString()}
-                    />
-                  </MDBox>
                   <MDBox display="flex" alignItems="center" mb={0.5} ml={-1.5}>
                     <MDBox mt={0.5}>
-                    <Switch name="projectActive" checked={projectActive} onChange={changeProjectActiveHandler} />
+                    <Switch name="inspectionActive" checked={inspectionActive} onChange={changeInspectionActiveHandler} />
                     </MDBox>
                     <MDBox width="80%" ml={0.5}>
                       <MDTypography variant="button" fontWeight="regular" color="text">
-                        Active Project?
+                        Active Inspection?
                       </MDTypography>
                     </MDBox>
                   </MDBox>
@@ -283,7 +178,7 @@ const EditProject = () => {
                         px={2}
                         mx={2}
                         onClick={() =>
-                          navigate("/project-management", {
+                          navigate("/inspection-management", {
                             state: { value: false, text: "" },
                           })
                         }
@@ -306,4 +201,4 @@ const EditProject = () => {
   );
 };
 
-export default EditProject;
+export default EditInspection;

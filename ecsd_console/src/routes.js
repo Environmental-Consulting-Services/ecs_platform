@@ -64,6 +64,7 @@ import ProjectManagement from "cruds/project-management";
 /* import TagManagement from "cruds/tag-management";*/
 import UserManagement from "cruds/user-management";
 /* import ItemManagement from "cruds/item-management";*/
+import InspectionManagement from "cruds/inspection-management";
 // Material Dashboard 2 PRO React components
 import MDAvatar from "components/MDAvatar";
 
@@ -73,8 +74,8 @@ import Icon from "@mui/material/Icon";
 // Images
 import profilePicture from "assets/images/team-3.jpg";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
-
-
+import InspectionTemplateManagement from "cruds/inspectiontemplate-management";
+import ActionItemManagement from "cruds/actionitem-management";
 
 const routes = [
   /* {
@@ -147,8 +148,8 @@ const routes = [
     name: "Inspections",
     title: "Inspections",
     key: "inspection-management",
-    route: "/company-management",
-    component: <CompanyManagement />,
+    route: "/inspection-management",
+    component: <InspectionManagement />,
     icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
@@ -156,13 +157,25 @@ const routes = [
   {
     name: "Action Items",
     title: "Action Items",
-    key: "action-management",
-    route: "/company-management",
-    component: <CompanyManagement />,
+    key: "actionitem-management",
+    route: "/actionitem-management",
+    component: <ActionItemManagement />,
     icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
-  },/* 
+  },
+  {
+    name: "Inspection Templates",
+    title: "Inspection Templates",
+    key: "inspectiontemplate-management",
+    route: "/inspectiontemplate-management",
+    component: <InspectionTemplateManagement />,
+    icon: <FontAwesomeIcon icon={faUser} size="sm" />,
+    type: "collapse",
+    noCollapse: true,
+  },
+  
+  /* 
   {
     type: "collapse",
     name: "Examples (API)",
@@ -433,7 +446,7 @@ const routes = [
     ],
   }, */
 
-  { type: "divider", key: "divider-1" },
+ /*  { type: "divider", key: "divider-1" },
   { type: "title", title: "Dashboards", key: "dashboards" },
   {
     type: "collapse",
@@ -452,7 +465,7 @@ const routes = [
     component: <Sales />,
     icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     noCollapse: true,
-  },
+  }, */
   /* {
     type: "collapse",
     name: "Dashboards",

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ecsd_mobile/model/person_model.dart';
 import 'package:ecsd_mobile/model/project_model.dart';
 import 'package:ecsd_mobile/services/helper_service.dart';
 import '../model/user_model.dart';
@@ -31,12 +32,16 @@ class ProjectService {
   static Future<List<ProjectModel>> loadProjects(String companyId) async {
     final storedUser = await SecureStorageService.getUser();
     var storedToken = await SecureStorageService.getUserAccessToken();
-    var accessToken = storedToken['access_token'];
+    var accessToken = storedToken;
 
     var requestPath = projectPath;
 
     var uri = HelperService.buildUri(requestPath);
     uri = uri.replace(queryParameters: {'filter[owner]': storedUser!['id']});
+
+    if (companyId.isNotEmpty) {
+      uri = uri.replace(queryParameters: {'filter[company]': companyId});
+    }
     final response = await http.get(uri,
         headers: HelperService.buildHeaders(
           accessToken: accessToken,
@@ -45,13 +50,13 @@ class ProjectService {
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {
       case 200:
-        final List<ProjectModel> companies = [];
+        final List<ProjectModel> projects = [];
         final json = jsonDecode(response.body);
-        for (var company in json['data']) {
-          companies.add(ProjectModel.fromJson(company));
+        for (var project in json['data']) {
+          projects.add(ProjectModel.fromJson(project));
         }
 
-        return companies;
+        return projects;
       case 400:
         final json = jsonDecode(response.body);
         throw Exception(json);
@@ -97,5 +102,144 @@ class ProjectService {
       default:
         throw FormGeneralException(message: 'Error contacting the server!');
     } */
+  }
+
+  static Future<List<Person>> loadAssigneesForProject(String projectId) async {
+    final storedUser = await SecureStorageService.getUser();
+    var storedToken = await SecureStorageService.getUserAccessToken();
+    var accessToken = storedToken;
+
+    var uri = HelperService.buildUri(projectPath + projectId + "/people/");
+    uri = uri.replace(queryParameters: {
+      'filter[project]': projectId,
+      'fields[projects]': 'people'
+    });
+
+    final response = await http.get(uri,
+        headers: HelperService.buildHeaders(
+          accessToken: accessToken,
+        ));
+
+    final statusType = (response.statusCode / 100).floor() * 100;
+    switch (statusType) {
+      case 200:
+        final List<Person> assignees = [];
+        final json = jsonDecode(response.body);
+        var peopleData = json["data"];
+        peopleData.forEach((person) {
+          assignees.add(Person.fromJson(person["attributes"]));
+        });
+
+        return assignees;
+      case 400:
+        final json = jsonDecode(response.body);
+        throw Exception(json);
+      case 300:
+      case 500:
+      default:
+        throw Exception('Error contacting the server!');
+    }
+
+    /*    List<Person> people = [
+      Person.create(),
+      Person.create(),
+    ]; */
+  }
+
+  static Future<String> getSiteMapIdForProject(String projectId) async {
+    final storedUser = await SecureStorageService.getUser();
+    var storedToken = await SecureStorageService.getUserAccessToken();
+    var accessToken = storedToken;
+
+    var uri = HelperService.buildUri(projectPath + projectId);
+    uri = uri.replace(queryParameters: {
+      'filter[project]': projectId,
+      'fields[projects]': 'site_maps'
+    });
+
+    try {
+      final response = await http.get(uri,
+          headers: HelperService.buildHeaders(
+            accessToken: accessToken,
+          ));
+
+      final statusType = (response.statusCode / 100).floor() * 100;
+      switch (statusType) {
+        case 200:
+          String siteMapId = "";
+          final json = jsonDecode(response.body);
+          if (json["data"]["attributes"]["site_maps"] != null) {
+            if (json["data"]["attributes"]["site_maps"][0] != null) {
+              siteMapId =
+                  json["data"]["attributes"]["site_maps"][0]["site_map"];
+            }
+          }
+          return siteMapId;
+        case 400:
+          final json = jsonDecode(response.body);
+          throw Exception(json);
+        case 300:
+        case 500:
+        default:
+          throw Exception('Error contacting the server!');
+      }
+    } catch (e) {
+      return "";
+    }
+    /*    List<Person> people = [
+      Person.create(),
+      Person.create(),
+    ]; */
+  }
+
+  static Future<String> setSiteMapIdForProject(
+      String projectId, String siteMapId) async {
+    final storedUser = await SecureStorageService.getUser();
+    var storedToken = await SecureStorageService.getUserAccessToken();
+    var accessToken = storedToken;
+
+    var uri = HelperService.buildUri(projectPath + projectId + "/sitemaps");
+    /* uri = uri.replace(queryParameters: {
+      'filter[project]': projectId,
+      'fields[projects]': 'site_maps'
+    }); */
+
+    final projectData = {
+      "data": {
+        "type": "project",
+        "id": projectId,
+        "attributes": {
+          "site_maps": [
+            {"site_map": siteMapId}
+          ],
+        },
+      },
+    };
+
+    final response = await http.patch(
+      uri,
+      headers: HelperService.buildHeaders(
+        accessToken: accessToken,
+      ),
+      body: jsonEncode(projectData),
+    );
+
+    final statusType = (response.statusCode / 100).floor() * 100;
+    switch (statusType) {
+      case 200:
+        return '{"status": "success" }';
+      case 400:
+        final json = jsonDecode(response.body);
+        throw Exception(json);
+      case 300:
+      case 500:
+      default:
+        throw Exception('Error contacting the server!');
+    }
+
+    /*    List<Person> people = [
+      Person.create(),
+      Person.create(),
+    ]; */
   }
 }

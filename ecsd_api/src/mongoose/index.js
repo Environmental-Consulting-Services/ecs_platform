@@ -5,8 +5,10 @@ import dotenvExpand from 'dotenv-expand';
 let myEnv = dotenv.config()
 dotenvExpand.expand(myEnv)
 
+
+
 export const dbConnect = () => {
-  console.log(process.env.DATABASE_URL);  
+  //console.log(process.env.DATABASE_URL);  
    mongoose.connection.once("open", () => console.log("DB connection"));
    mongoose.set('strictQuery', false)
    return mongoose.connect(

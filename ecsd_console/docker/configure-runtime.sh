@@ -6,7 +6,7 @@
 
 #expect three env args
 # 1. NGINX_CONF -- the nginx configuration file to edit,  default is /etc/nginx/conf.d/default.conf
-# 2. ENV_FILE_IN -- the input env file, deafulst to "/usr/share/nginx/html/runtime.env"
+# 2. ENV_FILE_IN -- the input env file, defaults to "/usr/share/nginx/html/runtime.env"
 # 3. ENV_FILE_OUT   -- the output env file defualt is runtime-env.js
 
 #setup nginx conf 

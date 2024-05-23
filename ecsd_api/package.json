@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "@lykmapipo/mongoose-faker": "^0.12.0",
+    "@pdfme/generator": "^4.0.1",
     "@videsk/mongoose-dummy": "^1.4.1",
     "axios": "^1.6.8",
     "bcrypt": "^5.0.1",
@@ -22,7 +23,8 @@
     "mongoose": "^6.12.8",
     "mongoose-dummy": "^1.0.8",
     "mongoose-fakery": "^0.1.7",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^1.4.4-lts.1",
+    "multer-gridfs-storage": "^5.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "node-cron": "^3.0.2",
@@ -34,9 +36,12 @@
     "pg": "^8.7.3",
     "random-token": "0.0.8",
     "sequelize": "^6.20.1",
+    "string-to-stream": "^3.0.1",
+    "survey-core": "1.10.2",
+    "survey-pdf": "1.10.2",
+    "survey-react-ui": "1.10.2",
     "uuid": "^8.3.2"
   },
-  "type": "commonjs",
   "devDependencies": {
     "@babel/cli": "^7.24.1",
     "@babel/core": "^7.24.4",
@@ -60,13 +65,15 @@
       "<rootDir>/dist/"
     ]
   },
+  "type": "module",
   "scripts": {
     "start:dev": "NODE_ENV=development nodemon --exec babel-node --experimental-specifier-resolution=node src/server.js",
     "build": "NODE_ENV=production babel src --out-dir dist --copy-files",
-    "start": "NODE_ENV=production node --experimental-specifier-resolution=node dist/server.js",
+    "start": "NODE_ENV=production node --experimental-modules --experimental-specifier-resolution=node dist/server.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
-    "seed": "node src/mongoose/seedData.js",
-    "clear": "node src/mongoose/clearDbs.js"
+    "seed": "node --experimental-modules src/mongoose/seedData.js",
+    "dbutil": "node --experimental-modules src/mongoose/DataLoadUtil.js",
+    "clear": "node --experimental-modules src/mongoose/clearDbs.js"
   },
   "author": "",
   "license": "ISC"

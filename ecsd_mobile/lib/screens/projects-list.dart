@@ -36,7 +36,7 @@ class _ProjectListState extends State<ProjectList> {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      itemCount: snapshot.data!.length,
+      itemCount: (snapshot.data != null) ? snapshot.data!.length : 0,
       itemBuilder: (context, index) {
         final project = snapshot.data?[index];
         return GestureDetector(
@@ -128,20 +128,20 @@ class _ProjectListState extends State<ProjectList> {
       backgroundColor: ArgonColors.bgColorScreen,
       // key: _scaffoldKey,
       drawer: ArgonDrawer(currentPage: "Projects"),
-      body: Container(
+      body: /* Container(
         padding: EdgeInsets.only(left: 24.0, right: 24.0),
-        child: SingleChildScrollView(
-          child: Column(
+/*         child: SingleChildScrollView(
+ */          child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: SizedBox(),
-              ),
-              projectListFutureBuilder,
-            ],
+              ), */
+          projectListFutureBuilder,
+      /*  ],
           ),
-        ),
-      ),
+        /* ), */
+      ), */
     );
   }
 }

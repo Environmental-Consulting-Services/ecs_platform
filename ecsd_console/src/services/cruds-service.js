@@ -3,15 +3,44 @@ import HttpService from "./http.service";
 class CrudService {
   // users requests
   imageUpload = async (formData, id) => {
-    const imageUpdate = `uploads/users/${id}/profile-image`;
-    return await HttpService.post(imageUpdate, formData);
+
+    const imageUpdate = `public/images/upload`;
+    return await HttpService.postFormData(imageUpdate, formData);
   };
+
+  imageDownload = async (id) => {
+    const imagepath = `public/images/files/${id}`;
+    return await HttpService.get(imagepath);
+  };
+
+  imageDownloadBase64 = async (id) => {
+    const imagepath = `public/images/files/${id}/base64`;
+    return await HttpService.getblob(imagepath);
+  };
+
+
+
 
   getUsers = async () => {
     const usersEndpoint = "users?include=roles";
     return await HttpService.get(usersEndpoint);
   };
 
+  getUsersByID = async (IDs)  => {
+    let idFilter = "";
+    if(IDs != null && IDs.length > 0){
+     IDs.map((id) => { 
+        if(id != null || id != ""){
+          idFilter = idFilter + `filter[_id]=${id}&`;
+          return `filter[_id]=${id}&`;
+        } 
+      });
+    }
+
+    const usersEndpoint = `users?${idFilter}`;
+    return await HttpService.get(usersEndpoint);
+  };
+  
   deleteUser = async (id) => {
     const endpoint = `users/${id}`;
     return await HttpService.delete(endpoint);
@@ -144,6 +173,93 @@ class CrudService {
     return await HttpService.patch(projectsEndpoint, payload);
   };
 
+  updateProjectSiteMap = async (payload, id) => {
+    const projectsEndpoint = `projects/${id}/sitemaps`;
+    return await HttpService.patch(projectsEndpoint, payload);
+  };
+
+  // project requests
+  getProjectAssignees = async (id) => {
+    const projectsEndpoint = `projects/${id}/people`;
+    return await HttpService.get(projectsEndpoint);
+  };
+
+  // project requests
+  getInspections = async () => {
+    const inspectionsEndpoint = "inspections";
+    return await HttpService.get(inspectionsEndpoint);
+  };
+
+  deleteInspection = async (id) => {
+    const endpoint = `inspections/${id}`;
+    return await HttpService.delete(endpoint);
+  };
+
+  createInspection = async (payload) => {
+    const endpoint = "inpections";
+    return await HttpService.post(endpoint, payload);
+  };
+
+  getInspection = async (id) => {
+    const inspectionsEndpoint = `inspections/${id}`;
+    return await HttpService.get(inspectionsEndpoint);
+  };
+
+  updateInspection = async (payload, id) => {
+    const inspectionsEndpoint = `inspections/${id}`;
+    return await HttpService.patch(inspectionsEndpoint, payload);
+  };
+/* 
+  updateProjectSiteMap = async (payload, id) => {
+    const projectsEndpoint = `projects/${id}/sitemaps`;
+    return await HttpService.patch(projectsEndpoint, payload);
+  }; */
+  
+
+  // project requests
+  getActionItems = async () => {
+    const actionitemsEndpoint = "actionitems";
+    return await HttpService.get(actionitemsEndpoint);
+  };
+
+  deleteActionItem = async (id) => {
+    const endpoint = `actionitems/${id}`;
+    return await HttpService.delete(endpoint);
+  };
+
+  createActionItem = async (payload) => {
+    const endpoint = "actionitems";
+    return await HttpService.post(endpoint, payload);
+  };
+
+  getActionItem = async (id) => {
+    const actionitemsEndpoint = `actionitems/${id}`;
+    return await HttpService.get(actionitemsEndpoint);
+  };
+
+  updateActionItem = async (payload, id) => {
+    const actionitemsEndpoint = `actionitems/${id}`;
+    return await HttpService.patch(actionitemsEndpoint, payload);
+  };
+
+
+  getActionItemNotes = async (id) => {
+    const actionitemsEndpoint = `actionitems/${id}/notes`;
+    return await HttpService.get(actionitemsEndpoint);
+  };
+
+  deleteActionItemNote = async (actionId, noteId ) => {
+    const endpoint = `actionitems/${actionId}/notes/${noteId}`;
+    return await HttpService.delete(endpoint);
+  };
+
+  createActionItemNote = async (actionId, payload) => {
+    const endpoint = `actionitems/${actionId}/notes`;
+    return await HttpService.post(endpoint, payload);
+  };
+
+
+
 
 
 
@@ -241,6 +357,40 @@ class CrudService {
     const endpoint = `messages/${id}`;
     return await HttpService.patch(endpoint, payload);
   };
+
+
+
+
+
+
+  // project requests
+  getInspectionTemplates = async () => {
+    const projectsEndpoint = "inspectiontemplates";
+    return await HttpService.get(projectsEndpoint);
+  };
+
+  deleteInspectionTemplates = async (id) => {
+    const endpoint = `inspectiontemplates/${id}`;
+    return await HttpService.delete(endpoint);
+  };
+
+  createInspectionTemplates = async (payload) => {
+    const endpoint = "inspectiontemplates";
+    return await HttpService.post(endpoint, payload);
+  };
+
+  getInspectionTemplate = async (id) => {
+    const projectsEndpoint = `inspectiontemplates/${id}`;
+    return await HttpService.get(projectsEndpoint);
+  };
+
+  updateInspectionTemplates = async (payload, id) => {
+    const projectsEndpoint = `inspectiontemplates/${id}`;
+    return await HttpService.patch(projectsEndpoint, payload);
+  };
+
+
+
 
 }
 

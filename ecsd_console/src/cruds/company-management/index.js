@@ -32,6 +32,7 @@ function CompanyManagement() {
   const ability = useAbility(AbilityContext);
   const [data, setData] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [userNames, setUserNames] = useState([]); //array of user entities [id, name
   const [notification, setNotification] = useState({
     value: false,
     text: "",
@@ -42,6 +43,19 @@ function CompanyManagement() {
   useEffect(() => {
     (async () => {
       const response = await CrudService.getCompanies();
+
+      let userIDs = [];
+      response.data.forEach((company) => {
+        userIDs.push(company.attributes.owner);
+      }
+      );  
+
+      let Users = await CrudService.getUsersByID(userIDs);
+
+      console.log(Users);
+
+
+      setUserNames(Users);
       setData(response.data);
     })();
   }, []);
@@ -105,6 +119,7 @@ function CompanyManagement() {
     }
   };
 
+
   const getRows = (info) => {
     let updatedInfo = info.map((row) => {
 
@@ -142,9 +157,30 @@ function CompanyManagement() {
       { Header: "name", accessor: "name", width: "25%" },
       {
         Header: "owner",
-        accessor: "owner",
+        //accessor: "owner",
         width: "25%",
-        Cell: ({ cell: { value } }) => HTMLReactParser(value),
+        Cell: (info) => {
+          
+          if(userNames && userNames.data && userNames.data.length > 0){
+           let user = userNames.data.filter((user) => {
+            if (user.id === info.cell.row.original.owner) {
+              return true;
+            }
+          });
+            
+          return (
+            <MDTypography variant="body" >
+              {user[0].attributes.first_name+ " " + user[0].attributes.last_name}
+            </MDTypography>
+          );
+        } else {
+          return (
+            <MDTypography variant="body" >
+              {info.cell.row.original.owner}
+            </MDTypography>
+          );
+        }
+      },
       },
       { Header: "created at", accessor: "created_at", width: "25%" },
       {

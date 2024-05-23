@@ -1,4 +1,4 @@
- 
+
 
 import { useEffect, useState } from "react";
 
@@ -75,7 +75,7 @@ const EditUser = () => {
         setUser({
           id: getData.id,
           first_name: getData.attributes.first_name,
-          last_name:getData.attributes.last_name,
+          last_name: getData.attributes.last_name,
           phone: getData.attributes.phone,
           address: getData.attributes.address,
           email: getData.attributes.email,
@@ -116,7 +116,7 @@ const EditUser = () => {
 
     const mailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (user.first_name.trim().length === 0) {
+    if (!user || !user.first_name || user.first_name.trim().length === 0) {
       setError({
         email: false,
         role: false,
@@ -129,7 +129,7 @@ const EditUser = () => {
       return;
     }
 
-    if (user.last_namest_name.trim().length === 0) {
+    if (!user || !user.last_name || user.last_name.trim().length === 0) {
       setError({
         email: false,
         role: false,
@@ -142,7 +142,7 @@ const EditUser = () => {
       return;
     }
 
-    if (user.email.trim().length === 0 || !user.email.trim().match(mailFormat)) {
+    if (!user || !user.email || user.email.trim().length === 0 || !user.email.trim().match(mailFormat)) {
       setError({
         role: false,
         first_name: false,
@@ -220,19 +220,16 @@ const EditUser = () => {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar breadcrumbTitle={user.name} />
-      <MDBox mt={5} mb={9}>
+      <DashboardNavbar breadcrumbTitle={user.first_name +" "+ user.last_name} />
+      <MDBox mt={5} mb={2}>
         <Grid container justifyContent="center">
           <Grid item xs={12} lg={8}>
-            <MDBox mt={6} mb={8} textAlign="center">
+            <MDBox mt={6} mb={2} textAlign="center">
               <MDBox mb={1}>
                 <MDTypography variant="h3" fontWeight="bold">
-                  Add New User
+                  Edit User
                 </MDTypography>
               </MDBox>
-              <MDTypography variant="h5" fontWeight="regular" color="secondary">
-                This information will describe more about the user.
-              </MDTypography>
             </MDBox>
             <Card>
               <MDBox
@@ -292,17 +289,17 @@ const EditUser = () => {
                     <Grid item xs={12} sm={6}>
                       <FormField
                         label="Phone"
-                        placeholder=""
+                        placeholder="555-555-1212"
                         name="phone"
                         value={user.phone}
                         onChange={changeHandler}
                         error={error.phone}
-                        inputProps={{
+                        /* inputProps={{
                           autoComplete: "phone",
                           form: {
                             autoComplete: "off",
                           },
-                        }}
+                        }} */
                       />
                       {error.phone && (
                         <MDTypography variant="caption" color="error" fontWeight="light">
@@ -311,7 +308,7 @@ const EditUser = () => {
                       )}
                     </Grid>
 
-                  <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6}>
                       <FormField
                         label="Address"
                         placeholder=""
@@ -319,12 +316,12 @@ const EditUser = () => {
                         value={user.address}
                         onChange={changeHandler}
                         error={error.address}
-                        inputProps={{
+                        /* inputProps={{
                           autoComplete: "address",
                           form: {
                             autoComplete: "off",
                           },
-                        }}
+                        }} */
                       />
                       {error.address && (
                         <MDTypography variant="caption" color="error" fontWeight="light">
@@ -333,24 +330,25 @@ const EditUser = () => {
                       )}
                     </Grid>
                   </Grid>
+
+                  
                   <MDBox display="flex" flexDirection="column" fullWidth>
                     <MDBox display="flex" flexDirection="column" fullWidth marginTop="2rem">
                       <Autocomplete
                         defaultValue={null}
                         options={roles}
-                        getOptionLabel={(option) =>
-                          {
-                            if (option.data) {
-                              if (option.data.attributes) {
-                                if (option.data.attributes.name) return option.data.attributes.name;
-                              }
-                            } else {
-                              if (option.attributes) {
-                                if (option.attributes.name) return option.attributes.name;
-                              }
+                        getOptionLabel={(option) => {
+                          if (option.data) {
+                            if (option.data.attributes) {
+                              if (option.data.attributes.name) return option.data.attributes.name;
                             }
-                            return "";
+                          } else {
+                            if (option.attributes) {
+                              if (option.attributes.name) return option.attributes.name;
+                            }
                           }
+                          return "";
+                        }
                         }
                         value={value ?? null}
                         onChange={(event, newValue) => {

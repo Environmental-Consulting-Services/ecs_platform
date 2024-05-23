@@ -1,3 +1,4 @@
+import 'package:ecsd_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:ecsd_mobile/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -132,7 +133,7 @@ class _NavbarState extends State<Navbar> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                GestureDetector(
+                                /* GestureDetector(
                                   onTap: () {
                                     Navigator.push(
                                         context,
@@ -150,7 +151,7 @@ class _NavbarState extends State<Navbar> {
                                               : ArgonColors.white,
                                           size: 22.0),
                                       onPressed: null),
-                                ),
+                                ), */
                                 PopupMenuButton(
                                     icon: Icon(Icons.account_circle,
                                         color: !widget.transparent
@@ -162,7 +163,7 @@ class _NavbarState extends State<Navbar> {
                                         size: 22.0),
                                     itemBuilder: (BuildContext context) {
                                       return [
-                                        PopupMenuItem(
+                                        /*  PopupMenuItem(
                                             child: Text("Profile"),
                                             value: "Profile",
                                             onTap: () {
@@ -174,11 +175,13 @@ class _NavbarState extends State<Navbar> {
                                                           builder: (context) =>
                                                               Profile()))
                                                   : null;
-                                            }),
+                                            }), */
                                         PopupMenuItem(
                                           child: Text("Logout"),
                                           value: "Logout",
                                           onTap: () => {
+                                            context.read<AuthenticationBloc>().add(
+                                                AuthenticationLogoutRequested())
                                             /* BlocProvider.of<AuthenticationBloc>(
                                                     context)
                                                 .add(UserLogoutEvent()) */
@@ -248,7 +251,6 @@ class _NavbarState extends State<Navbar> {
                       SizedBox(width: 30),
                     ],
                   ), */
-                      /* ß */
                     ])
               ],
             ),

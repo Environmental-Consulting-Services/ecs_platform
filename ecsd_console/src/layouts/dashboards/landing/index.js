@@ -29,10 +29,10 @@ import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarCha
 import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
 
 // Images
-import booking1 from "assets/images/products/product-1-min.jpg";
-import booking2 from "assets/images/products/product-2-min.jpg";
-import booking3 from "assets/images/products/product-3-min.jpg";
-
+/* import booking1 from "";
+import booking2 from "";
+import booking3 from "";
+ */
 function Landing() {
   const { sales, tasks } = reportsLineChartData;
 

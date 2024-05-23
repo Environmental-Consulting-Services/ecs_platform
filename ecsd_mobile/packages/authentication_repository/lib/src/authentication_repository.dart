@@ -13,7 +13,7 @@ class AuthenticationRepository {
     yield* _controller.stream;
   }
 
-  Future<Map<String, String>> logIn({
+  Future<String> logIn({
     required String username,
     required String password,
   }) async {
@@ -23,13 +23,13 @@ class AuthenticationRepository {
     );
 
     if (authResults['access_token'] != null) {
-      SecureStorageService.saveUserAccessToken(authResults);
+      SecureStorageService.saveUserAccessToken(authResults['access_token']);
       _controller.add(AuthenticationStatus.authenticated);
     } else {
       _controller.add(AuthenticationStatus.unauthenticated);
     }
 
-    return authResults;
+    return authResults['access_token'];
   }
 
   void logOut() {

@@ -8,7 +8,7 @@ class AuthenticationService {
   static const String refreshPath = 'token/refresh/';
   static const String verifyPath = 'token/verify/';
 
-  static Future<Map<String, String>> login({
+  static Future<Map<String, dynamic>> login({
     required String email,
     required String password,
   }) async {

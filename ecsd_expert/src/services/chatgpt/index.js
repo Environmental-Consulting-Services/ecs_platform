@@ -21,38 +21,39 @@ const assistantId = OPEN_AI_ASSISTANT_ID;
 export const createThreadRoute = async (req, res) => {
     
   var userId = req.user.id
-
-  UserModel.findById(userId).then(user => {
-    if (user.expert_thread) {
-      res.json({ threadId: user.expert_thread });
-    } else {
-      createThread().then(thread => {
-        user.expert_thread = thread.id;
-        user.save();
-        res.json({ threadId: thread.id });
-      });
-    }
-  });
+  var thread = await createThread();
+  res.json({ threadId: thread.id });
 }
+
+// Set up a Thread
+export const createThread = async () => {
+  console.log('Creating a new thread...');
+
+  const thread = await openai.beta.threads.create();
+  return thread;
+}
+
 
 
 export const createExpertMessageRoute = async (message, userId) => {
   
-  UserModel.findById(userId).then(user => {
+  UserModel.findById(userId).then( async (user) => {
     
-    var threadId = user.expert_thread;
+    var threadId;
+    if (user.expert_thread && user.expert_thread != "") {
+      threadId = user.expert_thread;
+    } else {
+      const thread = await openai.beta.threads.create().then( async (thread) => {
 
-    
-
+        user.expert_thread = thread.id;
+        await user.save();
+        threadId = thread.id ;
+      });
+    }
 
     addMessage(threadId, message).then(message => {
-      // res.json({ messageId: message.id });
-
-      // Run the assistant
       runAssistant(threadId).then(run => {
         const runId = run.id;
-
-        // Check the status
         pollingInterval = setInterval(() => {
           var theStatus = checkingStatus( userId, threadId, runId).then(status => {
             if (!status) {
@@ -73,23 +74,13 @@ export const createExpertMessageRoute = async (message, userId) => {
       return sentData
     });
     }).catch(err => {
-      return { error: err };
       clearInterval(pollingInterval);
+      return { error: err };
     }
   );
 }
 
 
-
-
-
-
-// Set up a Thread
-export const createThread = async (req, res) => {
-    console.log('Creating a new thread...');
-    const thread = await openai.beta.threads.create();
-    return thread;
-}
 
 export const addMessage = async (threadId, message) => {
     console.log('Adding a new message to thread: ' + threadId);
@@ -131,8 +122,8 @@ export const checkingStatus = async ( userId, threadId, runId) => {
     );
 
     const status = runObject.status;
-    console.log(runObject)
-    console.log('Current status: ' + status);
+    //console.log(runObject)
+    //console.log('Current status: ' + status);
     
     if(status == 'completed'){
       if(pollingComplete) {

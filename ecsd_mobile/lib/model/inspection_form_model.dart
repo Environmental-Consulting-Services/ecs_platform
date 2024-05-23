@@ -31,4 +31,27 @@ class InspectionFormModel {
       company: CompanyModel.create(),
     );
   }
+
+  factory InspectionFormModel.fromJson(Map<String, dynamic> json) =>
+      InspectionFormModel(
+        id: json["id"],
+        scheduled_date: DateTime.parse(json["scheduled_date"]),
+        type: json["type"],
+        status: json["status"],
+        items: json["items"],
+        project: ProjectModel.fromJson(json["project"]),
+        company: CompanyModel.fromJson(json["company"]),
+      );
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "scheduled_date": scheduled_date.toIso8601String(),
+      "type": type,
+      "status": status,
+      "items": items,
+      "project": project.toJson(),
+      "company": company.toJson(),
+    };
+  }
 }

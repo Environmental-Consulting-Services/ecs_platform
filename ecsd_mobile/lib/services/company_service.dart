@@ -16,9 +16,9 @@ class CompanyService {
 
     final storedUser = await SecureStorageService.getUser();
     var storedToken = await SecureStorageService.getUserAccessToken();
-    var accessToken = storedToken['access_token'];
+    var accessToken = storedToken;
 
-    final response = await http.post(
+    final response = await http.get(
         HelperService.buildUri(companyPath + companyId.toString()),
         headers: HelperService.buildHeaders(
           accessToken: accessToken,
@@ -48,7 +48,7 @@ class CompanyService {
   static Future<List<CompanyModel>> loadCompanies() async {
     //final storedUser = await SecureStorageService.getUser();
     var storedToken = await SecureStorageService.getUserAccessToken();
-    var accessToken = storedToken['access_token'];
+    var accessToken = storedToken;
 
     final response = await http.get(HelperService.buildUri(companyPath),
         headers: HelperService.buildHeaders(

@@ -1,33 +1,49 @@
 class Person {
-  final int id;
+  String id;
   String email;
   String firstName;
   String lastName;
-  String cellphone;
-  String project_role;
+  String? phone;
+  //String? project_role;
 
   Person({
     required this.id,
     required this.email,
     required this.firstName,
     required this.lastName,
-    required this.cellphone,
-    required this.project_role,
-  }) {}
+    required this.phone,
+    //required this.project_role
+  });
 
-  factory Person.create() {
-    final person = Person(
-      id: 0,
+  static create() {
+    return Person(
+      id: "",
       email: "",
       firstName: "",
       lastName: "",
-      cellphone: "",
-      project_role: "",
+      phone: "",
+      //project_role: "",
     );
-    return person;
   }
 
   String fullName() {
     return firstName + ' ' + lastName;
   }
+
+  factory Person.fromJson(Map<String, dynamic>? json) => Person(
+        id: (json != null) ? json["_id"] : "",
+        email: (json != null) ? json["email"] : "",
+        firstName: (json != null) ? json["first_name"] : "",
+        lastName: (json != null) ? json["last_name"] : "",
+        phone: (json != null) ? json["phone"] : "",
+        // project_role: (json != null) ? json["project_role"] : "",
+      );
+
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "email": email,
+        "first_name": firstName,
+        "last_name": lastName,
+        "phone": phone,
+      };
 }

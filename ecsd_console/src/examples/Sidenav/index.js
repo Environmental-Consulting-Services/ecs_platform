@@ -38,6 +38,7 @@ import SidenavItem from "examples/Sidenav/SidenavItem";
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
+import CrudService from "../../services/cruds-service";
 
 // Material Dashboard 2 PRO React context
 import {
@@ -64,7 +65,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const items = pathname.split("/").slice(1);
   const itemParentName = items[1];
   const itemName = items[items.length - 1];
-  const [activeCompany, setActiveCompany] = useState("None");
+  const [activeCompany, setActiveCompany] = useState("none");
+  const [data, setData] = useState([]);
 
 
   let textColor = "white";
@@ -76,6 +78,26 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
+
+
+
+  useEffect(() => {
+    (async () => {
+
+      if(authContext.isAuthenticated) {
+      const response = await CrudService.getCompanies();
+      
+      var companiesSelections = [{label:"None", value:"none"}];
+      response.data.map((company) => {
+        companiesSelections.push({ label: company.attributes.name, value: company.id });        
+      } );
+      setData(companiesSelections);
+    }else{
+      setData([]);
+    }
+
+    })();
+  }, []);
 
   useEffect(() => {
     setOpenCollapse(collapseName);
@@ -320,23 +342,21 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       Logout
     </SidenavCollapse>
   ); */
+  
   renderRoutes.unshift(
-
+    <MDBox key="companyselect" ml={1} mt={1} mb={1}>  
     <Autocomplete
       key="companyselect"
       disablePortal
       id="combo-box-demo"
-      options={[
-        { label: "Company A", value: "Company A" },
-        { label: "Company B", value: "Company B" },
-        { label: "Company C", value: "Company C" }
-      ]}
-      sx={{ width: 300 }}
+      options={data}
+      sx={{ width: 240 }}
       onChange={handleCompanySelect}
       renderInput={(params) => <TextField {...params} label="Company" />}
     />
+    </MDBox>
 
-
+);
 /* 
 
     <MDBox key="companyselect" display="flex" alignItems="center" sx={{ minWidth: "100%", height: 100 }}>
@@ -359,7 +379,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       </Select>
     </FormControl>
   </MDBox> */
-  );
+
 
   return (
     <SidenavRoot

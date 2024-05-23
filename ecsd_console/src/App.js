@@ -275,7 +275,10 @@ export default function App({ ability }) {
             {getRoutes(routes)}
             {getCrudRoutes(crudRoutes)}
             {getPageRoutes(pageRoutes)}
-            <Route path="*" element={<Navigate to="/dashboards/landing" />} />
+            {/* default route */}
+            {/* <Route path="*" element={<Navigate to="/dashboards/landing" />} /> */}
+            <Route path="*" element={<Navigate to="/company-management" />} />
+          
           </Routes>
         </ThemeProvider>
       </StyledEngineProvider>

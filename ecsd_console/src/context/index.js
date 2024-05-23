@@ -72,7 +72,7 @@ const AuthContextProvider = ({ children }) => {
       const res = await AuthService.getProfile();
       return res.data.id;
     } catch (err) {
-      console.error(err);
+      //console.error(err);
       return null;
     }
   };

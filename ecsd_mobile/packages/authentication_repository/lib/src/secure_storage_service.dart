@@ -12,22 +12,14 @@ class SecureStorageService {
     return storedUser == null ? null : jsonDecode(storedUser);
   }
 
-  static Future<Map<String, dynamic>> getUserAccessToken() async {
+  static Future<String> getUserAccessToken() async {
     final token = await SecureStorageService.storage.read(
       key: SecureStorageService.tokenKey,
     );
     if (token == null) {
-      return {};
+      return "";
     }
-
-    Map<String, dynamic> returnValue;
-    try {
-      returnValue = jsonDecode(token.toString());
-    } catch (e) {
-      returnValue = {};
-    }
-
-    return returnValue;
+    return token;
   }
 
   static void saveUser(Map<String, String> user) async {
@@ -37,10 +29,10 @@ class SecureStorageService {
     );
   }
 
-  static void saveUserAccessToken(Map<String, String> token) async {
+  static void saveUserAccessToken(String token) async {
     await SecureStorageService.storage.write(
       key: SecureStorageService.tokenKey,
-      value: jsonEncode(token),
+      value: token,
     );
   }
 

@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:ecsd_mobile/services/inspection_service.dart';
+import 'package:ecsd_mobile/widgets/appstate.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:observable/observable.dart';
 import '../model/inspection_model.dart';
 import 'inspection.dart';
 
 class InspectionList extends StatefulWidget {
   //final double height = window.physicalSize.height;
   final String projectId;
-
   const InspectionList({Key? key, this.projectId = ""}) : super(key: key);
 
   @override
@@ -15,6 +19,8 @@ class InspectionList extends StatefulWidget {
 
 // homepage state
 class _InspectionListState extends State<InspectionList> {
+  ObservableMap? _state;
+  late StreamSubscription stateChanges;
   late Future<List<InspectionModel>> inspectionsFuture;
 
   // function to fetch data from api and return future list of posts
@@ -26,8 +32,19 @@ class _InspectionListState extends State<InspectionList> {
 
   @override
   void initState() {
+    _state = context.findAncestorWidgetOfExactType<AppState>()?.state;
+    if (_state != null) {
+      _state?['projectId'] = widget.projectId;
+      stateChanges = _state!.changes.listen((event) => setState(() {}));
+    }
     super.initState();
     inspectionsFuture = getInspections(widget.projectId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    stateChanges.cancel();
   }
 
   Widget createInspectionList(BuildContext context, AsyncSnapshot snapshot) {
@@ -39,7 +56,7 @@ class _InspectionListState extends State<InspectionList> {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => Inspection(
-                      inspectionId: inspection!.id,
+                      inspectionId: inspection.id,
                     )));
           },
           child: Card(
@@ -50,11 +67,15 @@ class _InspectionListState extends State<InspectionList> {
                   Padding(
                       padding: const EdgeInsets.only(top: 16.0),
                       child: ListTile(
-                        title: Text(inspection!.scheduled_date!.toString(),
+                        title: Text(
+                            (inspection.scheduled_date != null)
+                                ? DateFormat.yMMMd()
+                                    .format(inspection.scheduled_date)
+                                : "Unscheduled",
                             style: TextStyle(
                                 color: Theme.of(context).primaryColorDark,
                                 fontSize: 22)),
-                        subtitle: Text("Status: Active",
+                        subtitle: Text("Status:" + inspection.status,
                             style: TextStyle(
                                 color: Theme.of(context).primaryColorDark,
                                 fontSize: 10)),

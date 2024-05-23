@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class HelperService {
-  static const String host = "192.168.0.133";
-  static const int port = 8080;
-  static const String scheme = "http";
-  //static const String apiPath = "/api/";
-  static const String apiPath = "/";
+  static const String host = "app.ecscompliance.com";
+  static const int port = 443;
+  static const String scheme = "https";
+  static const String apiPath = "/api/";
+  //static const String apiPath = "/";
 
   static Uri buildUri(String path) {
     var uri = Uri(
@@ -22,6 +22,16 @@ class HelperService {
     Map<String, String> headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
+    };
+    if (accessToken != null) {
+      headers['Authorization'] = 'Bearer $accessToken';
+    }
+    return headers;
+  }
+
+  static Map<String, String> buildHeadersForUpload({String? accessToken}) {
+    Map<String, String> headers = {
+      "Content-Type": "multipart/form-data",
     };
     if (accessToken != null) {
       headers['Authorization'] = 'Bearer $accessToken';

@@ -11,33 +11,37 @@ class MessageService {
   static Future<MessageModel> loadMessage(messageId) async {
     final storedUser = await SecureStorageService.getUser();
     var storedToken = await SecureStorageService.getUserAccessToken();
-    var accessToken = storedToken['access_token'];
+    var accessToken = storedToken;
 
-    final response = await http.get(
-      ChatHelperService.buildUri(messagePath + messageId),
-      headers: ChatHelperService.buildHeaders(
-        accessToken: accessToken,
-      ),
-    );
+    try {
+      final response = await http.get(
+        ChatHelperService.buildUri(messagePath + messageId),
+        headers: ChatHelperService.buildHeaders(
+          accessToken: accessToken,
+        ),
+      );
 
-    final statusType = (response.statusCode / 100).floor() * 100;
-    switch (statusType) {
-      case 200:
-        return MessageModel.fromJson(jsonDecode(response.body));
-      case 400:
-        final json = jsonDecode(response.body);
-        throw Exception(json);
-      case 300:
-      case 500:
-      default:
-        throw Exception('Error contacting the server!');
+      final statusType = (response.statusCode / 100).floor() * 100;
+      switch (statusType) {
+        case 200:
+          return MessageModel.fromJson(jsonDecode(response.body));
+        case 400:
+          final json = jsonDecode(response.body);
+          throw Exception(json);
+        case 300:
+        case 500:
+        default:
+          throw Exception('Error contacting the server!');
+      }
+    } catch (e) {
+      throw Exception('Error contacting the server!');
     }
   }
 
   static void saveMessage(MessageModel message) async {
     final storedUser = await SecureStorageService.getUser();
     var storedToken = await SecureStorageService.getUserAccessToken();
-    var accessToken = storedToken['access_token'];
+    var accessToken = storedToken;
 
     final response = await http.post(
       ChatHelperService.buildUri(messagePath + message.id),
@@ -65,30 +69,34 @@ class MessageService {
   static Future<List<MessageModel>> loadMessages() async {
     final storedUser = await SecureStorageService.getUser();
     var storedToken = await SecureStorageService.getUserAccessToken();
-    var accessToken = storedToken['access_token'];
+    var accessToken = storedToken;
 
-    final response = await http.get(ChatHelperService.buildUri(messagePath),
-        headers: ChatHelperService.buildHeaders(
-          accessToken: accessToken,
-        ));
+    try {
+      final response = await http.get(ChatHelperService.buildUri(messagePath),
+          headers: ChatHelperService.buildHeaders(
+            accessToken: accessToken,
+          ));
 
-    final statusType = (response.statusCode / 100).floor() * 100;
-    switch (statusType) {
-      case 200:
-        final List<MessageModel> messages = [];
-        final json = jsonDecode(response.body);
-        for (var message in json['data']) {
-          messages.add(MessageModel.fromJson(message));
-        }
+      final statusType = (response.statusCode / 100).floor() * 100;
+      switch (statusType) {
+        case 200:
+          final List<MessageModel> messages = [];
+          final json = jsonDecode(response.body);
+          for (var message in json['data']) {
+            messages.add(MessageModel.fromJson(message));
+          }
 
-        return messages;
-      case 400:
-        final json = jsonDecode(response.body);
-        throw Exception(json);
-      case 300:
-      case 500:
-      default:
-        throw Exception('Error contacting the server!');
+          return messages;
+        case 400:
+          final json = jsonDecode(response.body);
+          throw Exception(json);
+        case 300:
+        case 500:
+        default:
+          throw Exception('Error contacting the server!');
+      }
+    } catch (e) {
+      throw Exception('Error contacting the server!');
     }
   }
 }

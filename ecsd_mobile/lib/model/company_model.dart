@@ -48,4 +48,16 @@ class CompanyModel {
     //TODO: do the json stuff here cause its final
     return company;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "status": status,
+      "address": address.toJson(),
+      "owner": owner.toJson(),
+      "primary_contact": primary_contact.toJson(),
+      "people": people.map((person) => person.toJson()).toList(),
+    };
+  }
 }

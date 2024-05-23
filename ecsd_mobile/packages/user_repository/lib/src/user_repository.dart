@@ -13,7 +13,7 @@ class UserRepository {
   Future<User?> getUser() async {
     if (_user != null) return _user;
     var storedToken = await SecureStorageService.getUserAccessToken();
-    var access_token = storedToken['access_token'];
+    var access_token = storedToken;
 
     final meResponse = await http.get(HelperService.buildUri(profilePath),
         headers: HelperService.buildHeaders(accessToken: access_token));

@@ -31,8 +31,6 @@ const corsOptions = {
   credentials: true,
 };
 
-
-
 app.use(cors(corsOptions));
 //app.use(bodyParser.json({ type: "application/vnd.api+json", strict: false }));
 app.use(express.json());

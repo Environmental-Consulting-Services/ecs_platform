@@ -3,15 +3,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import "./passport.js";
 import {
-  itemRoutes,
   userRoutes,
   meRoutes,
   authRoutes,
   roleRoutes,
   uploadRoutes,
-  categoryRoutes,
   companyRoutes,
-  tagRoutes,
   permissionRoutes,
   imageRoutes,
   projectRoutes,
@@ -19,14 +16,16 @@ import {
   inspectionFormRoutes,
   managementPlanRoutes,
   actionItemRoutes,
-  inspectionTemplateRoutes
-  
-} from "./routes/index.js";
+  inspectionTemplateRoutes,
+  peopleRoutes
+    
+} from "./apis/index.js";
 import path from "path";
 
-import passportJWT from "passport-jwt";
 import cron from "node-cron";
 import ReseedAction from "./mongoose/ReseedAction.js";
+
+import passportJWT from "passport-jwt";
 
 const JWTStrategy = passportJWT.Strategy;
 
@@ -41,7 +40,7 @@ const corsOptions = {
     } else if(whitelist.indexOf(origin) !== -1 ){
       callback(null, true);
     } else if (process.env.NODE_ENV==="development"){
-      console.log("No CORS in DEV MODE ", origin);
+      //console.log("No CORS in DEV MODE ", origin);
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -50,8 +49,7 @@ const corsOptions = {
   credentials: true,
 };
 
-
-
+app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 //app.use(bodyParser.json({ type: "application/vnd.api+json", strict: false }));
 app.use(express.json());
@@ -69,28 +67,26 @@ app.use("/me", meRoutes);
 app.use("/uploads", uploadRoutes);
 app.use("/users", userRoutes);
 app.use("/roles", roleRoutes);
-app.use("/categories", categoryRoutes);
 app.use("/companies", companyRoutes);
-app.use("/tags", tagRoutes);
-app.use("/items", itemRoutes);
 app.use("/permissions", permissionRoutes);
 app.use("/public/images", imageRoutes);
 app.use("/projects", projectRoutes);
-
-
 app.use("/inspections",inspectionRoutes);
 app.use("/inspectionforms",inspectionFormRoutes);
 app.use("/managementplans",managementPlanRoutes);
 app.use("/actionitems",actionItemRoutes);
 app.use("/inspectiontemplates",inspectionTemplateRoutes);
+app.use("/people", peopleRoutes);
 
-
-if (process.env.SCHEDULE_HOUR) {
-  cron.schedule(`0 */${process.env.SCHEDULE_HOUR} * * *'`, () => {
-    ReseedAction();
-  });
+function errorHandler(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
 }
 
-//app.listen(PORT, () => console.log(`Server listening to port ${PORT}`));
+app.use(errorHandler);
+
+process.on('uncaughtException', (err) => {
+  console.log('FATAL ERROR: ', err);
+});
 
 export default app;

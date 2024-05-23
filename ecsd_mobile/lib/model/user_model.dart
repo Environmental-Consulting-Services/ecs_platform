@@ -10,7 +10,7 @@ class User {
   String email;
   String firstName;
   String lastName;
-  String cellphone;
+  String phone;
   String accessToken;
   String refreshToken;
 
@@ -19,7 +19,7 @@ class User {
     required this.email,
     required this.firstName,
     required this.lastName,
-    required this.cellphone,
+    required this.phone,
     required this.accessToken,
     required this.refreshToken,
   }) {
@@ -34,7 +34,7 @@ class User {
       email: "",
       firstName: "",
       lastName: "",
-      cellphone: "",
+      phone: "",
       accessToken: "",
       refreshToken: "",
     );
@@ -72,7 +72,7 @@ class User {
       {
         'id': id,
         'email': email,
-        'cellphone': cellphone,
+        'phone': phone,
         'firstName': firstName,
         'lastName': lastName,
         "accessToken": accessToken,
@@ -87,7 +87,7 @@ class User {
       email: (json['email'] != null) ? json['email'] : "",
       firstName: (json['firstName'] != null) ? json['firstName'] : "",
       lastName: (json['lastName'] != null) ? json['lastName'] : "",
-      cellphone: (json['cellphone'] != null) ? json['cellphone'] : "",
+      phone: (json['phone'] != null) ? json['phone'] : "",
       accessToken: (json['accessToken'] != null) ? json['accessToken'] : "",
       refreshToken: (json['refreshToken'] != null) ? json['refreshToken'] : "",
     );
@@ -100,7 +100,7 @@ class User {
       email: (json['email'] != null) ? json['email'] : "",
       firstName: (json['first_name'] != null) ? json['first_name'] : "",
       lastName: (json['last_name'] != null) ? json['last_name'] : "",
-      cellphone: (json['phone'] != null) ? json['phone'] : "",
+      phone: (json['phone'] != null) ? json['phone'] : "",
       accessToken: (json['access_token'] != null) ? json['access_token'] : "",
       refreshToken:
           (json['refresh_token'] != null) ? json['refresh_token'] : "",

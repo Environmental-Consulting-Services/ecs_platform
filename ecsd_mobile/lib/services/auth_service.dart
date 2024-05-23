@@ -43,7 +43,7 @@ class AuthService {
   static Future<User> register({
     required String email,
     required String password,
-    required String cellphone,
+    required String phone,
     required String firstName,
     required String lastName,
   }) async {
@@ -61,7 +61,7 @@ class AuthService {
               "last_name": lastName,
               "email": email,
               "password": password,
-              "phone": cellphone,
+              "phone": phone,
               "role": "",
             }
           }

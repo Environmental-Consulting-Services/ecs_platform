@@ -35,7 +35,7 @@ class _InspectionState extends State<Inspection> {
 
   int _selectedPage = 0;
   List<Widget> pageList = [];
-
+/* 
   getInspectionFormWidget() {
     return inspectionFormWidget;
   }
@@ -51,15 +51,17 @@ class _InspectionState extends State<Inspection> {
   setSiteMapWidget(SiteMapPainter siteMapWidget) {
     this.siteMapWidget = siteMapWidget;
   }
-
+ */
   @override
   void initState() {
-    this.setInspectionFormWidget(
+    /*    this.setInspectionFormWidget(
         InspectionFormWidget(inspectionId: widget.inspectionId));
     this.setSiteMapWidget(SiteMapPainter());
+ */
+    pageList.add(InspectionFormWidget(inspectionId: widget.inspectionId));
+    pageList.add(SiteMapPainter(inspectionId: widget.inspectionId));
+    pageList.add(ActionList(inspectionId: widget.inspectionId));
 
-    pageList.add(this.getInspectionFormWidget());
-    pageList.add(this.getSiteMapWidget());
     super.initState();
   }
 
@@ -79,8 +81,12 @@ class _InspectionState extends State<Inspection> {
             label: 'Inspection Form',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.build_rounded),
+            icon: Icon(Icons.maps_home_work_rounded),
             label: 'Site Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.build_rounded),
+            label: 'Action Items',
           ),
         ],
       ),

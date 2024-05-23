@@ -27,11 +27,18 @@ import HTMLReactParser from "html-react-parser";
 import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
 
+import { generate } from '@pdfme/generator';
+import { BLANK_PDF } from '@pdfme/common';
+
+
+
 function ProjectManagement() {
   let { state } = useLocation();
   const ability = useAbility(AbilityContext);
   const [data, setData] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [userNames, setUserNames] = useState([]); //array of user entities [id, name
+
   const [notification, setNotification] = useState({
     value: false,
     text: "",
@@ -42,6 +49,20 @@ function ProjectManagement() {
   useEffect(() => {
     (async () => {
       const response = await CrudService.getProjects();
+
+
+      let userIDs = [];
+      response.data.forEach((project) => {
+        userIDs.push(project.attributes.owner);
+      }
+      );  
+
+      let Users = await CrudService.getUsersByID(userIDs);
+
+      console.log(Users);
+
+
+      setUserNames(Users);
       setData(response.data);
     })();
   }, []);
@@ -135,6 +156,49 @@ function ProjectManagement() {
   }
  */
 
+  function doPDF() {
+    generate({ template, inputs }).then((pdf) => {
+      console.log(pdf);
+
+
+      // Browser
+      const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
+      window.open(URL.createObjectURL(blob));
+    });
+  }
+
+
+
+  const inputs = [{ a: 'a2', b: 'b1', c: 'c1' }];
+
+  const template = {
+    basePdf: BLANK_PDF,
+    schemas: [
+      {
+        a: {
+          type: 'text',
+          position: { x: 40, y: 50 },
+          width: 10,
+          height: 10,
+        },
+        b: {
+          type: 'text',
+          position: { x: 10, y: 10 },
+          width: 10,
+          height: 10,
+        },
+        c: {
+          type: 'text',
+          position: { x: 20, y: 20 },
+          width: 10,
+          height: 10,
+        },
+      },
+    ],
+  };
+
+
+
 
 
   const dataTableData = {
@@ -144,7 +208,28 @@ function ProjectManagement() {
         Header: "owner",
         accessor: "owner",
         width: "25%",
-        Cell: ({ cell: { value } }) => HTMLReactParser(value),
+        Cell: (info) => {
+          
+          if(userNames && userNames.data && userNames.data.length > 0){
+           let user = userNames.data.filter((user) => {
+            if (user.id === info.cell.row.original.owner) {
+              return true;
+            }
+          });
+            
+          return (
+            <MDTypography variant="body" >
+              {user[0].attributes.first_name+ " " + user[0].attributes.last_name}
+            </MDTypography>
+          );
+        } else {
+          return (
+            <MDTypography variant="body" >
+              {info.cell.row.original.owner}
+            </MDTypography>
+          );
+        }
+      },
       },
       { Header: "created at", accessor: "created_at", width: "25%" },
       {

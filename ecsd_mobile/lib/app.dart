@@ -1,5 +1,16 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:ecsd_mobile/screens/about.dart';
+import 'package:ecsd_mobile/screens/agreement.dart';
+import 'package:ecsd_mobile/screens/chat.dart';
 import 'package:ecsd_mobile/screens/companies.dart';
+import 'package:ecsd_mobile/screens/notifications-settings.dart';
+import 'package:ecsd_mobile/screens/notifications.dart';
+import 'package:ecsd_mobile/screens/privacy.dart';
+import 'package:ecsd_mobile/screens/profile.dart';
+import 'package:ecsd_mobile/screens/project.dart';
+import 'package:ecsd_mobile/screens/projects-list.dart';
+import 'package:ecsd_mobile/screens/register.dart';
+import 'package:ecsd_mobile/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecsd_mobile/authentication/authentication.dart';
@@ -62,7 +73,11 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'ECS D Mobile',
+      theme: ThemeData(fontFamily: 'OpenSans'),
+      debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
+      initialRoute: "/home",
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
@@ -83,6 +98,23 @@ class _AppViewState extends State<AppView> {
           },
           child: child,
         );
+      },
+      routes: <String, WidgetBuilder>{
+        //"/onboarding": (BuildContext context) => new Onboarding(),
+        //"/login": (BuildContext context) => new LoginScreen(),
+        "/home": (BuildContext context) => new Companies(),
+        "/profile": (BuildContext context) => new Profile(),
+        "/settings": (BuildContext context) => new Settings(),
+        "/chat": (BuildContext context) => new Chat(),
+        "/account": (BuildContext context) => new Register(),
+        "/notifications": (BuildContext context) => new Notifications(),
+        "/projects": (BuildContext context) => new ProjectList(),
+        "/about": (BuildContext context) => new About(),
+        "/agreement": (BuildContext context) => new UserAgreement(),
+        "/notificationsettings": (BuildContext context) =>
+            new NotificationsSettings(),
+        "/privacy": (BuildContext context) => new Privacy(),
+        "/project": (BuildContext context) => new ProjectPage(),
       },
       onGenerateRoute: (_) => SplashPage.route(),
     );

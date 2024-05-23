@@ -29,10 +29,10 @@ import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarCha
 import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
 
 // Images
-import booking1 from "assets/images/products/product-1-min.jpg";
-import booking2 from "assets/images/products/product-2-min.jpg";
-import booking3 from "assets/images/products/product-3-min.jpg";
-
+/* import booking1 from "";
+import booking2 from "";
+import booking3 from "";
+ */
 function Analytics() {
   const { sales, tasks } = reportsLineChartData;
 
@@ -186,7 +186,7 @@ function Analytics() {
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mt={3}>
                 <BookingCard
-                  image={booking1}
+                  image=""
                   title="Cozy 5 Stars Apartment"
                   description='The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the main night life in Barcelona.'
                   price="$899/night"
@@ -198,7 +198,7 @@ function Analytics() {
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mt={3}>
                 <BookingCard
-                  image={booking2}
+                  image=""
                   title="Office Studio"
                   description='The place is close to Metro Station and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the night life in London, UK.'
                   price="$1.119/night"
@@ -210,7 +210,7 @@ function Analytics() {
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mt={3}>
                 <BookingCard
-                  image={booking3}
+                  image=""
                   title="Beautiful Castle"
                   description='The place is close to Metro Station and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the main night life in Milan.'
                   price="$459/night"

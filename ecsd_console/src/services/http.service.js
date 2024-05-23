@@ -24,9 +24,20 @@ export class HttpService {
 
   delete = async (url) => await this.request(this.getOptionsConfig("delete", url));
 
+  postFormData = async (url, data) => await this.request(this.getFormOptionsConfig("post", url, data));
+
+  getblob = async (url) => await this.request(this.getOptionsConfig("get", url, {
+    responseType: 'blob'
+  }));
+
   getOptionsConfig = (method, url, data) => {
     return { method, url, data, headers: { "Content-Type": "application/json" } };
   };
+
+  getFormOptionsConfig = (method, url, data) => {
+    return { method, url, data, headers: {
+      'Content-Type': 'multipart/form-data'
+    }} };  
 
   request(options) {
     return new Promise((resolve, reject) => {

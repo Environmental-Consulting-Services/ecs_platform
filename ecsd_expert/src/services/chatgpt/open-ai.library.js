@@ -15,13 +15,13 @@ let pollingInterval;
 
 // Set up a Thread
 async function createThread() {
-    console.log('Creating a new thread...');
+    //console.log('Creating a new thread...');
     const thread = await openai.beta.threads.create();
     return thread;
 }
 
 async function addMessage(threadId, message) {
-    console.log('Adding a new message to thread: ' + threadId);
+    //console.log('Adding a new message to thread: ' + threadId);
     const response = await openai.beta.threads.messages.create(
         threadId,
         {
@@ -33,7 +33,7 @@ async function addMessage(threadId, message) {
 }
 
 async function runAssistant(threadId) {
-    console.log('Running assistant for thread: ' + threadId)
+   // console.log('Running assistant for thread: ' + threadId)
     const response = await openai.beta.threads.runs.create(
         threadId,
         { 
@@ -42,7 +42,7 @@ async function runAssistant(threadId) {
         }
       );
 
-    console.log(response)
+    //console.log(response)
 
     return response;
 }
@@ -54,8 +54,8 @@ async function checkingStatus(res, threadId, runId) {
     );
 
     const status = runObject.status;
-    console.log(runObject)
-    console.log('Current status: ' + status);
+    //console.log(runObject)
+    //console.log('Current status: ' + status);
     
     if(status == 'completed') {
         clearInterval(pollingInterval);

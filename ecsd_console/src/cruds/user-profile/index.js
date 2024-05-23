@@ -68,7 +68,7 @@ function UserProfile() {
             <MDBox mb={3}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <Header user={user} isDemo={isDemo} />
+                <Header user={user} isDemo={isDemo} />
                 </Grid>
                 <Grid item xs={12}>
                   <BasicInfo user={user} isDemo={isDemo} />

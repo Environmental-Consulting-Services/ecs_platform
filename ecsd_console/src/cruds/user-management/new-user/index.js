@@ -1,4 +1,4 @@
- 
+
 
 import { useEffect, useState } from "react";
 
@@ -101,7 +101,7 @@ const NewUser = () => {
       return;
     }
 
-    if (user.last_name.trim().length === 0 ) {
+    if (user.last_name.trim().length === 0) {
       setError({
         role: false,
         confirm: false,
@@ -229,9 +229,9 @@ const NewUser = () => {
         return err;
       }
     }
-      navigate("/user-management", {
-        state: { value: true, text: "The user was sucesfully created" },
-      });
+    navigate("/user-management", {
+      state: { value: true, text: "The user was sucesfully created" },
+    });
   };
 
   return (
@@ -325,48 +325,48 @@ const NewUser = () => {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                      <FormField
-                        label="Phone"
-                        placeholder=""
-                        name="phone"
-                        value={user.phone}
-                        onChange={changeHandler}
-                        error={error.phone}
-                        inputProps={{
-                          autoComplete: "phone",
-                          form: {
-                            autoComplete: "off",
-                          },
-                        }}
-                      />
-                      {error.phone && (
-                        <MDTypography variant="caption" color="error" fontWeight="light">
-                          {error.textError}
-                        </MDTypography>
-                      )}
-                    </Grid>
+                    <FormField
+                      label="Phone"
+                      placeholder=""
+                      name="phone"
+                      value={user.phone}
+                      onChange={changeHandler}
+                      error={error.phone}
+                      inputProps={{
+                        autoComplete: "phone",
+                        form: {
+                          autoComplete: "off",
+                        },
+                      }}
+                    />
+                    {error.phone && (
+                      <MDTypography variant="caption" color="error" fontWeight="light">
+                        {error.textError}
+                      </MDTypography>
+                    )}
+                  </Grid>
 
                   <Grid item xs={12} sm={6}>
-                      <FormField
-                        label="Address"
-                        placeholder=""
-                        name="address"
-                        value={user.address}
-                        onChange={changeHandler}
-                        error={error.address}
-                        inputProps={{
-                          autoComplete: "address",
-                          form: {
-                            autoComplete: "off",
-                          },
-                        }}
-                      />
-                      {error.address && (
-                        <MDTypography variant="caption" color="error" fontWeight="light">
-                          {error.textError}
-                        </MDTypography>
-                      )}
-                    </Grid>
+                    <FormField
+                      label="Address"
+                      placeholder=""
+                      name="address"
+                      value={user.address}
+                      onChange={changeHandler}
+                      error={error.address}
+                      inputProps={{
+                        autoComplete: "address",
+                        form: {
+                          autoComplete: "off",
+                        },
+                      }}
+                    />
+                    {error.address && (
+                      <MDTypography variant="caption" color="error" fontWeight="light">
+                        {error.textError}
+                      </MDTypography>
+                    )}
+                  </Grid>
                   <Grid container spacing={3} mt={4}>
                     <Grid item xs={12} sm={6}>
                       <MDInput

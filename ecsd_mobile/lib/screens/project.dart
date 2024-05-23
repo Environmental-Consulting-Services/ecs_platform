@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:ecsd_mobile/model/project_model.dart';
 import 'package:ecsd_mobile/screens/actions-list.dart';
 import 'package:ecsd_mobile/services/project_service.dart';
+import 'package:ecsd_mobile/widgets/appstate.dart';
 import 'package:flutter/material.dart';
 import 'package:ecsd_mobile/constants/Theme.dart';
 import 'package:ecsd_mobile/widgets/drawer.dart';
 import 'package:ecsd_mobile/widgets/navbars/navbar.dart';
+import 'package:observable/observable.dart';
 
 import 'inspections-list.dart';
 import 'project-body.dart';
@@ -22,7 +26,9 @@ class ProjectPage extends StatefulWidget {
 
 // homepage state
 class _ProjectPageState extends State<ProjectPage> {
-  late Future<ProjectModel> projectFuture;
+  ObservableMap? _state;
+  late StreamSubscription stateChanges;
+
   int _selectedPage = 0;
   List<Widget> pageList = [];
 
@@ -34,6 +40,12 @@ class _ProjectPageState extends State<ProjectPage> {
 
   @override
   void initState() {
+    _state = context.findAncestorWidgetOfExactType<AppState>()?.state;
+    if (_state != null) {
+      _state?['projectId'] = widget.projectId;
+      stateChanges = _state!.changes.listen((event) => setState(() {}));
+    }
+
     //projectFuture = getProject(widget.projectId);
     pageList.add(ProjectBody(projectId: widget.projectId));
     pageList.add(InspectionList(projectId: widget.projectId));

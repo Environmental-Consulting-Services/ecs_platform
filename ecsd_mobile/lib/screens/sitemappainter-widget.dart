@@ -1,17 +1,43 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:ui' as ui;
+import 'package:ecsd_mobile/model/image_model.dart';
+import 'package:ecsd_mobile/services/image_service.dart';
+import 'package:ecsd_mobile/services/project_service.dart';
+import 'package:ecsd_mobile/widgets/appstate.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_painter/flutter_painter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:observable/observable.dart';
 
 class SiteMapPainter extends StatefulWidget {
-  const SiteMapPainter({Key? key}) : super(key: key);
+  final String inspectionId;
+  const SiteMapPainter({Key? key, this.inspectionId = ""}) : super(key: key);
 
   @override
   _SiteMapPainterState createState() => _SiteMapPainterState();
 }
 
 class _SiteMapPainterState extends State<SiteMapPainter> {
+  ObservableMap? _state;
+  late StreamSubscription stateChanges;
+  late String projectId;
+  late Future<ImageModel> siteMapImage;
+  late PainterController painterController;
+
+  Future<ImageModel> getSiteMapImage(String projectId) async {
+    ImageModel image = ImageModel.create();
+
+    await ProjectService.getSiteMapIdForProject(projectId).then((value) async {
+      if (value != "")
+        ImageService.loadBase64Image(value).then((value) async {
+          image = value;
+        });
+    });
+    return image;
+  }
+
   static const Color red = Color(0xFFFF0000);
   FocusNode textFocusNode = FocusNode();
   late PainterController controller;
@@ -22,13 +48,22 @@ class _SiteMapPainterState extends State<SiteMapPainter> {
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
 
-  static const List<String> imageLinks = [
-    "https://i.imgur.com/VeeMfBS.png",
-  ];
+  static const List<String> imageLinks = [];
 
   @override
   void initState() {
     super.initState();
+
+    _state = context.findAncestorWidgetOfExactType<AppState>()?.state;
+    if (_state != null) {
+      projectId = _state?['projectId'];
+      stateChanges = _state!.changes.listen((event) => setState(() {}));
+    } else {
+      projectId = "";
+    }
+
+    siteMapImage = getSiteMapImage(projectId);
+
     controller = PainterController(
         settings: PainterSettings(
             text: TextSettings(
@@ -52,14 +87,15 @@ class _SiteMapPainterState extends State<SiteMapPainter> {
     textFocusNode.addListener(onFocus);
     // Initialize background
     initBackground();
+    painterController = controller;
   }
 
   /// Fetches image from an [ImageProvider] (in this example, [NetworkImage])
   /// to use it as a background
   void initBackground() async {
-    // Extension getter (.image) to get [ui.Image] from [ImageProvider]
-    final image =
-        await const NetworkImage('https://picsum.photos/1920/1080/').image;
+    final image = await new MemoryImage(await siteMapImage
+            .then((value) => Base64Decoder().convert(value.image_data)))
+        .image;
 
     setState(() {
       backgroundImage = image;
@@ -538,15 +574,6 @@ class _SiteMapPainterState extends State<SiteMapPainter> {
         .renderImage(backgroundImageSize)
         .then<Uint8List?>((ui.Image image) => image.pngBytes);
 
-    // From here, you can write the PNG image data a file or do whatever you want with it
-    // For example:
-    // ```dart
-    // final file = File('${(await getTemporaryDirectory()).path}/img.png');
-    // await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-    // ```
-    // I am going to display it using Image.memory
-
-    // Show a dialog with the image
     showDialog(
         context: context,
         builder: (context) => RenderedImageDialog(imageFuture: imageFuture));
@@ -572,10 +599,48 @@ class RenderedImageDialog extends StatelessWidget {
   const RenderedImageDialog({Key? key, required this.imageFuture})
       : super(key: key);
 
+  Future<bool> saveImage(BuildContext context, Uint8List? image) async {
+    bool savedSucess = await ImageService.uploadImage(image)
+        .then((value) => saveSiteMapToProject(context, value));
+
+    return Future<bool>.value(savedSucess);
+  }
+
+  Future<bool> saveSiteMapToProject(
+      BuildContext context, String siteMapId) async {
+    ObservableMap? _state =
+        context.findAncestorWidgetOfExactType<AppState>()?.state;
+    String projectId;
+
+    if (_state != null) {
+      projectId = _state?['projectId'];
+    } else {
+      projectId = "";
+    }
+
+    ProjectService.setSiteMapIdForProject(projectId, siteMapId);
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Rendered Image"),
+      title: const Text("Edited Site Map"),
+      actions: [
+        TextButton(
+          child: const Text("Close"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        TextButton(
+          child: const Text("Save"),
+          onPressed: () => {
+            imageFuture
+                .then((value) => saveImage(context, value))
+                .then((value) => {Navigator.pop(context)})
+          },
+        ),
+      ],
       content: FutureBuilder<Uint8List?>(
         future: imageFuture,
         builder: (context, snapshot) {
@@ -588,8 +653,7 @@ class RenderedImageDialog extends StatelessWidget {
           if (!snapshot.hasData || snapshot.data == null) {
             return const SizedBox();
           }
-          return InteractiveViewer(
-              maxScale: 10, child: Image.memory(snapshot.data!));
+          return InteractiveViewer(child: Image.memory(snapshot.data!));
         },
       ),
     );

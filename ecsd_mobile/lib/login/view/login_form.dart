@@ -43,6 +43,7 @@ class _UsernameInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('loginForm_usernameInput_textField'),
+          keyboardType: TextInputType.emailAddress,
           onChanged: (username) =>
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
@@ -64,6 +65,7 @@ class _PasswordInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('loginForm_passwordInput_textField'),
+          keyboardType: TextInputType.visiblePassword,
           onChanged: (password) =>
               context.read<LoginBloc>().add(LoginPasswordChanged(password)),
           obscureText: true,
@@ -96,5 +98,30 @@ class _LoginButton extends StatelessWidget {
               );
       },
     );
+  }
+}
+
+class _RegisterButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+      return OutlinedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Container(),
+            ),
+          );
+        },
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text(
+            'Sign Up',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    });
   }
 }

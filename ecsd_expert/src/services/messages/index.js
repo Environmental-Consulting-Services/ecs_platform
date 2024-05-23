@@ -2,7 +2,8 @@ import dotenv from "dotenv";
 var ObjectId = require('mongoose').Types.ObjectId; 
 
 import { messageModel } from "../../schemas/message.schema";
-import { createExpertMessageRoute } from "../chatgpt" ;
+import { createExpertMessageRoute, getOrCreateThread } from "../chatgpt" ;
+import { UserModel } from "../../schemas/user.schema";
 
 
 export const getMessagesRoute = async (req, res) => {
@@ -38,8 +39,6 @@ export const getMessagesRoute = async (req, res) => {
   if (req.query.sort) {
     sortValue = req.query.sort;
   }
-
-
 
   const allMessages = await messageModel
     .find(filters)

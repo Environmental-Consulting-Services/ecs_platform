@@ -5,6 +5,10 @@ import EditCompany from "cruds/company-management/edit-company";
 import NewCompany from "cruds/company-management/new-company";
 import EditProject from "cruds/project-management/edit-project";
 import NewProject from "cruds/project-management/new-project";
+import EditProjectSiteMap from "cruds/project-management/edit-project-site-map";
+
+import EditInspectionTemplate from "cruds/inspectiontemplate-management/edit-inspectiontemplate";
+import NewInspectionTemplate from "cruds/inspectiontemplate-management/new-inspectiontemplate";
 /* import EditItem from "cruds/item-management/edit-item";
 import NewItem from "cruds/item-management/new-item"; */
 import EditRole from "cruds/role-managament/edit-role";
@@ -13,6 +17,11 @@ import NewRole from "cruds/role-managament/new-role";
 import NewTag from "cruds/tag-management/new-tag"; */
 import EditUser from "cruds/user-management/edit-user";
 import NewUser from "cruds/user-management/new-user";
+import EditInspection from "cruds/inspection-management/edit-inspection";
+import NewInspection from "cruds/inspection-management/new-inspection";
+import EditActionItem from "cruds/actionitem-management/edit-actionitem";
+import NewActionItem from "cruds/actionitem-management/new-actionitem";
+
 
 /** 
   All of the routes for the Material Dashboard 2 PRO React are added here,
@@ -75,6 +84,49 @@ const crudRoutes = [
     component: <EditProject />,
     type: "projects",
   },
+  {
+    key: "edit-project-site-map",
+    route: "/project-management/edit-project-site-map/:id",
+    component: <EditProjectSiteMap />,
+    type: "projects",
+  },
+  {
+    key: "new-inspection",
+    route: "/inspection-management/new-inspection",
+    component: <NewInspection />,
+    type: "inspections",
+  },
+  {
+    key: "edit-inspection",
+    route: "/inspection-management/edit-inspection/:id",
+    component: <EditInspection />,
+    type: "inspections",
+  },
+  {
+    key: "new-actionitem",
+    route: "actionitem-management/new-actionitem",
+    component: <NewActionItem />,
+    type: "inspections",
+  },
+  {
+    key: "edit-actionitem",
+    route: "/actionitem-management/edit-actionitem/:id",
+    component: <EditActionItem />,
+    type: "inspections",
+  },
+  {
+    key: "new-inspectiontemplate",
+    route: "/inspectiontemplate-management/new-inspectiontemplate",
+    component: <NewInspectionTemplate />,
+    type: "inspectiontemplates",
+  },
+  {
+    key: "edit-inspectiontemplate",
+    route: "/inspectiontemplate-management/edit-inspectiontemplate/:id",
+    component: <EditInspectionTemplate />,
+    type: "inspectiontemplates",
+  },
+
   /* {
     key: "new-tag",
     route: "/tag-management/new-tag",

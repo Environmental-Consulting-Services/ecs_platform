@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class ChatHelperService {
-  static const String chat_host = "192.168.0.133";
-  static const int chat_port = 8081;
-  static const String chat_scheme = "http";
-  //static const String apiPath = "/chat/";
-  static const String chatPath = "/";
+  static const String chat_host = "app.ecscompliance.com";
+  static const int chat_port = 443;
+  static const String chat_scheme = "https";
+  static const String chatPath = "/expert/";
+  //static const String chatPath = "/";
 
   static Uri buildUri(String path) {
     var uri = Uri(

@@ -27,7 +27,7 @@ import HTMLReactParser from "html-react-parser";
 import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
 
-function ProjectManagement() {
+function InspectionTemplateManagement() {
   let { state } = useLocation();
   const ability = useAbility(AbilityContext);
   const [data, setData] = useState([]);
@@ -41,7 +41,7 @@ function ProjectManagement() {
 
   useEffect(() => {
     (async () => {
-      const response = await CrudService.getProjects();
+      const response = await CrudService.getInspectionTemplates();
       setData(response.data);
     })();
   }, []);
@@ -70,26 +70,26 @@ function ProjectManagement() {
   }, [notification]);
 
   const clickAddHandler = () => {
-    navigate("/project-management/new-project");
+    navigate("/inspectiontemplate-management/new-inspectiontemplate");
   };
 
   const clickEditHandler = (id) => {
-    navigate(`/project-management/edit-project/${id}`);
+    navigate(`/inspectiontemplate-management/edit-inspectiontemplate/${id}`);
   };
 
   const clickDeleteHandler = async (e, id) => {
     try {
-      if (!confirm("Are you sure you want to delete this project?")) {
+      if (!confirm("Are you sure you want to delete this template?")) {
         e.nativeEvent.stopImmediatePropagation();
       } else {
-        await CrudService.deleteProject(id);
+        await CrudService.deleteInspectionTemplate(id);
         // the delete does not send a response
         // so I need to get again the projects to set it and this way the table gets updated -> it goes to the useEffect with data dependecy
-        const response = await CrudService.getProjects();
+        const response = await CrudService.getInspectionTemplates();
         setData(response.data);
         setNotification({
           value: true,
-          text: "The project has been successfully deleted",
+          text: "The template has been successfully deleted",
         });
       }
     } catch (err) {
@@ -111,10 +111,10 @@ function ProjectManagement() {
    /*    const UserName  =  getUserName(row.attributes.owner);
       console.log(UserName); */
       return {
-        type: "projects",
+        type: "inspectiontemplates",
         id: row.id,
         name: row.attributes.name,
-        owner: row.attributes.owner,
+        status: row.attributes.status,
         created_at: row.attributes.created_at,
       };
     });
@@ -141,8 +141,8 @@ function ProjectManagement() {
     columns: [
       { Header: "name", accessor: "name", width: "25%" },
       {
-        Header: "owner",
-        accessor: "owner",
+        Header: "status",
+        accessor: "status",
         width: "25%",
         Cell: ({ cell: { value } }) => HTMLReactParser(value),
       },
@@ -155,7 +155,7 @@ function ProjectManagement() {
           return (
             <MDBox display="flex" alignItems="center">
               {ability.can("delete", "projects") && (
-                <Tooltip title="Delete Project">
+                <Tooltip title="Delete Template">
                   <IconButton
                     onClick={(e) => clickDeleteHandler(e, info.cell.row.original.id)}
                     size="large">
@@ -164,7 +164,7 @@ function ProjectManagement() {
                 </Tooltip>
               )}
               {ability.can("edit", "projects") && (
-                <Tooltip title="Edit Project">
+                <Tooltip title="Edit Template">
                   <IconButton onClick={() => clickEditHandler(info.cell.row.original.id)} size="large">
                     <EditIcon />
                   </IconButton>
@@ -194,7 +194,7 @@ function ProjectManagement() {
           <Card>
             <MDBox p={3} lineHeight={1} display="flex" justifyContent="space-between">
               <MDTypography variant="h5" fontWeight="medium">
-                Project Management
+                Template Management
               </MDTypography>
               {ability.can("create", "projects") && (
                 <MDButton
@@ -204,7 +204,7 @@ function ProjectManagement() {
                   type="submit"
                   onClick={clickAddHandler}
                 >
-                  + Add Project
+                  + Add Template
                 </MDButton>
               )}
             </MDBox>
@@ -217,4 +217,4 @@ function ProjectManagement() {
   );
 }
 
-export default ProjectManagement;
+export default InspectionTemplateManagement;

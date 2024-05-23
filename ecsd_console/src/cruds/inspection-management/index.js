@@ -19,15 +19,21 @@ import MDButton from "components/MDButton";
 import MDAlert from "components/MDAlert";
 import { Tooltip, IconButton } from "@mui/material";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import DownloadIcon from "@mui/icons-material/Download";
 
 import CrudService from "services/cruds-service";
-import HTMLReactParser from "html-react-parser";
 import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
+import { format } from 'date-fns';
+import React from "react";
+import { Model } from "survey-core";
+import { SurveyPDF } from "survey-pdf";
+import { Survey } from "survey-react-ui";
+import "survey-core/defaultV2.min.css";
+import { json } from "./json";
+import { setLicenseKey } from "survey-core";
 
-function ProjectManagement() {
+function InspectionManagement() {
   let { state } = useLocation();
   const ability = useAbility(AbilityContext);
   const [data, setData] = useState([]);
@@ -41,7 +47,7 @@ function ProjectManagement() {
 
   useEffect(() => {
     (async () => {
-      const response = await CrudService.getProjects();
+      const response = await CrudService.getInspections();
       setData(response.data);
     })();
   }, []);
@@ -70,30 +76,95 @@ function ProjectManagement() {
   }, [notification]);
 
   const clickAddHandler = () => {
-    navigate("/project-management/new-project");
+    navigate("/inspection-management/new-inspection");
   };
 
   const clickEditHandler = (id) => {
-    navigate(`/project-management/edit-project/${id}`);
+    navigate(`/project-management/edit-inspection/${id}`);
   };
+
+
+  const clickPDFHandler = async (e, id) => {
+    try {
+     
+
+      const response = await CrudService.getInspection(id).then( async (inspectionResponse) => {
+
+        await CrudService.getInspectionTemplate(inspectionResponse.data.attributes.template).then(templateResponse => {
+        
+          const surveyModel = templateResponse.data.attributes.items[0];
+
+          const pdfWidth = /* !!surveyModel && surveyModel.pdfWidth ? surveyModel.pdfWidth :  */210;
+          const pdfHeight = /* !!surveyModel && surveyModel.pdfHeight ? surveyModel.pdfHeight : */ 297;
+          const options = {
+            haveCommercialLicense: true,
+              fontSize: 10,
+             margins: {
+                  left: 10,
+                  right: 10,
+                  top: 10,
+                  bot: 10
+              },
+              format: [pdfWidth, pdfHeight],
+              tagboxSelectedChoicesOnly: true,
+              compress: true
+
+          };
+
+
+          surveyModel.pages[0].visible = true;
+
+          const surveyPDF = new SurveyPDF( surveyModel, options);
+          surveyPDF.mode = "display";
+
+
+          setLicenseKey(
+            "NzMyNjcyZDctM2RlNC00ZTU3LTkzODctMThhMzcyYTU5MWUyOzE9MjAyNS0wNS0xNSwyPTIwMjUtMDUtMTUsND0yMDI1LTA1LTE1"
+          );
+
+          if (surveyPDF) {
+             surveyPDF.data = inspectionResponse.data.attributes.formdata;
+          }
+
+
+
+          let filename = inspectionResponse.data.attributes.scheduled_date + ".pdf";
+          surveyPDF.save(filename);
+       
+        });      
+      });
+    
+    } catch (err) {
+      console.error(err);
+      if (err.hasOwnProperty("errors")) {
+        setNotification({
+          value: true,
+          text: err.errors[0].title,
+        });
+      }
+      return null;
+    }
+  };
+
+
+
 
   const clickDeleteHandler = async (e, id) => {
     try {
-      if (!confirm("Are you sure you want to delete this project?")) {
+      if (!confirm("Are you sure you want to delete this inspection?")) {
         e.nativeEvent.stopImmediatePropagation();
       } else {
-        await CrudService.deleteProject(id);
+        await CrudService.deleteInspection(id);
         // the delete does not send a response
         // so I need to get again the projects to set it and this way the table gets updated -> it goes to the useEffect with data dependecy
-        const response = await CrudService.getProjects();
+        const response = await CrudService.getInspections();
         setData(response.data);
         setNotification({
           value: true,
-          text: "The project has been successfully deleted",
+          text: "The inspection has been successfully deleted",
         });
       }
     } catch (err) {
-      // it sends error if the project is associated with an item
       console.error(err);
       if (err.hasOwnProperty("errors")) {
         setNotification({
@@ -110,12 +181,28 @@ function ProjectManagement() {
 
    /*    const UserName  =  getUserName(row.attributes.owner);
       console.log(UserName); */
+
+      let scheduled_date = "Not Scheduled";
+      if(row.attributes.scheduled_date != null && row.attributes.scheduled_date != ""){
+        scheduled_date = format(Date.parse(row.attributes.scheduled_date), 'MMMM do, yyyy');
+      }
+
+      let created_date = "";
+      if(row.attributes.created_at != null && row.attributes.created_at != ""){
+        created_date = format(Date.parse(row.attributes.created_at), 'MMMM do, yyyy');
+      }
+
       return {
-        type: "projects",
+        type: "inspections",
         id: row.id,
         name: row.attributes.name,
-        owner: row.attributes.owner,
-        created_at: row.attributes.created_at,
+        scheduled_date: scheduled_date,
+        status: row.attributes.status,
+        action_count: row.attributes.actions.reduce((acc, action) => {
+          return acc + 1;
+        }, 0),
+        //owner: row.attributes.owner,
+        created_at: created_date,
       };
     });
     return updatedInfo;
@@ -139,14 +226,17 @@ function ProjectManagement() {
 
   const dataTableData = {
     columns: [
-      { Header: "name", accessor: "name", width: "25%" },
-      {
+      { Header: "scheduled date", accessor: "scheduled_date", width: "25%" },
+      /* {
         Header: "owner",
         accessor: "owner",
         width: "25%",
         Cell: ({ cell: { value } }) => HTMLReactParser(value),
-      },
+      }, */
       { Header: "created at", accessor: "created_at", width: "25%" },
+     
+      { Header: "Status", accessor: "status", width: "25%" },
+      { Header: "Action Items", accessor: "action_count", width: "25%" },
       {
         Header: "actions",
         disableSortBy: true,
@@ -154,25 +244,25 @@ function ProjectManagement() {
         Cell: (info) => {
           return (
             <MDBox display="flex" alignItems="center">
-              {ability.can("delete", "projects") && (
-                <Tooltip title="Delete Project">
+              
+                <Tooltip title="Download PDF">
                   <IconButton
-                    onClick={(e) => clickDeleteHandler(e, info.cell.row.original.id)}
+                    onClick={(e) => clickPDFHandler(e, info.cell.row.original.id)}
                     size="large">
-                    <DeleteIcon />
+                    <DownloadIcon />
                   </IconButton>
                 </Tooltip>
-              )}
-              {ability.can("edit", "projects") && (
+              
+              {/* {ability.can("edit", "projects") && (
                 <Tooltip title="Edit Project">
                   <IconButton onClick={() => clickEditHandler(info.cell.row.original.id)} size="large">
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
-              )}
+              )} */}
             </MDBox>
           );
-        },
+        }, 
       },
     ],
 
@@ -194,7 +284,7 @@ function ProjectManagement() {
           <Card>
             <MDBox p={3} lineHeight={1} display="flex" justifyContent="space-between">
               <MDTypography variant="h5" fontWeight="medium">
-                Project Management
+                Inspection Management
               </MDTypography>
               {ability.can("create", "projects") && (
                 <MDButton
@@ -204,7 +294,7 @@ function ProjectManagement() {
                   type="submit"
                   onClick={clickAddHandler}
                 >
-                  + Add Project
+                  + Add Inspection
                 </MDButton>
               )}
             </MDBox>
@@ -217,4 +307,4 @@ function ProjectManagement() {
   );
 }
 
-export default ProjectManagement;
+export default InspectionManagement;

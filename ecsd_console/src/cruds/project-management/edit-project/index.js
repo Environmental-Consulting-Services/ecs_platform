@@ -38,6 +38,7 @@ const EditProject = () => {
     city: "",
     state: "",
     zip_code: "",
+    site_map:{}
   });
 
  
@@ -84,6 +85,7 @@ const EditProject = () => {
           state: res.data.attributes.address.state,
           zip_code: res.data.attributes.address.zip_code,
           owner: res.data.attributes.owner,
+          site_map: res.data.attributes.site_maps[0].site_map
         });
       } catch (err) {
         console.error(err);
@@ -91,6 +93,11 @@ const EditProject = () => {
     })();
   }, [id]);
 
+
+
+  const clickEditSiteMapHandler = (id) => {
+    navigate(`/project-management/edit-project-site-map/${id}`);
+  };
 
   const changeHandler = (e) => {
     setProject({
@@ -129,6 +136,7 @@ const EditProject = () => {
                   },
                   owner: {_id: ownerID},
                   primary_contact: {_id:""}
+
               }
           }
   };
@@ -161,7 +169,17 @@ const EditProject = () => {
                 This information describes more about the project.
               </MDTypography>
             </MDBox>
+            
             <Card>
+            <MDButton
+                  variant="gradient"
+                  color="dark"
+                  size="small"
+                  type="submit" 
+                  onClick={() =>  clickEditSiteMapHandler(project.id)}
+                >
+                  + Edit Site Map
+                </MDButton>
               <MDBox component="form" method="POST" onSubmit={submitHandler}>
                 <MDBox display="flex" flexDirection="column" px={3} my={2}>
                   <MDBox p={1}>

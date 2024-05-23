@@ -27,7 +27,7 @@ import HTMLReactParser from "html-react-parser";
 import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
 
-function ProjectManagement() {
+function ActionItemManagement() {
   let { state } = useLocation();
   const ability = useAbility(AbilityContext);
   const [data, setData] = useState([]);
@@ -41,7 +41,7 @@ function ProjectManagement() {
 
   useEffect(() => {
     (async () => {
-      const response = await CrudService.getProjects();
+      const response = await CrudService.getActionItems();
       setData(response.data);
     })();
   }, []);
@@ -70,30 +70,30 @@ function ProjectManagement() {
   }, [notification]);
 
   const clickAddHandler = () => {
-    navigate("/project-management/new-project");
+    navigate("/actionitem-management/new-actionitem");
   };
 
   const clickEditHandler = (id) => {
-    navigate(`/project-management/edit-project/${id}`);
+    navigate(`/actionitem-management/edit-actionitem/${id}`);
   };
 
   const clickDeleteHandler = async (e, id) => {
     try {
-      if (!confirm("Are you sure you want to delete this project?")) {
+      if (!confirm("Are you sure you want to delete this actionitem?")) {
         e.nativeEvent.stopImmediatePropagation();
       } else {
-        await CrudService.deleteProject(id);
+        await CrudService.deleteActionItem(id);
         // the delete does not send a response
-        // so I need to get again the projects to set it and this way the table gets updated -> it goes to the useEffect with data dependecy
-        const response = await CrudService.getProjects();
+        // so I need to get again the actionitems to set it and this way the table gets updated -> it goes to the useEffect with data dependecy
+        const response = await CrudService.getActionItems();
         setData(response.data);
         setNotification({
           value: true,
-          text: "The project has been successfully deleted",
+          text: "The actionitem has been successfully deleted",
         });
       }
     } catch (err) {
-      // it sends error if the project is associated with an item
+      // it sends error if the actionitem is associated with an item
       console.error(err);
       if (err.hasOwnProperty("errors")) {
         setNotification({
@@ -111,10 +111,9 @@ function ProjectManagement() {
    /*    const UserName  =  getUserName(row.attributes.owner);
       console.log(UserName); */
       return {
-        type: "projects",
+        type: "actionitems",
         id: row.id,
         name: row.attributes.name,
-        owner: row.attributes.owner,
         created_at: row.attributes.created_at,
       };
     });
@@ -140,12 +139,12 @@ function ProjectManagement() {
   const dataTableData = {
     columns: [
       { Header: "name", accessor: "name", width: "25%" },
-      {
+    /*   {
         Header: "owner",
         accessor: "owner",
         width: "25%",
         Cell: ({ cell: { value } }) => HTMLReactParser(value),
-      },
+      }, */
       { Header: "created at", accessor: "created_at", width: "25%" },
       {
         Header: "actions",
@@ -155,7 +154,7 @@ function ProjectManagement() {
           return (
             <MDBox display="flex" alignItems="center">
               {ability.can("delete", "projects") && (
-                <Tooltip title="Delete Project">
+                <Tooltip title="Delete Action Item">
                   <IconButton
                     onClick={(e) => clickDeleteHandler(e, info.cell.row.original.id)}
                     size="large">
@@ -164,7 +163,7 @@ function ProjectManagement() {
                 </Tooltip>
               )}
               {ability.can("edit", "projects") && (
-                <Tooltip title="Edit Project">
+                <Tooltip title="Edit ActionItem">
                   <IconButton onClick={() => clickEditHandler(info.cell.row.original.id)} size="large">
                     <EditIcon />
                   </IconButton>
@@ -194,7 +193,7 @@ function ProjectManagement() {
           <Card>
             <MDBox p={3} lineHeight={1} display="flex" justifyContent="space-between">
               <MDTypography variant="h5" fontWeight="medium">
-                Project Management
+                ActionItem Management
               </MDTypography>
               {ability.can("create", "projects") && (
                 <MDButton
@@ -204,7 +203,7 @@ function ProjectManagement() {
                   type="submit"
                   onClick={clickAddHandler}
                 >
-                  + Add Project
+                  + Add ActionItem
                 </MDButton>
               )}
             </MDBox>
@@ -217,4 +216,4 @@ function ProjectManagement() {
   );
 }
 
-export default ProjectManagement;
+export default ActionItemManagement;

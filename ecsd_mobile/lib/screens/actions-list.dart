@@ -1,7 +1,8 @@
+import 'package:ecsd_mobile/screens/actionpage.dart';
 import 'package:flutter/material.dart';
 import '../model/action_items.dart';
 import '../services/action_service.dart';
-import 'action.dart';
+import 'actionitembody.dart';
 
 class ActionList extends StatefulWidget {
   //final double height = window.physicalSize.height;
@@ -20,16 +21,27 @@ class _ActionListState extends State<ActionList> {
   late Future<List<ActionItemModel>> actionsFuture;
 
   // function to fetch data from api and return future list of posts
-  Future<List<ActionItemModel>> getActions(String Id) async {
+  Future<List<ActionItemModel>> getProjectActions(String Id) async {
     Future<List<ActionItemModel>> actions =
         ActionService.loadProjectActions(Id);
+    return actions;
+  }
+
+  Future<List<ActionItemModel>> getInspectionActions(String Id) async {
+    Future<List<ActionItemModel>> actions =
+        ActionService.loadInspectionActions(Id);
     return actions;
   }
 
   @override
   void initState() {
     super.initState();
-    actionsFuture = getActions(widget.projectId);
+
+    if (widget.inspectionId != "") {
+      actionsFuture = getInspectionActions(widget.inspectionId);
+    } else {
+      actionsFuture = getProjectActions(widget.projectId);
+    }
   }
 
   Widget createActionList(BuildContext context, AsyncSnapshot snapshot) {
@@ -40,8 +52,10 @@ class _ActionListState extends State<ActionList> {
         return GestureDetector(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ActionWidget(
+                builder: (context) => ActionPage(
                       actionItemId: action!.id,
+                      projectId: widget.projectId,
+                      inspectionId: widget.inspectionId,
                     )));
           },
           child: Card(

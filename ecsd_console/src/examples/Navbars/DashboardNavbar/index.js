@@ -141,13 +141,13 @@ function DashboardNavbar({ absolute, light, isMini, breadcrumbTitle = null }) {
         vertical: "bottom",
         horizontal: "left",
       }}
-      open={Boolean(openMenu)}
+      open={/* Boolean(openMenu) */ false}
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     > 
-      <NotificationItem icon={<Icon>email</Icon>} title="Messages" />
+{/*       <NotificationItem icon={<Icon>email</Icon>} title="Messages" />
       <NotificationItem icon={<Icon>podcasts</Icon>} title="Action Items" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Inspections" />
+      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Inspections" /> */}
     </Menu>
   );
 

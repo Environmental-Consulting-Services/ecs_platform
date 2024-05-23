@@ -25,5 +25,5 @@ COPY --chown=node:node package*.json ./
 USER node
 #COPY --chown=node:node ./.env ./.env
 #CMD ["node", "./dist/server.js"]
-EXPOSE 8080
+EXPOSE 8082
 CMD ["node", "./dist/server.js"]

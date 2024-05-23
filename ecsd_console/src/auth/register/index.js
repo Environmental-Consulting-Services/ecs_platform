@@ -13,6 +13,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import { useNavigate } from "react-router-dom";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -26,6 +27,9 @@ import { InputLabel } from "@mui/material";
 
 function Register() {
   const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
+
+
 
   const [inputs, setInputs] = useState({
     first_name: "",
@@ -91,7 +95,8 @@ function Register() {
 
     try {
       const response = await AuthService.register(myData);
-      authContext.login(response.access_token);
+      navigate("/auth/login");
+      //authContext.login(response.access_token);
     } catch (err) {
       setErrors({ ...errors, emailTaken: true });
       console.error(err);

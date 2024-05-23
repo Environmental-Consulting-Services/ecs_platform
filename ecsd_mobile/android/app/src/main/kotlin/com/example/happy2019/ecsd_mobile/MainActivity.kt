@@ -1,5 +1,5 @@
 package com.ecscompliance.ecsd_mobile
 
-import io.flutter.embedding.android.FlutterAppCompatActivity;
+import io.flutter.app.FlutterActivity
 
-public class MainActivity : FlutterAppCompatActivity()
+public class MainActivity : FlutterActivity()

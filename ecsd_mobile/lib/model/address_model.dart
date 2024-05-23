@@ -23,4 +23,14 @@ class AddressModel {
     );
     return address;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "street_one": street_one,
+      "street_two": street_two,
+      "city": city,
+      "state": state,
+      "zip_code": zip_code,
+    };
+  }
 }
