@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ecsd_mobile/model/project_model.dart';
 import 'package:ecsd_mobile/services/inspection_service.dart';
 import 'package:ecsd_mobile/widgets/appstate.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,24 @@ class _InspectionListState extends State<InspectionList> {
   void dispose() {
     super.dispose();
     stateChanges.cancel();
+  }
+
+  void addInspection() async {
+    InspectionModel newInspection = InspectionModel.create();
+
+    newInspection.project = widget.projectId;
+    newInspection.scheduled_date = DateTime.now();
+    newInspection.status = "unscheduled";
+
+    await InspectionService.createInspection(newInspection)
+        .then((createdInspection) {
+      if (widget.projectId != "") {
+        inspectionsFuture = getInspections(widget.projectId);
+      } else {
+        inspectionsFuture = getInspections("");
+      }
+      setState(() {});
+    });
   }
 
   Widget createInspectionList(BuildContext context, AsyncSnapshot snapshot) {
@@ -113,6 +132,87 @@ class _InspectionListState extends State<InspectionList> {
               }
           }
         });
+
+    final _inspectionFormKey = GlobalKey<FormState>();
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(),
+        Container(
+          child: inspectionListFutureBuilder,
+        ),
+        Positioned(
+            right: 20,
+            bottom: 20,
+            child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  child: Icon(Icons.note_add_rounded),
+                  tooltip: 'Add Inspection',
+                  onPressed: () async {
+                    addInspection(/* value ?? "" */);
+                    /* await showDialog<void>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('New Inspection'),
+                              insetPadding: EdgeInsets.all(10),
+                              actions: [
+                                ElevatedButton(
+                                  child: const Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
+                                  },
+                                ),
+                                ElevatedButton(
+                                  child: const Text('Add Inspection'),
+                                  onPressed: () {
+                                    if (_inspectionFormKey.currentState!
+                                        .validate()) {
+                                      _inspectionFormKey.currentState!.save();
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                ),
+                              ],
+                              content: Stack(
+                                clipBehavior: Clip.none,
+                                children: <Widget>[
+                                  Form(
+                                    key: _inspectionFormKey,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: TextFormField(
+                                            autofocus: true,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Inspection',
+                                            ),
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Please enter a name';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (value) {
+                                              addInspection(/* value ?? "" */);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )); */
+                  },
+                )))
+      ],
+    );
 
     return inspectionListFutureBuilder;
   }

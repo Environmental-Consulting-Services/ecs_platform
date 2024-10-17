@@ -107,6 +107,7 @@ const NewActionItem = () => {
 
   useEffect(() => {
     (async () => {
+      //WTF IS THIS?!?!?!  I'm not sure what this is doing, but it's not working.  Why not use a real project id?  Oh, we dont have one because we have no concept of a project in this context
       const projectId = "1";
       const response = await CrudService.getProjectAssignees(projectId);
       

@@ -342,7 +342,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       Logout
     </SidenavCollapse>
   ); */
-  
+/*   
   renderRoutes.unshift(
     <MDBox key="companyselect" ml={1} mt={1} mb={1}>  
     <Autocomplete
@@ -357,6 +357,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     </MDBox>
 
 );
+ */
+
 /* 
 
     <MDBox key="companyselect" display="flex" alignItems="center" sx={{ minWidth: "100%", height: 100 }}>

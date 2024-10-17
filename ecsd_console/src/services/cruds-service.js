@@ -19,8 +19,6 @@ class CrudService {
   };
 
 
-
-
   getUsers = async () => {
     const usersEndpoint = "users?include=roles";
     return await HttpService.get(usersEndpoint);
@@ -196,7 +194,7 @@ class CrudService {
   };
 
   createInspection = async (payload) => {
-    const endpoint = "inpections";
+    const endpoint = "inspections";
     return await HttpService.post(endpoint, payload);
   };
 
@@ -209,13 +207,18 @@ class CrudService {
     const inspectionsEndpoint = `inspections/${id}`;
     return await HttpService.patch(inspectionsEndpoint, payload);
   };
+
+  shareInspectionPDF = async (id) => {
+    const inspectionsEndpoint = `inspections/${id}/sharepdf`;
+    return await HttpService.post(inspectionsEndpoint);
+  };
+
 /* 
   updateProjectSiteMap = async (payload, id) => {
     const projectsEndpoint = `projects/${id}/sitemaps`;
     return await HttpService.patch(projectsEndpoint, payload);
   }; */
   
-
   // project requests
   getActionItems = async () => {
     const actionitemsEndpoint = "actionitems";

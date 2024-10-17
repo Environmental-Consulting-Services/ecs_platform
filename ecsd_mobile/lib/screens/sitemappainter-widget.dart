@@ -31,7 +31,7 @@ class _SiteMapPainterState extends State<SiteMapPainter> {
 
     await ProjectService.getSiteMapIdForProject(projectId).then((value) async {
       if (value != "")
-        ImageService.loadBase64Image(value).then((value) async {
+        await ImageService.loadBase64Image(value).then((value) async {
           image = value;
         });
     });

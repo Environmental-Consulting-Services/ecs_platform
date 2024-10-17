@@ -23,4 +23,11 @@ const router = express.Router();
     await downloadBase64(req, res);
   })
 
+  //router.get("/files/:name", download);
+  router.get("/files/:id/pdf", passport.authenticate("jwt", { session: false }), async (req, res) => {
+    res.setHeader('Content-Type', 'application/pdf');
+    await downloadBase64(req, res);
+  })
+
+
   export default router;

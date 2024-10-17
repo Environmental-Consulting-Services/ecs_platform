@@ -68,6 +68,40 @@ class ActionService {
     }
   }
 
+  static Future<bool> createAction(ActionItemModel action) async {
+    final storedUser = await SecureStorageService.getUser();
+    var storedToken = await SecureStorageService.getUserAccessToken();
+    var accessToken = storedToken;
+
+    var uri = HelperService.buildUri(requestPath);
+    final response = await http.post(
+      uri,
+      headers: HelperService.buildHeaders(
+        accessToken: accessToken,
+      ),
+      body: jsonEncode({
+        "data": {
+          "type": "actionitems",
+          "attributes": action.toJson(),
+        },
+      }),
+    );
+
+    final statusType = (response.statusCode / 100).floor() * 100;
+    switch (statusType) {
+      case 200:
+        return true;
+
+      case 400:
+        final json = jsonDecode(response.body);
+        throw Exception(json);
+      case 300:
+      case 500:
+      default:
+        throw Exception('Error loading data!');
+    }
+  }
+
   static Future<List<ActionItemModel>> loadInspectionActions(
       String inspectionId) async {
     final storedUser = await SecureStorageService.getUser();

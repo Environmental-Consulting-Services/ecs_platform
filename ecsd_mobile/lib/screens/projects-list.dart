@@ -43,7 +43,7 @@ class _ProjectListState extends State<ProjectList> {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => ProjectPage(
-                      projectId: project!.number,
+                      projectId: project!.id,
                     )));
           },
           child: Card(

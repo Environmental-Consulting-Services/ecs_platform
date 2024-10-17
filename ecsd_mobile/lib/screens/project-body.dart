@@ -26,6 +26,12 @@ class _ProjectBodyState extends State<ProjectBody> {
     return project;
   }
 
+  // function to fetch data from api and return future list of posts
+  Future<ProjectModel> getProjectStats(String projectId) async {
+    Future<ProjectModel> project = ProjectService.loadProjectStats(projectId);
+    return project;
+  }
+
   @override
   void initState() {
     projectFuture = getProject(widget.projectId);
@@ -73,14 +79,14 @@ class _ProjectBodyState extends State<ProjectBody> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '102',
+                    '1',
                     maxLines: 1,
                     softWrap: false,
                     overflow: TextOverflow.fade,
                   ),
                   SizedBox(height: 10),
                   Text(
-                    '3',
+                    '2',
                     maxLines: 1,
                     softWrap: false,
                     overflow: TextOverflow.fade,

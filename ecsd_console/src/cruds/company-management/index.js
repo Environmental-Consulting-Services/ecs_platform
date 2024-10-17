@@ -51,10 +51,6 @@ function CompanyManagement() {
       );  
 
       let Users = await CrudService.getUsersByID(userIDs);
-
-      console.log(Users);
-
-
       setUserNames(Users);
       setData(response.data);
     })();
@@ -108,7 +104,7 @@ function CompanyManagement() {
       }
     } catch (err) {
       // it sends error is the company is associated with an item
-      console.error(err);
+      //console.error(err);
       if (err.hasOwnProperty("errors")) {
         setNotification({
           value: true,

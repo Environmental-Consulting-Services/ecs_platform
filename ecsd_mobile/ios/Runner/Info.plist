@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
+	<dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow user to take pictures of job sites for compliance</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The mic is not used in this app.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>

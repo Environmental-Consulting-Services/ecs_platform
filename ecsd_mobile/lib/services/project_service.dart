@@ -20,8 +20,22 @@ class ProjectService {
       return ProjectModel.fromJson(jsonDecode(json));
     } else {
       ProjectModel projectModel = ProjectModel.create();
-      projectModel.number = projectId.toString();
-      projectModel.name = "Teste Project";
+      projectModel.id = projectId.toString();
+      projectModel.name = "New Project";
+      return projectModel;
+      //throw SecureStorageNotFoundException();
+    }
+  }
+
+  static Future<ProjectModel> loadProjectStats(projectId) async {
+    final json = null;
+
+    if (json != null) {
+      return ProjectModel.fromJson(jsonDecode(json));
+    } else {
+      ProjectModel projectModel = ProjectModel.create();
+      projectModel.id = projectId.toString();
+      projectModel.name = "New Project";
       return projectModel;
       //throw SecureStorageNotFoundException();
     }

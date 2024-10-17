@@ -65,18 +65,18 @@ async function seedDB() {
   const perm8 = await permissionModel({ created_at: new Date(), name: "delete roles" });
   // permission permissions
   const perm9 = await permissionModel({ created_at: new Date(), name: "view permissions" });
-   // company permissions
-   const perm22 = await permissionModel({ created_at: new Date(), name: "view companies" });
-   const perm23 = await permissionModel({ created_at: new Date(), name: "create companies" });
-   const perm24 = await permissionModel({ created_at: new Date(), name: "edit companies" });
-   const perm25 = await permissionModel({ created_at: new Date(), name: "delete companies" });
+  // company permissions
+  const perm22 = await permissionModel({ created_at: new Date(), name: "view companies" });
+  const perm23 = await permissionModel({ created_at: new Date(), name: "create companies" });
+  const perm24 = await permissionModel({ created_at: new Date(), name: "edit companies" });
+  const perm25 = await permissionModel({ created_at: new Date(), name: "delete companies" });
 
 
-   // project permissions
-   const perm26 = await permissionModel({ created_at: new Date(), name: "view projects" });
-   const perm27 = await permissionModel({ created_at: new Date(), name: "create projects" });
-   const perm28 = await permissionModel({ created_at: new Date(), name: "edit projects" });
-   const perm29 = await permissionModel({ created_at: new Date(), name: "delete projects" });
+  // project permissions
+  const perm26 = await permissionModel({ created_at: new Date(), name: "view projects" });
+  const perm27 = await permissionModel({ created_at: new Date(), name: "create projects" });
+  const perm28 = await permissionModel({ created_at: new Date(), name: "edit projects" });
+  const perm29 = await permissionModel({ created_at: new Date(), name: "delete projects" });
 
 
 
@@ -114,51 +114,41 @@ async function seedDB() {
   member.role = roleMember._id;
   await member.save();
 
-    const person1 = new PersonModel({first_name: "Person 1", last_name: "LastName1",  email: "scott@test.com", phone: "123456789"});
-    person1.save();
-    const person2 = new PersonModel({first_name: "Person 2", last_name: "LastName2",  email: "scott@test.com", phone: "123456789"});
-    person2.save();
-    const person3 = new PersonModel({first_name: "Person 3", last_name: "LastName3",  email: "scott@test.com", phone: "123456789"});
-    person3.save();
-   
+  const person1 = new PersonModel({first_name: "Person 1", last_name: "LastName1",  email: "scott@test.com", phone: "123456789"});
+  person1.save();
+  const person2 = new PersonModel({first_name: "Person 2", last_name: "LastName2",  email: "scott@test.com", phone: "123456789"});
+  person2.save();
+  const person3 = new PersonModel({first_name: "Person 3", last_name: "LastName3",  email: "scott@test.com", phone: "123456789"});
+  person3.save();
+  
 
   const company = new CompanyModel({ _id: mongoose.Types.ObjectId(1), name: "Test Company 1", status: "active", owner: admin,  created_at: new Date() });
   const project = new ProjectModel({ _id: mongoose.Types.ObjectId(2), name: "Project 1", status: "active", company: company, owner: admin, created_at: new Date() });
   const inspection = new InspectionModel({ _id: mongoose.Types.ObjectId(3), name: "Inspection 1", project: project, created_at: new Date() });
   const actionItem = new  ActionItemModel({ _id: mongoose.Types.ObjectId(4), name: "Action Item 1", inspection: inspection, project: project, created_at: new Date() });
 
-   const company2 = new CompanyModel({ _id: mongoose.Types.ObjectId(1), name: "Test Company 2", status: "active", owner: admin,  created_at: new Date() });
-   const project2 = new ProjectModel({ _id: mongoose.Types.ObjectId(2), name: "Project 2", status: "active", company: company2, owner: admin, created_at: new Date() });
-   const inspection2 = new InspectionModel({ _id: mongoose.Types.ObjectId(3), name: "Inspection 1", project: project2, created_at: new Date() });
-   const actionItem2 = new  ActionItemModel({ _id: mongoose.Types.ObjectId(4), name: "Action Item 1", inspection: inspection2, project: project2, created_at: new Date() });
+  const company2 = new CompanyModel({ _id: mongoose.Types.ObjectId(1), name: "Test Company 2", status: "active", owner: admin,  created_at: new Date() });
+  const project2 = new ProjectModel({ _id: mongoose.Types.ObjectId(2), name: "Project 2", status: "active", company: company2, owner: admin, created_at: new Date() });
+  const inspection2 = new InspectionModel({ _id: mongoose.Types.ObjectId(3), name: "Inspection 1", project: project2, created_at: new Date() });
+  const actionItem2 = new  ActionItemModel({ _id: mongoose.Types.ObjectId(4), name: "Action Item 1", inspection: inspection2, project: project2, created_at: new Date() });
+
+  project.people.push({"role":"member", "member": person1});
+  project.people.push({"role":"member", "member": person3});
+
+  project2.people.push({"role":"member", "member": person1});
+  project2.people.push({"role":"member", "member": person2}); 
+
+
+  await company.save();
+  await project.save();
+  await inspection.save();
+  await actionItem.save();
+
+  await company2.save();
+  await project2.save();
+  await inspection2.save();
+  await actionItem2.save();
  
-    project.people.push({"role":"member", "member": person1});
-    project.people.push({"role":"member", "member": person3});
-
-    project2.people.push({"role":"member", "member": person1});
-    project2.people.push({"role":"member", "member": person2}); 
-
-
-   await company.save();
-   await project.save();
-   await inspection.save();
-   await actionItem.save();
-
-
-
-    await company2.save();
-    await project2.save();
-    await inspection2.save();
-    await actionItem2.save();
- 
- 
- 
-
-
-
-
-
-
   console.log("DB seeded");
 }
 

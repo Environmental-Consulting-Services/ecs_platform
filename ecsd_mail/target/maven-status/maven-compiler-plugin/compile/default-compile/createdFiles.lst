@@ -1,0 +1,6 @@
+com/ecscompliance/sendEmail/config/ApiClientConfig.class
+com/ecscompliance/sendEmail/service/EmailServiceImpl.class
+com/ecscompliance/sendEmail/service/EmailService.class
+com/ecscompliance/sendEmail/SendEmailApplication.class
+com/ecscompliance/sendEmail/controller/EmailController.class
+com/ecscompliance/sendEmail/model/CustomMessage.class

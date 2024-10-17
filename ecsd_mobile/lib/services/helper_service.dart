@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HelperService {
-  static const String host = "app.ecscompliance.com";
-  static const int port = 443;
-  static const String scheme = "https";
-  static const String apiPath = "/api/";
+  static String host = dotenv.get('apihost');
+  static int port = int.parse(dotenv.get('apiport'));
+  static String scheme = dotenv.get('apischeme');
+  static String apiPath = dotenv.get('apipath');
   //static const String apiPath = "/";
 
   static Uri buildUri(String path) {

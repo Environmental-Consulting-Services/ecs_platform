@@ -1,6 +1,6 @@
 import express from "express";
 import passport from "passport";
-import { getInspectionPDFRoute, createInspectionRoute, deleteInspectionRoute, editInspectionRoute, getInspectionsRoute, getInspectionRoute, getInspectionTemplateForInspectionRoute} from "../";
+import {shareInspectionPDFRoute, getInspectionPDFRoute, createInspectionRoute, deleteInspectionRoute, editInspectionRoute, getInspectionsRoute, getInspectionRoute, getInspectionTemplateForInspectionRoute} from "../";
 import jwt from 'jsonwebtoken';
 const router = express.Router();
 
@@ -28,8 +28,12 @@ router.get('/:id/inspectiontemplate', passport.authenticate('jwt',{session: fals
     await getInspectionTemplateForInspectionRoute(req, res);
 });
 
-router.get('/:id/pdf', passport.authenticate('jwt',{session: false}), async (req, res) => {
+router.get('/:id/pdf/:ts', async (req, res) => {
     await getInspectionPDFRoute(req, res);
+});
+
+router.post('/:id/sharepdf', passport.authenticate('jwt',{session: false}), async (req, res) => {
+    await shareInspectionPDFRoute(req, res);
 });
 
 export default router;

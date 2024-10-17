@@ -4,7 +4,7 @@ import { GridFsStorage } from "multer-gridfs-storage";
 import {dbConfig} from "../config/db.js";
 
 var storage = new GridFsStorage({
-  url: dbConfig.url + dbConfig.database,
+  url: dbConfig.url,
   
   options: { useNewUrlParser: true, useUnifiedTopology: true },
   file: (req, file) => {

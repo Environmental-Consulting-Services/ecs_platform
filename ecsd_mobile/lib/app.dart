@@ -18,6 +18,7 @@ import 'package:ecsd_mobile/home/home.dart';
 import 'package:ecsd_mobile/login/login.dart';
 import 'package:ecsd_mobile/splash/splash.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class App extends StatefulWidget {
   const App({super.key});

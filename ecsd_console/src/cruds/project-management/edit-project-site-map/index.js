@@ -100,7 +100,7 @@ const EditProjectSiteMap = () => {
           state: res.data.attributes.address.state,
           zip_code: res.data.attributes.address.zip_code,
           owner: res.data.attributes.owner,
-          site_map: res.data.attributes.site_maps[0].site_map,
+          site_map: (res.data.attributes.site_maps.length>0)?res.data.attributes.site_maps[0].site_map:null,
           previous_site_maps: res.data.attributes.site_maps.slice(1),
         };
 
@@ -170,7 +170,7 @@ const EditProjectSiteMap = () => {
   });
 
   const fetchSiteMapImage = async () => {
-    if(siteMapId != null) {
+    if(siteMapId != null && siteMapId !== "") {
       const res = await CrudService.imageDownloadBase64(siteMapId);
       setSiteMapImage("data:image/png;base64," + res);
     } else {
@@ -226,7 +226,7 @@ const EditProjectSiteMap = () => {
         return (
           <>
             <MDTypography variant="h6" color="textSecondary" fontWeight="light">
-              No Site Map
+              
             </MDTypography>
           </>
         );

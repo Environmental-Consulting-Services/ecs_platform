@@ -19,6 +19,8 @@ import EditUser from "cruds/user-management/edit-user";
 import NewUser from "cruds/user-management/new-user";
 import EditInspection from "cruds/inspection-management/edit-inspection";
 import NewInspection from "cruds/inspection-management/new-inspection";
+import ViewInspection from "cruds/inspection-management/view-inspection";
+
 import EditActionItem from "cruds/actionitem-management/edit-actionitem";
 import NewActionItem from "cruds/actionitem-management/new-actionitem";
 
@@ -100,6 +102,12 @@ const crudRoutes = [
     key: "edit-inspection",
     route: "/inspection-management/edit-inspection/:id",
     component: <EditInspection />,
+    type: "inspections",
+  },
+  {
+    key: "view-inspection",
+    route: "/inspection-management/view-inspection/:id",
+    component: <ViewInspection />,
     type: "inspections",
   },
   {

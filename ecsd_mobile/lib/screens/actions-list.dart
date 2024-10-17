@@ -44,6 +44,26 @@ class _ActionListState extends State<ActionList> {
     }
   }
 
+  void addAction(String note) async {
+    ActionItemModel newActionItem = ActionItemModel.create();
+    newActionItem.project = widget.projectId;
+    newActionItem.inspection = widget.inspectionId;
+    newActionItem.name = note;
+    newActionItem.status = "todo";
+    DateTime dueDate = DateTime.now();
+    dueDate = dueDate.add(new Duration(days: 1));
+    newActionItem.due_date = dueDate;
+
+    await ActionService.createAction(newActionItem).then((savedNotes) {
+      if (widget.inspectionId != "") {
+        actionsFuture = getInspectionActions(widget.inspectionId);
+      } else {
+        actionsFuture = getProjectActions(widget.projectId);
+      }
+      setState(() {});
+    });
+  }
+
   Widget createActionList(BuildContext context, AsyncSnapshot snapshot) {
     return ListView.builder(
       itemCount: snapshot.data!.length,
@@ -70,7 +90,7 @@ class _ActionListState extends State<ActionList> {
                             style: TextStyle(
                                 color: Theme.of(context).primaryColorDark,
                                 fontSize: 22)),
-                        subtitle: Text("Status:" + action!.status,
+                        subtitle: Text("Status:  " + action!.status,
                             style: TextStyle(
                                 color: Theme.of(context).primaryColorDark,
                                 fontSize: 10)),
@@ -109,6 +129,86 @@ class _ActionListState extends State<ActionList> {
           }
         });
 
-    return actionListFutureBuilder;
+    //return actionListFutureBuilder;
+
+    final _actionFormKey = GlobalKey<FormState>();
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(),
+        Container(
+          child: actionListFutureBuilder,
+        ),
+        Positioned(
+            right: 20,
+            bottom: 20,
+            child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  child: Icon(Icons.note_add_rounded),
+                  tooltip: 'Add Action',
+                  onPressed: () async {
+                    await showDialog<void>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('New Action Item'),
+                              insetPadding: EdgeInsets.all(10),
+                              actions: [
+                                ElevatedButton(
+                                  child: const Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
+                                  },
+                                ),
+                                ElevatedButton(
+                                  child: const Text('Add Action Item'),
+                                  onPressed: () {
+                                    if (_actionFormKey.currentState!
+                                        .validate()) {
+                                      _actionFormKey.currentState!.save();
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                ),
+                              ],
+                              content: Stack(
+                                clipBehavior: Clip.none,
+                                children: <Widget>[
+                                  Form(
+                                    key: _actionFormKey,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: TextFormField(
+                                            autofocus: true,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Action Item',
+                                            ),
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Please enter a Title for the Action';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (value) {
+                                              addAction(value ?? "");
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ));
+                  },
+                )))
+      ],
+    );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:ecsd_mobile/model/notes_model.dart';
-import 'package:ecsd_mobile/model/person_model.dart';
 
 class ActionItemModel {
   String id;
@@ -88,9 +87,9 @@ class ActionItemModel {
       "source": source,
       "control": control,
       "location": location,
-      "date_initiated": date_initiated,
-      "date_resolved": date_resolved,
-      "due_date": due_date,
+      "date_initiated": date_initiated?.toIso8601String(),
+      "date_resolved": date_resolved?.toIso8601String(),
+      "due_date": due_date?.toIso8601String(),
       "assigned_to": assignedTo,
     };
   }

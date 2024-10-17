@@ -85,7 +85,7 @@ const EditProject = () => {
           state: res.data.attributes.address.state,
           zip_code: res.data.attributes.address.zip_code,
           owner: res.data.attributes.owner,
-          site_map: res.data.attributes.site_maps[0].site_map
+          site_map: res.data.attributes.site_maps.length>0? res.data.attributes.site_maps[0].site_map:"",
         });
       } catch (err) {
         console.error(err);

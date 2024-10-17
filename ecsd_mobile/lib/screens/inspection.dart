@@ -70,6 +70,7 @@ class _InspectionState extends State<Inspection> {
     // variable to call and store future project
 
     return Scaffold(
+      key: GlobalKey(),
       resizeToAvoidBottomInset: false,
       appBar: getAppBar("Inspection"),
       bottomNavigationBar: BottomNavigationBar(

@@ -444,10 +444,9 @@ class _ActionItemBodyState extends State<ActionItemBody> {
           if (snapshot.hasData) {
             return DropdownButtonFormField(
                 key: dropdownState,
-                value: selectedAssignee,
+                value: selectedAssignee.length > 0 ? selectedAssignee : "null",
                 decoration: inputDecoration(
                     prefixIcon: Icon(Icons.email_outlined),
-                    //hintText: 'Sediment Control',
                     labelText: 'Assigned To'),
                 items: snapshot.data!
                     .map<DropdownMenuItem<String>>(
@@ -455,7 +454,12 @@ class _ActionItemBodyState extends State<ActionItemBody> {
                               value: item.id,
                               child: Text(item.firstName + " " + item.lastName),
                             ))
-                    .toList(),
+                    .followedBy([
+                  DropdownMenuItem<String>(
+                    value: "null",
+                    child: Text("Unassigned"),
+                  )
+                ]).toList(),
                 onChanged: (value) {
                   selectedAssignee = value!;
                   setState(() {});

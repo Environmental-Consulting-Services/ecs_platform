@@ -1,4 +1,5 @@
 import express from "express";
+const { json, urlencoded } = require("body-parser");
 import cors from "cors";
 import dotenv from "dotenv";
 import "./passport.js";
@@ -23,7 +24,7 @@ import {
 import path from "path";
 
 import cron from "node-cron";
-import ReseedAction from "./mongoose/ReseedAction.js";
+//import ReseedAction from "./mongoose/ReseedAction.js";
 
 import passportJWT from "passport-jwt";
 
@@ -31,6 +32,10 @@ const JWTStrategy = passportJWT.Strategy;
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app = express();
+
+
+app.use(json({ limit: '30mb' }))
+app.use(urlencoded({ limit: '30mb', extended: true }))
 
 const whitelist = [process.env.APP_URL_CLIENT];
 const corsOptions = {

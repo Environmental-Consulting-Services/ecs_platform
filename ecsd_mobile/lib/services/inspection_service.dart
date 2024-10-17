@@ -66,6 +66,40 @@ class InspectionService {
     }
   }
 
+  static Future<bool> createInspection(InspectionModel inspection) async {
+    final storedUser = await SecureStorageService.getUser();
+    var storedToken = await SecureStorageService.getUserAccessToken();
+    var accessToken = storedToken;
+
+    var uri = HelperService.buildUri(requestPath);
+    final response = await http.post(
+      uri,
+      headers: HelperService.buildHeaders(
+        accessToken: accessToken,
+      ),
+      body: jsonEncode({
+        "data": {
+          "type": "inspections",
+          "attributes": inspection.toJson(),
+        },
+      }),
+    );
+
+    final statusType = (response.statusCode / 100).floor() * 100;
+    switch (statusType) {
+      case 200:
+        return true;
+
+      case 400:
+        final json = jsonDecode(response.body);
+        throw Exception(json);
+      case 300:
+      case 500:
+      default:
+        throw Exception('Error loading data!');
+    }
+  }
+
   static Future<String> updateInspection(InspectionModel inspectionData) async {
     final storedUser = await SecureStorageService.getUser();
     var storedToken = await SecureStorageService.getUserAccessToken();

@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatHelperService {
-  static const String chat_host = "app.ecscompliance.com";
-  static const int chat_port = 443;
-  static const String chat_scheme = "https";
-  static const String chatPath = "/expert/";
+  static String chat_host = dotenv.get('chathost');
+  static int chat_port = int.parse(dotenv.get('chatport'));
+  static String chat_scheme = dotenv.get('chatscheme');
+  static String chatPath = dotenv.get('chatpath');
   //static const String chatPath = "/";
 
   static Uri buildUri(String path) {

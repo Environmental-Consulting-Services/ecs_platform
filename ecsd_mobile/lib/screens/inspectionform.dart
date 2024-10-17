@@ -175,7 +175,12 @@ loadPreviousData({"weather":["clear"]});
       }
 
       final WebViewController controller =
-          WebViewController.fromPlatformCreationParams(params);
+          WebViewController.fromPlatformCreationParams(
+        params,
+        onPermissionRequest: (WebViewPermissionRequest request) {
+          request.grant();
+        },
+      );
 
       controller
         ..setJavaScriptMode(JavaScriptMode.unrestricted)

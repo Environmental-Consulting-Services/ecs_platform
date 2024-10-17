@@ -3,9 +3,11 @@ import 'package:ecsd_mobile/model/company_model.dart';
 import 'package:ecsd_mobile/model/permit_model.dart';
 import 'package:ecsd_mobile/model/person_model.dart';
 import 'package:ecsd_mobile/model/user_model.dart';
+import 'package:ecsd_mobile/screens/search.dart';
 
 class ProjectModel {
   String number;
+  String id;
   String name;
   CompanyModel company;
   AddressModel address;
@@ -20,6 +22,7 @@ class ProjectModel {
 
   ProjectModel({
     required this.number,
+    required this.id,
     required this.name,
     required this.company,
     required this.address,
@@ -35,6 +38,7 @@ class ProjectModel {
 
   factory ProjectModel.create() {
     final project = ProjectModel(
+      id: "",
       number: "",
       name: "",
       company: CompanyModel.create(),
@@ -54,7 +58,8 @@ class ProjectModel {
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
     final project = ProjectModel.create();
 
-    project.number = json["id"];
+    project.id = json["id"];
+    project.number = json["attributes"]["number"];
     project.name = json["attributes"]["name"];
     //project.company = json["attributes"]["company"];
     //project.address = json["attributes"]["address"];
@@ -72,7 +77,8 @@ class ProjectModel {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": number,
+      "id": id,
+      "number": number,
       "name": name,
       "company": company.toJson(),
       "address": address.toJson(),

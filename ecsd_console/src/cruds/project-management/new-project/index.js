@@ -3,6 +3,7 @@
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import { InputLabel, Autocomplete } from "@mui/material";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -21,9 +22,13 @@ import { useNavigate } from "react-router-dom";
 import CrudService from "services/cruds-service";
 import { AuthContext } from "context";
 
+
+
+
 const NewProject = () => {
   const navigate = useNavigate();
   const [roles, setRoles] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [ownerID, setOwnerId] = useState("");
   const [projectActive, setProjectActive] = useState(false);
   const [owner, setOwner] = useState("");
@@ -36,6 +41,7 @@ const NewProject = () => {
     city: "",
     state: "",
     zip_code: "",
+    company: "",
   });
 
  
@@ -52,9 +58,18 @@ const NewProject = () => {
     zip_code: false,
     error: false,
     textError: "",
+    company: false,
   });
 
+  const setCompanyValue = (newValue) => {
+    setProject({
+      ...project,
+      company: newValue.id,
+    });
+  };
+
   const changeHandler = (e) => {
+    console.log(e);
     setProject({
       ...project,
       [e.target.name]: e.target.value,
@@ -99,6 +114,23 @@ const NewProject = () => {
     })();
   }, []);
 
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await CrudService.getCompanies();
+        var projectCompanySelections = [[{ label: "Select Company", id: "none" }]];
+        response.data.map((company) => {
+          projectCompanySelections.push({ label: company.attributes.name, id: company.id });        
+        } );
+        setCompanies(projectCompanySelections);
+      } catch (err) {
+        console.error(err);
+        return null;
+      }
+    })();
+  }, []);
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -121,7 +153,8 @@ const NewProject = () => {
                       zip_code: project.zip_code,
                   },
                   owner: {_id: ownerID},
-                  primary_contact: {_id:""}
+                  primary_contact: {_id:""},
+                  company: {_id: project.company},
               }
           }
   };
@@ -171,7 +204,51 @@ const NewProject = () => {
                         {error.textError}
                       </MDTypography>
                     )}
-                  </MDBox>                  
+                  </MDBox>      
+
+                  <MDBox
+                      display="flex"
+                      flexDirection="column"
+                      fullWidth
+                      marginBottom="1rem"
+                      marginTop="2rem"
+                    >
+                      <Autocomplete
+                      { ...{
+                        options: companies,
+                        getOptionLabel: (option) => option.label,
+                      } }
+                        key="company"
+                        disablePortal
+                        id="combo-box-company"
+                        options={companies}
+                        autoComplete
+                        includeInputInList
+                        /* getOptionLabel={(option) => (option ? option.attributes.name : "")} */
+                        /* value={value ?? option.attributes.id} */
+                        onChange={(event, newValue) => {
+                          setCompanyValue(newValue);
+                        }}
+                        renderInput={(params) => (<FormField {...params} label="Company" InputLabelProps={{ shrink: true }} />
+                        )}
+                      />
+                      {error.company && (
+                        <MDTypography
+                          variant="caption"
+                          color="error"
+                          fontWeight="light"
+                          paddingTop="1rem"
+                        >
+                          {error.textError}
+                        </MDTypography>
+                      )}
+                    </MDBox>
+
+
+
+
+
+
                   <MDBox p={1}>
                     <FormField
                       type="text"

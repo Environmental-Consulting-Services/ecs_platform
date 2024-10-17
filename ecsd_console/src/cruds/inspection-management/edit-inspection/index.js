@@ -87,6 +87,7 @@ const EditInspection = () => {
   };
 
 
+  
   const changeInspectionActiveHandler = (e) => {
     setInspectionActive(e.target.checked);
   };

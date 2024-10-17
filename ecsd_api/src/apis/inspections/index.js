@@ -11,21 +11,28 @@ import {Readable } from 'stream';
 import {dbConfig}  from "../images/config/db.js";
 import React from "react";
 import str  from 'string-to-stream';
+import CrudService from "../../services/cruds-service";
+
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
+
+const APP_URL_API = process.env.APP_URL_API;
+const mail_api_host = process.env.MAIL_API_HOST;
+const mail_api_port = process.env.MAIL_API_PORT;
 
 
 const url = dbConfig.url;
-
-const baseUrl = "http://localhost:8080/public/images/files/";
-
+const baseUrl = APP_URL_API+"/public/images/files/";
 const mongoClient = new MongoClient(url);
 
-
 import { setLicenseKey } from "survey-core";
+import crudsService from "../../services/cruds-service.js";
+
 /* 
 import pkg from 'survey-core';
 const { setLicenseKey } = pkg;
  */
-
 
 export const getInspectionsRoute = async (req, res) => {
   let inspectionsObjectArray = [];
@@ -114,8 +121,7 @@ export const getInspectionRoute = async (req, res) => {
   return res.status(200).send(sentData);
 };
 
-
-export const getInspectionPDFRoute = async (req, res) => {
+export const shareInspectionPDFRoute = async (req, res) => {
   const inspectionId = req.params.id;
 
   let fieldsInspection;
@@ -132,12 +138,14 @@ export const getInspectionPDFRoute = async (req, res) => {
       .send({ errors: [{ detail: "The inspection can not be found" }] });
   }
 
+
+
+
   const foundInspectionTemplate = await InspectionTemplateModel.findOne({ _id: foundInspection.template });
-  
-  global.window = {document: {createElementNS: () => {return {}} }};
-  global.navigator = {};
-  global.html2pdf = {};
-  global.btoa = () => {};
+
+  const { window } = new JSDOM(`...`);
+  global.window = window;
+  global.document = window.document;
    
       const surveyModel = foundInspectionTemplate.items[0];
 
@@ -146,16 +154,19 @@ export const getInspectionPDFRoute = async (req, res) => {
       const options = {
         haveCommercialLicense: true,
           fontSize: 10,
+          htmlRenderAs: "standard",
+          applyImageFit: true,
+
+          imageFit: "true",
          margins: {
               left: 10,
               right: 10,
               top: 10,
               bot: 10
           },
-          format: [pdfWidth, pdfHeight],
+          format: "letter",
           tagboxSelectedChoicesOnly: true,
-          //compress: true
-
+          compress: true
       };
 
       surveyModel.pages[0].visible = true;
@@ -170,33 +181,34 @@ export const getInspectionPDFRoute = async (req, res) => {
          surveyPDF.data = foundInspection.formdata;
       }
 
-      var filename = "inspection_report_"+ foundInspection.id + ".pdf";
-      var fileId = await surveyPDF.raw().then(async (blob) => {  
+      var timeStamp = Math.floor(Date.now() / 1000);
+      var filename = "inspection_report_"+ foundInspection.id + "_"+timeStamp+".pdf";
 
-      //var rawblob = surveyPDF.raw("blob").then(async (blob) => {  
-      //const arrayBuffer = await blob.arrayBuffer();
-      //const buffer = Buffer.from(arrayBuffer, "binary"); 
-      //const stream = Readable.from(buffer);
+      
+      var fileId = await surveyPDF.save('./files/'+filename).then(async (blob) => {  
+        
+        return 1234;
 
-        const dataStream = str(blob);
-        const db = mongoClient.db("files_db");
-        const bucket = new GridFSBucket(db, { bucketName: 'images' });
-        var bucketStream = bucket.openUploadStream(filename)
-        var newDocId = dataStream.pipe(bucketStream)
-        .on('error', function(error) {
-          //assert.ifError(error);
-          //console.log(error)
-          //return "";
-        }).
-        on('finish', function() {
-          //console.log('Done');                
-          //fileId = bucketStream.id;          
-          //console.log('fs.files._id:'+bucketStream.id)
-          //return bucketStream.id;
-        });
-        return newDocId.id;
       });
 
+      const formData = new FormData();
+      formData.append("to", "scott@llamalogic.com");
+      formData.append("subject", "Sent from API to Mailer");
+      formData.append("message", "Sent from API to Mailer about : <a href='"+APP_URL_API+"/inspections/"+foundInspection.id+"/pdf/"+timeStamp+"'>Inspection "+foundInspection.id+"</a> " );
+      
+      CrudService.sendMail(formData, inspectionId).then((response) => {
+        const sentData = {
+          data: {
+            type: "inspections",
+            id: foundInspection.id,
+            attributes: {
+              ...foundInspection._doc,
+            },
+          },
+        };
+        return res.status(200);
+      });
+    
       delete global.window;
       delete global.html2pdf;
       delete global.navigator;
@@ -207,11 +219,103 @@ export const getInspectionPDFRoute = async (req, res) => {
       type: "inspections",
       id: foundInspection.id,
       attributes: {
-        pdf_file_id: fileId,
+        pdf_file_ts: timeStamp,
+        filname: filename,
       },
     },
   };
   return res.status(200).send(sentData);
+};
+
+export const getInspectionPDFRoute = async (req, res) => {
+  const inspectionId = req.params.id;
+  const fileTS = req.params.ts;
+
+  //const inspectionId  = fileId.split("_")[2];
+  //const timeStamp = fileId.split("_")[3];
+   
+
+  let fieldsInspection;
+  if (req.query.fields) {
+    if (req.query.fields.inspections) {
+      fieldsInspection = req.query.fields.inspections.split(",");
+    }
+  }
+
+
+  const foundInspection = await InspectionModel.findOne({ _id: inspectionId }).select(fieldsInspection);
+  if (!foundInspection) {
+    return res
+      .status(400)
+      .send({ errors: [{ detail: "The inspection can not be found" }] });
+  }
+
+  const foundInspectionTemplate = await InspectionTemplateModel.findOne({ _id: foundInspection.template });
+
+  const { window } = new JSDOM(`...`);
+  global.window = window;
+  global.document = window.document;
+   
+      const surveyModel = foundInspectionTemplate.items[0];
+
+      const pdfWidth = /* !!surveyModel && surveyModel.pdfWidth ? surveyModel.pdfWidth :  */210;
+      const pdfHeight = /* !!surveyModel && surveyModel.pdfHeight ? surveyModel.pdfHeight : */ 297;
+      const options = {
+        haveCommercialLicense: true,
+        htmlRenderAs: "standard",
+        fontSize: 10,
+        imageFit: "true",
+        applyImageFit: true,
+
+        margins: {
+              left: 10,
+              right: 10,
+              top: 10,
+              bot: 10
+        },
+        format: "letter",
+        tagboxSelectedChoicesOnly: true,
+        compress: true
+      };
+
+      surveyModel.pages[0].visible = true;
+      const surveyPDF = new SurveyPDF( surveyModel, options);
+      surveyPDF.mode = "display";
+
+      setLicenseKey(
+        "NzMyNjcyZDctM2RlNC00ZTU3LTkzODctMThhMzcyYTU5MWUyOzE9MjAyNS0wNS0xNSwyPTIwMjUtMDUtMTUsND0yMDI1LTA1LTE1"
+      );
+
+      if (surveyPDF) {
+         surveyPDF.data = foundInspection.formdata;
+      }
+
+      var fileLoc = './files/';
+      var filename = "inspection_report_"+ foundInspection.id + "_"+fileTS+".pdf";
+      
+      var fileSaveData = await surveyPDF.save(fileLoc+filename).then(async (blob) => {  
+       
+        delete global.window;
+        delete global.html2pdf;
+        delete global.navigator;
+        delete global.btoa;
+
+        return res.download(fileLoc+filename);
+
+      } );
+
+      
+  /* const sentData = {
+    data: {
+      type: "inspections",
+      id: foundInspection.id,
+      attributes: {
+        pdf_file_ts: timeStamp,
+        filname: filename,
+      },
+    },
+  };
+  return res.download(fileLoc+filename); */
 };
 
 
@@ -265,15 +369,19 @@ export const createInspectionRoute = async (req, res) => {
       .send({ errors: [{ detail: "The owner already has a project by this name" }] });
   } */
   
+  
+  let existingTemplate = await InspectionTemplateModel.findOne({ project: project });
+
+    
   const newInspection = new InspectionModel({
     scheduled_date : scheduled_date,
     type: type,
     status: status,
-    template: template,
+    template: (template)?template: (existingTemplate)?existingTemplate._id:null,
     actions : actions,
     living_narratives : living_narratives,
     project : project,
-    company : company,
+    company : (company=="")?null:company,
     created_at: Date.now(),
     updated_at: Date.now(),
   });
