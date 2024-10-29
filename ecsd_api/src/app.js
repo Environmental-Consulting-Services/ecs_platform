@@ -44,7 +44,7 @@ const corsOptions = {
       callback(null, true);
     } else if(whitelist.indexOf(origin) !== -1 ){
       callback(null, true);
-    } else if (process.env.NODE_ENV==="development"){
+    } else if (process.env.NODE_ENV==="dev"){
       //console.log("No CORS in DEV MODE ", origin);
       callback(null, true);
     } else {

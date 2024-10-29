@@ -11,6 +11,7 @@ import '../model/inspection_form_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 //widgets
 
@@ -69,7 +70,7 @@ setJsonSurvey(
 ''';
 
   String surveyDataCommand = '''
-loadPreviousData({"weather":["clear"]});
+loadPreviousData({});
 ''';
 
   // function to fetch data from api and return future list of posts
@@ -178,6 +179,8 @@ loadPreviousData({"weather":["clear"]});
           WebViewController.fromPlatformCreationParams(
         params,
         onPermissionRequest: (WebViewPermissionRequest request) {
+          Permission.camera.request();
+          Permission.microphone.request();
           request.grant();
         },
       );

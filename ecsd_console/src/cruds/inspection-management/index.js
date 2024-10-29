@@ -115,6 +115,9 @@ function InspectionManagement() {
 
         await CrudService.getInspectionTemplate(inspectionResponse.data.attributes.template).then(templateResponse => {
         
+
+         
+
           const surveyModel = templateResponse.data.attributes.items[0];
 
           const pdfWidth = /* !!surveyModel && surveyModel.pdfWidth ? surveyModel.pdfWidth :  */210;
@@ -134,12 +137,52 @@ function InspectionManagement() {
 
           };
 
-
           surveyModel.pages[0].visible = true;
-
+          surveyModel.pages[1].visible = true;
           const surveyPDF = new SurveyPDF( surveyModel, options);
-          surveyPDF.mode = "display";
 
+          surveyPDF.questionsOnPageMode = "singlePage";
+          surveyPDF.onRenderFooter.add((_, canvas) => {
+            if (canvas.pageNumber === 1) 
+              {
+                console.log(_.data);
+                return;
+              }
+            if (canvas.pageNumber === 2) return;
+            
+            console.log(_.data.project_name);
+
+            canvas.drawText({
+                text: "- " + canvas.pageNumber+" -",
+                fontSize: 10,
+                fontStyle: "bold",
+                horizontalAlign: "right",
+                margins: {  top: 10, bot: 10, left: 10, right: 10 }
+            });
+            canvas.drawText({
+              
+              text: _.data.project_name,
+              fontSize: 10,
+              horizontalAlign: "left",
+              margins: {  top: 10, bot: 10, left: 10, right: 10 }
+          });
+          canvas.drawText({
+              
+            text: _.data.inspection_number,
+            fontSize: 10,
+            horizontalAlign: "left",
+            margins: {  top: 10, bot: 50, left: 10, right: 10 }
+        });
+        
+
+
+          });
+
+
+
+
+
+          surveyPDF.mode = "display";
 
           setLicenseKey(
             "NzMyNjcyZDctM2RlNC00ZTU3LTkzODctMThhMzcyYTU5MWUyOzE9MjAyNS0wNS0xNSwyPTIwMjUtMDUtMTUsND0yMDI1LTA1LTE1"

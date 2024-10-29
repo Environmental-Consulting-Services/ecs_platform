@@ -11,7 +11,7 @@ import { UserModel } from "../../schemas/user.schema.js";
 import bcrypt from "bcrypt";
 import { makeString } from "../../utils/StringUtils.js";
 
-dotenv.config();
+//dotenv.config();
 
 /* import userRoutes from './users';
 import itemRoutes from './items';

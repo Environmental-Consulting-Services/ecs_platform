@@ -20,6 +20,6 @@ public class CustomMessage {
     private String subject;
 
     @NotBlank
-    @Size(min = 10, max = 200)
+    @Size(min = 10, max = 1000)
     private String message;
 }

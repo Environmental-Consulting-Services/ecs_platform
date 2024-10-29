@@ -51,7 +51,7 @@ class ProjectService {
     var requestPath = projectPath;
 
     var uri = HelperService.buildUri(requestPath);
-    uri = uri.replace(queryParameters: {'filter[owner]': storedUser!['id']});
+    //uri = uri.replace(queryParameters: {'filter[owner]': storedUser!['id']});
 
     if (companyId.isNotEmpty) {
       uri = uri.replace(queryParameters: {'filter[company]': companyId});

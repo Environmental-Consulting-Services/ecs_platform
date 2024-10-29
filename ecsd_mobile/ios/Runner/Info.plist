@@ -5,7 +5,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Allow user to take pictures of job sites for compliance</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>The mic is not used in this app.</string>
+	<string>Allow users to use the microphone.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

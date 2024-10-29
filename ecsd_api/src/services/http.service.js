@@ -35,6 +35,8 @@ export class HttpService {
   };
 
   getFormOptionsConfig = (method, url, data) => {
+    console.log(Axios.defaults.baseURL);
+    console.log(method, url, data);
     return { method, url, data, headers: {
       'Content-Type': 'multipart/form-data'
     }} };  

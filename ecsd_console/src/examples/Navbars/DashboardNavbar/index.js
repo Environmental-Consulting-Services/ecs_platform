@@ -192,12 +192,24 @@ function DashboardNavbar({ absolute, light, isMini, breadcrumbTitle = null }) {
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
+
+        <IconButton
+                size="small"
+                disableRipple
+                color="inherit"
+                sx={navbarMobileMenu}
+                onClick={handleMiniSidenav}
+              >
+                <Icon sx={iconsStyle} fontSize="medium">
+                  {miniSidenav ? "menu_open" : "menu"}
+                </Icon>
+              </IconButton> 
           <Breadcrumbs icon="home" title={breadcrumbTitle ?? route[route.length - 1]} route={route} light={light} />
-          {/* <IconButton sx={navbarDesktopMenu} onClick={handleMiniSidenav} size="small" disableRipple>
+           <IconButton sx={navbarDesktopMenu} onClick={handleMiniSidenav} size="small" disableRipple>
             <Icon fontSize="medium" sx={iconsStyle}>
               {miniSidenav ? "menu_open" : "menu"}
             </Icon>
-          </IconButton> */}
+          </IconButton> 
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
@@ -221,19 +233,8 @@ function DashboardNavbar({ absolute, light, isMini, breadcrumbTitle = null }) {
               {renderUserMenu()}
 
 
-{/* 
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarMobileMenu}
-                onClick={handleMiniSidenav}
-              >
-                <Icon sx={iconsStyle} fontSize="medium">
-                  {miniSidenav ? "menu_open" : "menu"}
-                </Icon>
-              </IconButton> */}
-         {/*      <IconButton
+
+           {/*     <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -241,7 +242,7 @@ function DashboardNavbar({ absolute, light, isMini, breadcrumbTitle = null }) {
                 onClick={handleConfiguratorOpen}
               >
                 <Icon sx={iconsStyle}>settings</Icon>
-              </IconButton> */}
+              </IconButton>  */}
               <IconButton
                 size="small"
                 disableRipple

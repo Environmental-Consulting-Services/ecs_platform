@@ -6,10 +6,17 @@ import jwt from 'jsonwebtoken';
 import { UserModel } from "../users/schema/user.schema";
 import { roleModel } from "../roles/schema/role.schema"
 import { passwordResetModel } from "./schema/passwordResets.schema";
+import CrudService from "../../services/cruds-service";
 
-dotenv.config();
+//dotenv.config();
 
-const transporter = nodemailer.createTransport({
+
+const APP_URL_API = process.env.APP_URL_API;
+const mail_api_host = process.env.MAIL_API_HOST;
+const mail_api_port = process.env.MAIL_API_PORT;
+
+
+/* const transporter = nodemailer.createTransport({
   host: "smtp.mailtrap.io",
   port: 2525,
   auth: {
@@ -18,7 +25,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const loginRouteHandler = async (req, res, email, password) => {
+ */export const loginRouteHandler = async (req, res, email, password) => {
   //Check If User Exists
   let foundUser = await UserModel.findOne({ email: email });
   if (foundUser == null) {
@@ -176,28 +183,45 @@ export const forgotPasswordRouteHandler = async (req, res, email) => {
   } else {
     let token = randomToken(20);
     // send mail with defined transport object
-    let info = await transporter.sendMail({
-      from: "admin@jsonapi.com", // sender address
-      to: email, // list of receivers
-      subject: "Reset Password", // Subject line
-      html: `<p>You requested to change your password.If this request was not made by you please contact us. Access <a href='${process.env.APP_URL_CLIENT}/auth/reset-password?token=${token}&email=${email}'>this link</a> to reste your password </p>`, // html body
-    });
-    const dataSent = {
-      data: "password-forgot",
-      attributes: {
-        redirect_url: `${process.env.APP_URL_API}/password-reset`,
-        email: email,
-      },
-    };
+    
+    
+    const formData = new FormData();
+    formData.append("to", email);
+    formData.append("subject", "Smart Complai: Reset Passord");
 
-    // save token in db
-    await passwordResetModel.create({
+    let html = `<p>You requested to change your password.If this request was not made by you please contact us. Access <a href='${process.env.APP_URL_CLIENT}/auth/reset-password?token=${token}&email=${email}'>this link</a> to reste your password </p>`; // html body
+
+    formData.append("message", html);
+    console.log("Sending email!");
+
+    CrudService.sendMail(formData, email).then( async (response) => {
+
+      console.log("Sent email");
+      
+      const dataSent = {
+        data: "password-forgot",
+        attributes: {
+          redirect_url: `${process.env.APP_URL_API}/password-reset`,
+          email: email,
+        },
+      };
+
+      await passwordResetModel.create({
         email: foundUser.email,
         token: token,
         created_at: new Date(),
-    });
+        });
 
-    return res.status(204).json(dataSent);
+        return res.status(204).json(dataSent);
+    
+      }).catch((error) => {
+        console.log(error);
+        return res.status(400).json({errors: { email: ["The email does not match any existing user."] }});
+      });
+        // save token in db
+      
+ 
+   
   }
 }
 
