@@ -14,9 +14,7 @@ import java.io.IOException;
 public class EmailServiceImpl implements EmailService{
     private static final String FROM = "no-reply@ecscompliance.com";
 
-    
     Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
-
 
     @Override
     public Boolean sendEmail(ApiClient client, CustomMessage customMessage) {

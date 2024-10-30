@@ -1,3 +1,14 @@
+###
+#
+# Required Environment Variables
+# - APP_ENV -- folder under the env dir that you want to read the .env file from
+#    - dev
+#    - prod
+#    - staging
+# - APP_DOMAIN -- domain name for the application (cert will be generated for this domain and used in the nginx config)
+#    - app.ecscompliance.com
+#    - staging.app.ecscompliance.com
+###
 services:
   nginx: 
     image: ghcr.io/llamalogic/nginx
@@ -10,14 +21,15 @@ services:
     volumes:
       #- ./nginx/conf/:/etc/nginx/conf.d/:rw
       - ./certbot/www:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/nginx/ssl/:rw
+      - ./certbot/conf/live/${APP_DOMAIN}/fullchain.pem:/etc/nginx/ssl/fullchain.pem:rw
+      - ./certbot/conf/live/${APP_DOMAIN}/privkey.pem:/etc/nginx/ssl/privkey.pem:rw
     networks:
       ecsd-app:
         aliases:
           - nginx
   api:
     image: ghcr.io/llamalogic/api
-    env_file: ./.env-api
+    env_file: ./env/${APP_ENV}/.env-api
     hostname: api
     volumes:
       - ./files/:/usr/node/app/files/:rw 
@@ -27,19 +39,19 @@ services:
           - api
   console:
     image: ghcr.io/llamalogic/console
-    env_file: ./.env-console
+    env_file: ./env/${APP_ENV}/.env-console
     environment:
       ENV_FILE_IN: "/usr/share/nginx/html/runtime-env.env"
     hostname: console
     volumes:
-      - ./.env-console:/usr/share/nginx/html/runtime-env.env
+      - ./env/${APP_ENV}/.env-console:/usr/share/nginx/html/runtime-env.env
     networks:
       ecsd-app:
         aliases:
           - console      
   mail:
     image: ghcr.io/llamalogic/mail
-    env_file: ./.env-mail
+    env_file: ./env/${APP_ENV}/.env-mail
     hostname: mail
     networks:
       ecsd-app:
@@ -47,7 +59,7 @@ services:
           - mail
   expert:
     image: ghcr.io/llamalogic/expert
-    env_file: ./.env-expert
+    env_file: ./env/${APP_ENV}/.env-expert
     hostname: expert
     networks:
       ecsd-app:
