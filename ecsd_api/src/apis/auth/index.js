@@ -187,9 +187,9 @@ export const forgotPasswordRouteHandler = async (req, res, email) => {
     
     const formData = new FormData();
     formData.append("to", email);
-    formData.append("subject", "Smart Complai: Reset Passord");
+    formData.append("subject", "Smart Complai: Reset Password");
 
-    let html = `<p>You requested to change your password.If this request was not made by you please contact us. Access <a href='${process.env.APP_URL_CLIENT}/auth/reset-password?token=${token}&email=${email}'>this link</a> to reste your password </p>`; // html body
+    let html = `<p>You requested to change your password. If this request was not made by you please contact us. Access <a href='${process.env.APP_URL_CLIENT}/auth/reset-password?token=${token}&email=${email}'>this link</a> to reste your password </p>`; // html body
 
     formData.append("message", html);
     console.log("Sending email!");
