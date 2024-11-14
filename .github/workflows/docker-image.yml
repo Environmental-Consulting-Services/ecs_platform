@@ -13,28 +13,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Console Docker image
-    - run: docker build . -t ghcr.io/llamalogic/console:staging-$(date +%s) -f ./ecsd_console/docker/Dockerfile
-    - run: docker push -a ghcr.io/llamalogic/console
+        - uses: actions/checkout@v4
+        - name: Build the Console Docker image
+        - run: docker build . -t ghcr.io/llamalogic/console:staging-$(date +%s) -f ./ecsd_console/docker/Dockerfile
+        - run: docker push -a ghcr.io/llamalogic/console
 
   build-api-image:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the API Docker image
-    - run: docker build . -t ghcr.io/llamalogic/api:staging-$(date +%s) -f ./ecsd_api/docker/Dockerfile
-    - run: docker push - ghcr.io/llamalogic/api
+        - uses: actions/checkout@v4
+        - name: Build the API Docker image
+        - run: docker build . -t ghcr.io/llamalogic/api:staging-$(date +%s) -f ./ecsd_api/docker/Dockerfile
+        - run: docker push - ghcr.io/llamalogic/api
 
   build-mail-image:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Mail Docker image
-    - run: docker build . -t ghcr.io/llamalogic/mail:staging-$(date +%s) -f ./ecsd_mail/docker/Dockerfile
-    - run: docker push - ghcr.io/llamalogic/mail
+        - uses: actions/checkout@v4
+        - name: Build the Mail Docker image
+        - run: docker build . -t ghcr.io/llamalogic/mail:staging-$(date +%s) -f ./ecsd_mail/docker/Dockerfile
+        - run: docker push - ghcr.io/llamalogic/mail
       
