@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { roleModel } from "./schema/role.schema";
 import { permissionModel } from "../permissions/schema/permission.schema";
 
-//dotenv.config();
+dotenv.config();
 
 export const createRoleForUser = async (obj) => {
   return await models.ModelHasRole.create(obj);

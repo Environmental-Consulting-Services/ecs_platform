@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { UserModel } from '../users/schema/user.schema';
 
-//dotenv.config();
+dotenv.config();
 
 export const setUserProfileImageRoute = async (randomId, req, res) => {
   const id = req.params.id;

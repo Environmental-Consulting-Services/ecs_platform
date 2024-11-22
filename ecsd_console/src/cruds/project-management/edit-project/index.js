@@ -85,7 +85,7 @@ const EditProject = () => {
           state: res.data.attributes.address.state,
           zip_code: res.data.attributes.address.zip_code,
           owner: res.data.attributes.owner,
-          site_map: res.data.attributes.site_maps.length>0? res.data.attributes.site_maps[0].site_map:"",
+          site_map: res.data.attributes.site_maps[0].site_map
         });
       } catch (err) {
         console.error(err);
@@ -97,6 +97,10 @@ const EditProject = () => {
 
   const clickEditSiteMapHandler = (id) => {
     navigate(`/project-management/edit-project-site-map/${id}`);
+  };
+
+  const clickEditKeyPairHandler = (id) => {
+    navigate(`/project-management/edit-key-pair/${id}`);
   };
 
   const changeHandler = (e) => {
@@ -179,6 +183,15 @@ const EditProject = () => {
                   onClick={() =>  clickEditSiteMapHandler(project.id)}
                 >
                   + Edit Site Map
+                </MDButton>
+                <MDButton
+                  variant="gradient"
+                  color="secondary"
+                  size="small"
+                  type="submit" 
+                  onClick={() =>  clickEditKeyPairHandler(project.id)}
+                >
+                  + Edit Key Value Pair
                 </MDButton>
               <MDBox component="form" method="POST" onSubmit={submitHandler}>
                 <MDBox display="flex" flexDirection="column" px={3} my={2}>

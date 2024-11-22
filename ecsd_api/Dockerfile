@@ -1,4 +1,4 @@
-ARG NODE_VERSION=18.17.1
+cdeARG NODE_VERSION=18.17.1
 
 # ---------- Base ----------
 FROM node:${NODE_VERSION}-alpine AS base

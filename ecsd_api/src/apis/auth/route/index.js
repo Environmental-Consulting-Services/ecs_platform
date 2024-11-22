@@ -18,6 +18,8 @@ router.post("/logout", (req, res) => {
   return res.sendStatus(204);
 });
 
+
+
 router.post("/register", async (req, res) => {
   try {
     const {type, first_name, last_name, email, password, profile_image, phone, address, role, } = req.body.data.attributes;

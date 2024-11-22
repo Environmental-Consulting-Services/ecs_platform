@@ -68,20 +68,12 @@ import InspectionManagement from "cruds/inspection-management";
 // Material Dashboard 2 PRO React components
 import MDAvatar from "components/MDAvatar";
 
-// @mui icons 
+// @mui icons
 import Icon from "@mui/material/Icon";
 
 // Images
 import profilePicture from "assets/images/team-3.jpg";
-import { faUser  } from "@fortawesome/free-regular-svg-icons";
-import { FaPeopleRoof } from "react-icons/fa6";
-import { FaClipboardUser } from "react-icons/fa6";
-import { FaClipboardQuestion } from "react-icons/fa6";
-import { FaListCheck } from "react-icons/fa6";
-import { FaObjectUngroup } from "react-icons/fa6";
-
-
-
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 import InspectionTemplateManagement from "cruds/inspectiontemplate-management";
 import ActionItemManagement from "cruds/actionitem-management";
 
@@ -129,8 +121,7 @@ const routes = [
     key: "company-management",
     route: "/company-management",
     component: <CompanyManagement />,
-    icon: <FaPeopleRoof />,
-    /* icon: <FontAwesomeIcon icon={<FaPeopleRoof>} size="sm"/>, */
+    icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
   },
@@ -139,8 +130,7 @@ const routes = [
     key: "project-management",
     route: "/project-management",
     component: <ProjectManagement />,
-    icon: <FaClipboardUser />,
-    /*icon: <FontAwesomeIcon icon={faUser} size="sm" />,*/
+    icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
   },
@@ -150,8 +140,7 @@ const routes = [
     title: "User Management",
     route: "/user-management",
     component: <UserManagement />,
-   /* icon: <FaClipboardQuestion />, */
-     icon: <FontAwesomeIcon icon={faUser} size="sm" />, 
+    icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
   },
@@ -161,8 +150,7 @@ const routes = [
     key: "inspection-management",
     route: "/inspection-management",
     component: <InspectionManagement />,
-    icon: <FaClipboardQuestion />,
-    /* icon: <FontAwesomeIcon icon={faUser} size="sm" />, */
+    icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
   },
@@ -172,8 +160,7 @@ const routes = [
     key: "actionitem-management",
     route: "/actionitem-management",
     component: <ActionItemManagement />,
-    icon: <FaListCheck />,
-    /* icon: <FontAwesomeIcon icon={faUser} size="sm" />, */
+    icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
   },
@@ -183,8 +170,7 @@ const routes = [
     key: "inspectiontemplate-management",
     route: "/inspectiontemplate-management",
     component: <InspectionTemplateManagement />,
-    icon: <FaObjectUngroup />,
-    /* icon: <FontAwesomeIcon icon={faUser} size="sm" />, */
+    icon: <FontAwesomeIcon icon={faUser} size="sm" />,
     type: "collapse",
     noCollapse: true,
   },

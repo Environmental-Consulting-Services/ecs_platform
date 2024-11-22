@@ -15,7 +15,7 @@ import { createActionItemNoteRoute } from "../apis/actionitems/index.js";
 import { InspectionTemplateModel } from "../apis/inspectiontemplates/schema/inspectionTemplate.schema";
 import { InspectionFormModel } from "../apis/inspectionforms/schema/inspectionForm.schema";
 
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+dotenv.config();
 
 
 async function dbUtil() {

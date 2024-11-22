@@ -17,22 +17,20 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import FormField from "layouts/applications/wizard/components/FormField";
 import { useNavigate } from "react-router-dom";
-import Autocomplete from "@mui/material/Autocomplete";
 
 import CrudService from "services/cruds-service";
 import { AuthContext } from "context";
 
 const NewInspection = () => {
   const navigate = useNavigate();
-  const [templates, setTemplates] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [ownerID, setOwnerId] = useState("");
   const [inspectionActive, setInspectionActive] = useState(false);
   const [owner, setOwner] = useState("");
   const [inspection, setInspection] = useState({
     name: "",
     inspectionActive: "",
-    template: "",
-    status: "unsheduled",
+    status: "",
     street_one: "",
     street_two: "",
     city: "",
@@ -41,11 +39,10 @@ const NewInspection = () => {
   });
 
  
-  const [template, setTemplate] = useState("");
+  const [value, setValue] = useState("");
 
   const [error, setError] = useState({
     name: false,
-    template: false,
     inspectionActive:false,
     status: false,
     street_one: false,
@@ -93,8 +90,8 @@ const NewInspection = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await CrudService.getInspectionTemplates();
-        setTemplates(response.data);
+        const response = await CrudService.getRoles();
+        setRoles(response.data);
       } catch (err) {
         console.error(err);
         return null;
@@ -115,8 +112,7 @@ const NewInspection = () => {
               type: "inspections",
               attributes: {
                   name: inspection.name,
-                  template: template.id,
-                  status: (inspectionActive) ? "scheduled" : "unscheduled",
+                  status: (inspectionActive) ? "active" : "inactive",
                   
               }
           }
@@ -153,8 +149,6 @@ const NewInspection = () => {
             <Card>
               <MDBox component="form" method="POST" onSubmit={submitHandler}>
                 <MDBox display="flex" flexDirection="column" px={3} my={2}>
-                  
-                  
                   <MDBox p={1}>
                     <FormField
                       type="text"
@@ -169,41 +163,9 @@ const NewInspection = () => {
                         {error.textError}
                       </MDTypography>
                     )}
-                  </MDBox>       
-
-                  <MDBox
-                      display="flex"
-                      flexDirection="column"
-                      fullWidth
-                      marginBottom="1rem"
-                      marginTop="2rem"
-                    >
-                      <Autocomplete
-                        defaultValue=""
-                        options={templates}
-                        getOptionLabel={(option) => (option ? option.attributes.name : "")}
-                        value={template ?? ""}
-                        onChange={(event, newValue) => {
-                          setTemplate(newValue);
-                        }}
-                        renderInput={(params) => (
-                          <FormField {...params} label="Template" InputLabelProps={{ shrink: true }} />
-                        )}
-                      />
-                      {error.template && (
-                        <MDTypography
-                          variant="caption"
-                          color="error"
-                          fontWeight="light"
-                          paddingTop="1rem"
-                        >
-                          {error.textError}
-                        </MDTypography>
-                      )}
-                    </MDBox>
-
+                  </MDBox>                  
                   
-                 {/*  <MDBox display="flex" alignItems="center" mb={0.5} ml={-1.5}>
+                  <MDBox display="flex" alignItems="center" mb={0.5} ml={-1.5}>
                     <MDBox mt={0.5}>
                     <Switch name="inspectionActive" checked={inspectionActive} onChange={changeInspectionActiveHandler} />
                     </MDBox>
@@ -212,10 +174,7 @@ const NewInspection = () => {
                         Active Inspection?
                       </MDTypography>
                     </MDBox>
-                  </MDBox> */}
-                  
-
-
+                  </MDBox>
                   <MDBox ml="auto" mt={4} mb={2} display="flex" justifyContent="flex-end">
                     <MDBox mx={2}>
                       <MDButton

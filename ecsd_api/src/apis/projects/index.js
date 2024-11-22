@@ -41,17 +41,6 @@ export const getProjectsRoute = async (req, res) => {
     }
   }
 
-    filters = { ...filters, $or: [
-      {
-        'people.member': req.user._id
-      },
-      {
-        owner: req.user._id
-      }
-    ]};
-  
-
-
   const allProjects = await ProjectModel
     .find(filters)
     .select(fieldsProject)
@@ -110,7 +99,6 @@ export const createProjectRoute = async (req, res) => {
     status,
     address,
     owner,
-    company,
     primary_contact } = req.body.data.attributes;
 
 
@@ -146,17 +134,15 @@ export const createProjectRoute = async (req, res) => {
 
   const newProject = new ProjectModel({
     name: name,
-    status: status,
+    status: "active",
     address: new AddressModel({
       street_one: address.street_one,
       street_two: address.street_two,
       city: address.city,
       state: address.state,
       zip_code: address.zip_code,
-      company: company
     }),
     owner: { _id: owner._id },
-    company: company,
     //primary_contact: primary_contact, 
     //people: people.map(person => person._id),
     created_at: Date.now(),

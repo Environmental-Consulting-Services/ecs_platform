@@ -29,13 +29,7 @@ import DataTable from "examples/Tables/DataTable";
 import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Form } from "formik";
-/* import Button from '@mui/material/Button';
- */
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Modal from "@mui/material/Modal";
 
 
 
@@ -53,7 +47,9 @@ const EditActionItem = () => {
   const [tableData, setTableData] = useState([]);
   const [note, setNote] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
+
 
   //const [actionitemActive, setActionItemActive] = useState(false);
   const [actionitem, setActionItem] = useState({
@@ -77,7 +73,9 @@ const EditActionItem = () => {
 
   });
 
+
   const [value, setValue] = useState("");
+
   const [error, setError] = useState({
     name: false,
     number: false,
@@ -167,13 +165,6 @@ const EditActionItem = () => {
     setTableData(getRows(data));
   }, [data]);
 
-
-  const handleClose = async (e) => {
-  
-    setShowModal(false);
-    setNote("");
-
-  }
 
   const handleNoteSave = async (e) => {
     try {
@@ -769,49 +760,7 @@ const addNoteModal = () => {
         </Grid>
       </MDBox>
       <Footer />
-
-      <Dialog
-        open={showModal}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Add a new Note to the Action Item."}
-        </DialogTitle>
-        <DialogContent>
-        <>
-         
-            <MDBox component="form" method="POST" >
-              <FormField
-                type="text"
-                multiline rows={5}
-                placeholder="Enter Note"
-                name="note"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-            </MDBox>
-          
-        </>
-         {/*  <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
-          </DialogContentText> */}
-        </DialogContent>
-        <DialogActions>
-            <MDButton variant="secondary" onClick={handleClose}>
-              Cancel
-            </MDButton>
-            <MDButton variant="primary" onClick={handleNoteSave}>
-              Save
-            </MDButton>
-        </DialogActions>
-      </Dialog>
-
-{/* 
-      <MOdal
-
+      <Modal
         height={200}
         width={400}
         keepMounted
@@ -845,7 +794,7 @@ const addNoteModal = () => {
             </MDButton>
           </MDBox>
         </>
-      </Modal> */}
+      </Modal>
     </DashboardLayout>
   );
 };

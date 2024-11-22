@@ -26,10 +26,10 @@ import CrudService from "services/cruds-service";
 import HTMLReactParser from "html-react-parser";
 import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
-/* 
+
 import { generate } from '@pdfme/generator';
 import { BLANK_PDF } from '@pdfme/common';
- */
+
 
 
 function ProjectManagement() {
@@ -155,7 +155,7 @@ function ProjectManagement() {
       }
   }
  */
-/* 
+
   function doPDF() {
     generate({ template, inputs }).then((pdf) => {
       console.log(pdf);
@@ -198,7 +198,7 @@ function ProjectManagement() {
   };
 
 
- */
+
 
 
   const dataTableData = {

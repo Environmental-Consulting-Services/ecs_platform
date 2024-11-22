@@ -39,16 +39,7 @@ export const getCompaniesRoute = async (req, res) => {
     }
   }
 
-  filters = { ...filters, $or: [
-    {
-      people: req.user._id
-    },
-    {
-      owner: req.user._id
-    }
-  ]};
-
-
+  //TODO: need to limit to companies a user can see....
 
   const allCompanies = await CompanyModel
     .find(filters)

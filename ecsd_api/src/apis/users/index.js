@@ -4,7 +4,7 @@ import { UserModel } from "./schema/user.schema";
 import { roleModel } from "../roles/schema/role.schema";
 import { permissionModel } from "../permissions/schema/permission.schema";
 
-//dotenv.config();
+dotenv.config();
 
 const validateEmail = (inputText) => {
   var mailformat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

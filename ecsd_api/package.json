@@ -7,7 +7,6 @@
     "@lykmapipo/mongoose-faker": "^0.12.0",
     "@pdfme/generator": "^4.0.1",
     "@videsk/mongoose-dummy": "^1.4.1",
-    "@vitejs/plugin-react": "^4.3.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
@@ -18,11 +17,10 @@
     "esm": "^3.2.25",
     "express": "^4.18.1",
     "file-system": "^2.2.2",
-    "form-data": "^4.0.1",
-    "jsdom": "^25.0.1",
+    "form-data": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
-    "mongoose": "6.12.8",
+    "mongoose": "^6.12.8",
     "mongoose-dummy": "^1.0.8",
     "mongoose-fakery": "^0.1.7",
     "multer": "^1.4.4-lts.1",
@@ -42,11 +40,7 @@
     "survey-core": "1.10.2",
     "survey-pdf": "1.10.2",
     "survey-react-ui": "1.10.2",
-    "uuid": "^8.3.2",
-    "vite": "^5.2.11",
-    "webpack": "^5.91.0",
-    "webpack-dev-server": "^5.0.4",
-    "webpack-merge": "^5.10.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.1",
@@ -56,7 +50,6 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.18.0",
     "@babel/preset-env": "^7.24.4",
     "@babel/register": "^7.17.7",
-    "@types/node": "^20.12.12",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
@@ -73,15 +66,14 @@
     ]
   },
   "scripts": {
-    "start:dev": "NODE_ENV=dev nodemon --exec babel-node --experimental-specifier-resolution=node --env-file=.env.dev src/server.js ",
-    "build": "NODE_ENV=production babel src --out-dir dist --copy-files ",
+    "start:dev": "NODE_ENV=development nodemon --exec babel-node --experimental-specifier-resolution=node src/server.js",
+    "start:dev:win": "SET NODE_ENV=development & nodemon --exec babel-node --experimental-specifier-resolution=node src/server.js",
+    "build": "NODE_ENV=production babel src --out-dir dist --copy-files",
     "start": "NODE_ENV=production node --experimental-modules --experimental-specifier-resolution=node dist/server.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
     "seed": "node --experimental-modules src/mongoose/seedData.js",
-    "seed:staging": "NODE_ENV=staging node --experimental-modules src/mongoose/seedData.js",
     "dbutil": "node --experimental-modules src/mongoose/DataLoadUtil.js",
-    "clear": "node --experimental-modules src/mongoose/clearDbs.js",
-    "envtest": "NODE_ENV=staging nodemon --exec babel-node  --experimental-specifier-resolution=node src/envtest.js "
+    "clear": "node --experimental-modules src/mongoose/clearDbs.js"
   },
   "author": "",
   "license": "ISC"

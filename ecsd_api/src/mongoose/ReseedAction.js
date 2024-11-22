@@ -7,7 +7,7 @@ import { roleModel } from "../apis/roles/schema/role.schema";
 import { permissionModel } from "../apis/permissions/schema/permission.schema";
 
 import dotenv from "dotenv";
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+dotenv.config();
 
 const ReseedAction = () => {
   async function clear() {

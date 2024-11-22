@@ -2,8 +2,10 @@ import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
-let myEnv = dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+let myEnv = dotenv.config()
 dotenvExpand.expand(myEnv)
+
+
 
 export const dbConnect = () => {
   //console.log(process.env.DATABASE_URL);  

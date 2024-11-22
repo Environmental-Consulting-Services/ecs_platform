@@ -5,9 +5,7 @@ import passport from "passport";
 
 import { UserModel } from "./apis/users/schema/user.schema";
 const JWTStrategy = passportJWT.Strategy;
-//dotenv.config();
-
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+dotenv.config();
 
 passport.use(
   new JWTStrategy(

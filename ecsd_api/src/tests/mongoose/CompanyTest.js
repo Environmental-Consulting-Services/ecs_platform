@@ -8,7 +8,7 @@ import { AddressModel } from "../../schemas/address.schema.js";
 import { makeString } from "../../utils/StringUtils.js";
 
 import dotenv from 'dotenv';
-//dotenv.config();
+dotenv.config();
 
 async function test() {
   //connect do db

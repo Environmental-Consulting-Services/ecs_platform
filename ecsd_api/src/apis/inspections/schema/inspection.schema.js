@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { LivingNarrativeSchema } from "../../managementplans/schema/managementplan.schema.js";
-import sequenceGenerator from "../../../mongoose/mongoose_utils.js";
 
 
 // Define schema for Project
@@ -12,7 +11,6 @@ const inspectionSchema = new mongoose.Schema({
     enum: ["unscheduled","scheduled", "started", "conducted", "completed"],
     default: "unscheduled",
   },
-  number: { type: String },
   template: {
     type: mongoose.Schema.Types.ObjectId, ref: 'InspectionTemplate', required: false
   },
@@ -32,22 +30,5 @@ inspectionSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });
 inspectionSchema.set("toJSON", { virtuals: true });
-
-
-// sequence instance
-var sequence = sequenceGenerator('inspections');
-// I make sure this is the last pre-save middleware (just in case)
-inspectionSchema.pre('save', function(next) {
-  var doc = this;
-  // get the next sequence
-  if (doc.isNew) { 
-    sequence.next(function(nextSeq){
-      doc.number = nextSeq;
-      next();
-    });
-  } else { next(); } 
-});
-
-
 
 export const InspectionModel = mongoose.model("Inspection", inspectionSchema);

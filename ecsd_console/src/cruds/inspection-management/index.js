@@ -20,8 +20,6 @@ import MDAlert from "components/MDAlert";
 import { Tooltip, IconButton } from "@mui/material";
 
 import DownloadIcon from "@mui/icons-material/Download";
-import EditIcon from "@mui/icons-material/Edit";
-import ShareIcon from "@mui/icons-material/Share";
 
 import CrudService from "services/cruds-service";
 import { AbilityContext } from "Can";
@@ -81,30 +79,9 @@ function InspectionManagement() {
     navigate("/inspection-management/new-inspection");
   };
 
-
-  const clickShareHandler = async (e, id) => {
-    try {
-
-      const response = await CrudService.shareInspectionPDF(id).then( async (inspectionResponse) => {
-        setNotification({
-          value: true,
-          text: "The inspection has been successfully shared",
-        });
-      });
-  
-      } catch (err) {
-        console.error(err);
-        if (err.hasOwnProperty("errors")) {
-          setNotification({
-            value: true,
-            text: err.errors[0].title,
-          });
-        }
-        return null;
-      }
-    };
-  
-
+  const clickEditHandler = (id) => {
+    navigate(`/project-management/edit-inspection/${id}`);
+  };
 
 
   const clickPDFHandler = async (e, id) => {
@@ -115,9 +92,6 @@ function InspectionManagement() {
 
         await CrudService.getInspectionTemplate(inspectionResponse.data.attributes.template).then(templateResponse => {
         
-
-         
-
           const surveyModel = templateResponse.data.attributes.items[0];
 
           const pdfWidth = /* !!surveyModel && surveyModel.pdfWidth ? surveyModel.pdfWidth :  */210;
@@ -137,52 +111,12 @@ function InspectionManagement() {
 
           };
 
+
           surveyModel.pages[0].visible = true;
-          surveyModel.pages[1].visible = true;
+
           const surveyPDF = new SurveyPDF( surveyModel, options);
-
-          surveyPDF.questionsOnPageMode = "singlePage";
-          surveyPDF.onRenderFooter.add((_, canvas) => {
-            if (canvas.pageNumber === 1) 
-              {
-                console.log(_.data);
-                return;
-              }
-            if (canvas.pageNumber === 2) return;
-            
-            console.log(_.data.project_name);
-
-            canvas.drawText({
-                text: "- " + canvas.pageNumber+" -",
-                fontSize: 10,
-                fontStyle: "bold",
-                horizontalAlign: "right",
-                margins: {  top: 10, bot: 10, left: 10, right: 10 }
-            });
-            canvas.drawText({
-              
-              text: _.data.project_name,
-              fontSize: 10,
-              horizontalAlign: "left",
-              margins: {  top: 10, bot: 10, left: 10, right: 10 }
-          });
-          canvas.drawText({
-              
-            text: _.data.inspection_number,
-            fontSize: 10,
-            horizontalAlign: "left",
-            margins: {  top: 10, bot: 50, left: 10, right: 10 }
-        });
-        
-
-
-          });
-
-
-
-
-
           surveyPDF.mode = "display";
+
 
           setLicenseKey(
             "NzMyNjcyZDctM2RlNC00ZTU3LTkzODctMThhMzcyYTU5MWUyOzE9MjAyNS0wNS0xNSwyPTIwMjUtMDUtMTUsND0yMDI1LTA1LTE1"
@@ -191,6 +125,8 @@ function InspectionManagement() {
           if (surveyPDF) {
              surveyPDF.data = inspectionResponse.data.attributes.formdata;
           }
+
+
 
           let filename = inspectionResponse.data.attributes.scheduled_date + ".pdf";
           surveyPDF.save(filename);
@@ -211,9 +147,7 @@ function InspectionManagement() {
   };
 
 
-  const clickEditHandler = (e,id) => {
-    navigate(`/inspection-management/view-inspection/${id}`);
-  };
+
 
   const clickDeleteHandler = async (e, id) => {
     try {
@@ -264,9 +198,9 @@ function InspectionManagement() {
         name: row.attributes.name,
         scheduled_date: scheduled_date,
         status: row.attributes.status,
-        action_count: (row.attributes.actions && row.attributes.actions.length>0)? row.attributes.actions.reduce((acc, action) => {
+        action_count: row.attributes.actions.reduce((acc, action) => {
           return acc + 1;
-        }, 0): 0,
+        }, 0),
         //owner: row.attributes.owner,
         created_at: created_date,
       };
@@ -307,17 +241,10 @@ function InspectionManagement() {
         Header: "actions",
         disableSortBy: true,
         accessor: "",
-        align: "center",
         Cell: (info) => {
           return (
             <MDBox display="flex" alignItems="center">
               
-              <Tooltip title="Edit Inspection">
-                <IconButton onClick={(e) => clickEditHandler(e,info.cell.row.original.id)} size="small">
-                <EditIcon />
-                </IconButton>
-                </Tooltip>
-  
                 <Tooltip title="Download PDF">
                   <IconButton
                     onClick={(e) => clickPDFHandler(e, info.cell.row.original.id)}
@@ -325,14 +252,7 @@ function InspectionManagement() {
                     <DownloadIcon />
                   </IconButton>
                 </Tooltip>
-                
-                <Tooltip title="Share Inspection">
-                <IconButton onClick={(e) => clickShareHandler(e,info.cell.row.original.id)} size="large">
-                  <ShareIcon />
-                </IconButton>
-                </Tooltip>
-
-
+              
               {/* {ability.can("edit", "projects") && (
                 <Tooltip title="Edit Project">
                   <IconButton onClick={() => clickEditHandler(info.cell.row.original.id)} size="large">

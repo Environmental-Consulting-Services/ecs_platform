@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { PersonModel } from "./schema/person.schema";
 
-//dotenv.config();
+dotenv.config();
 
 const validateEmail = (inputText) => {
   var mailformat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

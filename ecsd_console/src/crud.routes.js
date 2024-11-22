@@ -6,6 +6,8 @@ import NewCompany from "cruds/company-management/new-company";
 import EditProject from "cruds/project-management/edit-project";
 import NewProject from "cruds/project-management/new-project";
 import EditProjectSiteMap from "cruds/project-management/edit-project-site-map";
+import EditProjectKeyPair from "cruds/project-management/edit-key-pair";
+
 
 import EditInspectionTemplate from "cruds/inspectiontemplate-management/edit-inspectiontemplate";
 import NewInspectionTemplate from "cruds/inspectiontemplate-management/new-inspectiontemplate";
@@ -19,8 +21,6 @@ import EditUser from "cruds/user-management/edit-user";
 import NewUser from "cruds/user-management/new-user";
 import EditInspection from "cruds/inspection-management/edit-inspection";
 import NewInspection from "cruds/inspection-management/new-inspection";
-import ViewInspection from "cruds/inspection-management/view-inspection";
-
 import EditActionItem from "cruds/actionitem-management/edit-actionitem";
 import NewActionItem from "cruds/actionitem-management/new-actionitem";
 
@@ -93,6 +93,12 @@ const crudRoutes = [
     type: "projects",
   },
   {
+    key: "edit-key-pair",
+    route: "/project-management/edit-key-pair/:id",
+    component: <EditProjectKeyPair />,
+    type: "projects",
+  },
+  {
     key: "new-inspection",
     route: "/inspection-management/new-inspection",
     component: <NewInspection />,
@@ -102,12 +108,6 @@ const crudRoutes = [
     key: "edit-inspection",
     route: "/inspection-management/edit-inspection/:id",
     component: <EditInspection />,
-    type: "inspections",
-  },
-  {
-    key: "view-inspection",
-    route: "/inspection-management/view-inspection/:id",
-    component: <ViewInspection />,
     type: "inspections",
   },
   {

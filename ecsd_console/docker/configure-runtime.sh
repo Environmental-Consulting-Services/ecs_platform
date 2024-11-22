@@ -27,7 +27,7 @@ runtime_input="/usr/share/nginx/html/runtime-env.env"
 if [ -n "${ENV_FILE_IN}" ]; then
     echo "ENV_FILE_IN is set to some string"
     #check if the file exists
-    if [ -f ${ENV_FILE_IN}]; then 
+    if exist ${ENV_FILE_IN}; then 
         rem "file exists"
         # Assign the nginx configuration filename
         runtime_env=${ENV_FILE_IN}

@@ -7,7 +7,7 @@ import request from "supertest"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 
-//dotenv.config();
+dotenv.config();
 
 const token = "{YOUR TOKEN}" 
 

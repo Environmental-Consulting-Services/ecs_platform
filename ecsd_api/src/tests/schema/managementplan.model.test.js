@@ -14,7 +14,7 @@ import { makeString } from "../../utils/StringUtils.js";
 const ignoredFields = ['_id','created_at', '__v', /detail.*_info/];
 
 
-//dotenv.config();
+dotenv.config();
 
 beforeAll(async () => {
 await connectDB();

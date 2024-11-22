@@ -1,5 +1,4 @@
 import express from "express";
-const { json, urlencoded } = require("body-parser");
 import cors from "cors";
 import dotenv from "dotenv";
 import "./passport.js";
@@ -18,13 +17,14 @@ import {
   managementPlanRoutes,
   actionItemRoutes,
   inspectionTemplateRoutes,
-  peopleRoutes
+  peopleRoutes,
+  keypairRoutes
     
 } from "./apis/index.js";
 import path from "path";
 
 import cron from "node-cron";
-//import ReseedAction from "./mongoose/ReseedAction.js";
+import ReseedAction from "./mongoose/ReseedAction.js";
 
 import passportJWT from "passport-jwt";
 
@@ -33,10 +33,6 @@ const JWTStrategy = passportJWT.Strategy;
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app = express();
 
-
-app.use(json({ limit: '30mb' }))
-app.use(urlencoded({ limit: '30mb', extended: true }))
-
 const whitelist = [process.env.APP_URL_CLIENT];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -44,7 +40,7 @@ const corsOptions = {
       callback(null, true);
     } else if(whitelist.indexOf(origin) !== -1 ){
       callback(null, true);
-    } else if (process.env.NODE_ENV==="dev"){
+    } else if (process.env.NODE_ENV==="development"){
       //console.log("No CORS in DEV MODE ", origin);
       callback(null, true);
     } else {
@@ -82,6 +78,7 @@ app.use("/managementplans",managementPlanRoutes);
 app.use("/actionitems",actionItemRoutes);
 app.use("/inspectiontemplates",inspectionTemplateRoutes);
 app.use("/people", peopleRoutes);
+app.use("/keypairs", keypairRoutes);
 
 function errorHandler(err, req, res, next) {
   console.error(err.stack);

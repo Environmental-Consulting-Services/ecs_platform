@@ -13,6 +13,8 @@ import inspectionTemplateRoutes from './inspectiontemplates/route';
 import managementPlanRoutes from './managementplans/route';
 import actionItemRoutes from './actionitems/route';
 import peopleRoutes from './person/route';
+import keypairRoutes from './keypairs/route';
 
 
-export { projectRoutes, userRoutes, meRoutes, authRoutes, roleRoutes, companyRoutes,  permissionRoutes, uploadRoutes, imageRoutes, inspectionFormRoutes, inspectionRoutes, inspectionTemplateRoutes, managementPlanRoutes, actionItemRoutes, peopleRoutes };
+
+export { keypairRoutes, projectRoutes, userRoutes, meRoutes, authRoutes, roleRoutes, companyRoutes,  permissionRoutes, uploadRoutes, imageRoutes, inspectionFormRoutes, inspectionRoutes, inspectionTemplateRoutes, managementPlanRoutes, actionItemRoutes, peopleRoutes };

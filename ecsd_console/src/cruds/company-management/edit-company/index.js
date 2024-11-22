@@ -1,4 +1,6 @@
- import { useEffect, useState } from "react";
+ 
+
+import { useEffect, useState } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -29,7 +31,6 @@ const EditCompany = () => {
   const [owner, setOwner] = useState("");
   const [companyActive, setCompanyActive] = useState(false);
   const [company, setCompany] = useState({
-    id: "",
     name: "",
     status: "",
     street_one: "",
@@ -61,7 +62,7 @@ const EditCompany = () => {
         const response = await CrudService.getRoles();
         setRoles(response.data);
       } catch (err) {
-        //console.error(err);
+        console.error(err);
         return null;
       }
     })();
@@ -71,22 +72,19 @@ const EditCompany = () => {
     if (!id) return;
     (async () => {
       try {
-        const res = await CrudService.getCompany(id).then((res) => {
-          setCompanyActive(res.data.attributes.status === "active" ? true : false);
-          var companyData = {};
-          companyData.id = res.data.id;
-          companyData.name = res.data.attributes.name;
-          companyData.status = res.data.attributes.status;
-          companyData.street_one = (res.data.attributes.address != undefined && res.data.attributes.address.street_one != undefined) ?res.data.attributes.address.street_one:"";
-          companyData.street_two = (res.data.attributes.address != undefined && res.data.attributes.address.street_two != undefined) ?res.data.attributes.address.street_two:"";
-          companyData.city = (res.data.attributes.address != undefined && res.data.attributes.address.city != undefined) ?res.data.attributes.address.city:"";
-          companyData.state = (res.data.attributes.address != undefined && res.data.attributes.address.state != undefined) ?res.data.attributes.address.state:"";
-          companyData.zip_code = (res.data.attributes.address != undefined && res.data.attributes.address.zip_code != undefined) ?res.data.attributes.address.zip_code:"";
-          companyData.owner = (res.data.attributes.owner != undefined) ?res.data.attributes.owner:"";
-          setCompany(companyData);
-          setOwnerId((res.data.attributes.owner != undefined) ?res.data.attributes.owner:"",);
-      });
-
+        const res = await CrudService.getCompany(id);
+        setCompanyActive(res.data.attributes.status === "active" ? true : false)
+        setCompany({
+          id: res.data.id,
+          name: res.data.attributes.name,
+          status: res.data.attributes.status,
+          street_one: res.data.attributes.address.street_one,
+          street_two: res.data.attributes.address.street_two,
+          city: res.data.attributes.address.city,
+          state: res.data.attributes.address.state,
+          zip_code: res.data.attributes.address.zip_code,
+          owner: res.data.attributes.owner,
+        });
       } catch (err) {
         console.error(err);
       }
@@ -156,7 +154,7 @@ const EditCompany = () => {
             <MDBox mt={6} mb={8} textAlign="center">
               <MDBox mb={1}>
                 <MDTypography variant="h3" fontWeight="bold">
-                  Edit Company
+                  Edit Copmany
                 </MDTypography>
               </MDBox>
               <MDTypography variant="h5" fontWeight="regular" color="secondary">
@@ -257,15 +255,15 @@ const EditCompany = () => {
                       </MDTypography>
                     )}
                   </MDBox>
-                 {/*  <MDBox p={1}>
-                  <FormField
+                  <MDBox p={1}>
+                    <FormField
                       type="text"
                       label="Owner"
                       name="owner"
-                      value={company.owner}
-                      
-                    /> 
-                  </MDBox> */}
+                      value={owner}
+                      editable={false.toString()}
+                    />
+                  </MDBox>
                   <MDBox display="flex" alignItems="center" mb={0.5} ml={-1.5}>
                     <MDBox mt={0.5}>
                     <Switch name="companyActive" checked={companyActive} onChange={changeCompanyActiveHandler} />

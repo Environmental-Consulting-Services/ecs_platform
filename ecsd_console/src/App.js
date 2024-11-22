@@ -54,6 +54,8 @@ import ResetPassword from "auth/reset-password";
 import AuthService from "services/auth-service";
 import { Helmet } from "react-helmet";
 
+import PopupSelection from "examples/CompanySelect"
+
 export default function App({ ability }) {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -70,10 +72,12 @@ export default function App({ ability }) {
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
+  const [showPopup, setShowPopup] = useState(false);
   const authContext = useContext(AuthContext);
   const [userDetails, setUserDetails] = useState({ name: "", image: "" });
 
   const [isDemo, setIsDemo] = useState(false);
+
 
   useEffect(() => {
     setIsDemo(window._env_.REACT_APP_IS_DEMO === "false");
@@ -141,6 +145,32 @@ export default function App({ ability }) {
       ability.update(rules);
     })();
   }, [authContext.isAuthenticated]);
+
+  // useEffect(() => {
+  //   if (authContext.isAuthenticated) {
+  //     setShowPopup(true); // Show popup after login
+  //   }
+  // }, [authContext.isAuthenticated]);
+
+//   const closePopup = () => setShowPopup(false);
+
+//   return (
+//     <>
+//       <StyledEngineProvider injectFirst>
+//         <ThemeProvider theme={darkMode ? themeDark : theme}>
+//           <CssBaseline />
+//           {/* Your existing layout code */}
+          
+//           {showPopup && <PopupSelection onClose={closePopup} />}
+          
+//           <Routes>
+//             {/* Your routes */}
+//           </Routes>
+//         </ThemeProvider>
+//       </StyledEngineProvider>
+//     </>
+//   );
+// }
 
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
@@ -271,9 +301,7 @@ export default function App({ ability }) {
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-            {/* <Route path="/auth/reset-password" element={<ResetPassword />} /> */}
             <Route path="/auth/reset-password" element={<ResetPassword />} />
-            
             {getRoutes(routes)}
             {getCrudRoutes(crudRoutes)}
             {getPageRoutes(pageRoutes)}

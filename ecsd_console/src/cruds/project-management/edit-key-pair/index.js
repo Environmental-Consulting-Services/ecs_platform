@@ -33,7 +33,7 @@ import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
 import { set } from "date-fns";
 
-const EditProjectSiteMap = () => {
+const EditProjectKeyPair = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const ability = useAbility(AbilityContext);
@@ -45,9 +45,35 @@ const EditProjectSiteMap = () => {
   const [siteMapImage, setSiteMapImage] = useState();
   const [isSaveDisabled, setSaveDisabled] = useState(true);
   const [data, setData] = useState([]);
-  const [tableData, setTableData] = useState([{site_map_data: ""}]);
+  const [tableData, setTableData] = useState([]);
+  //const [tableData, setTableData] = useState([{keys: ""}]);
+
   const [oldSiteMaps, setOldSiteMaps] = useState([]);
   const [oldSiteMapImages, setOldSiteMapImages] = useState([]);
+
+  // Phu's edit
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formData, setFormData] = useState({ Key: "", Value: "" });
+
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSave = () => {
+    setTableData([...tableData, formData]);
+    setIsFormOpen(false);
+  };
+
+  ////////////////////////////////////////////////////////
 
   const [project, setProject] = useState({
     name: "",
@@ -70,20 +96,6 @@ const EditProjectSiteMap = () => {
     textError: "",
   });
 
-
-  /* // Get User Roles
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await CrudService.getRoles();
-        setRoles(response.data);
-      } catch (err) {
-        console.error(err);
-        return null;
-      }
-    })();
-  }, []); */
-
   useEffect(() => {
     if (!id) return;
     (async () => {
@@ -103,20 +115,6 @@ const EditProjectSiteMap = () => {
           site_map: res.data.attributes.site_maps[0].site_map,
           previous_site_maps: res.data.attributes.site_maps.slice(1),
         };
-
-
-        let siteMapId = "";
-
-        if (project != null && project.site_map != null && project.site_map.length > 0){
-          siteMapId = project.site_map;
-        } 
-        setSiteMapId(siteMapId);
-    
-        let oldSiteMaps = [];
-        if (project != null && project.previous_site_maps != null && project.previous_site_maps.length > 0){
-          oldSiteMaps = project.previous_site_maps;
-        } 
-        setOldSiteMaps(oldSiteMaps); 
         
         setProject(project);
 
@@ -127,16 +125,6 @@ const EditProjectSiteMap = () => {
   }, []);
 
 
-  useEffect(() => {
-    fetchSiteMapImage();
-  }, [siteMapId]);
-
-
-  useEffect(() => {
-    fetchOldSiteMapImages();
-  }, [oldSiteMaps]);
-
-
 
 /* 
   useEffect(() => {
@@ -145,9 +133,9 @@ const EditProjectSiteMap = () => {
       setTableData(rowData);
     }
     
-    getRowData(oldSiteMaps);
+    getRowData(keys);
     
-  }, [oldSiteMaps]);
+  }, [keys]);
  */
 
 
@@ -168,71 +156,6 @@ const EditProjectSiteMap = () => {
     };
     reader.readAsDataURL(blob);
   });
-
-  const fetchSiteMapImage = async () => {
-    if(siteMapId != null) {
-      const res = await CrudService.imageDownloadBase64(siteMapId);
-      setSiteMapImage("data:image/png;base64," + res);
-    } else {
-      setSiteMapImage(null);
-    }
-  };
-
-
-  const fetchOldSiteMapImages = async () => {
-    if(oldSiteMaps != null && oldSiteMaps.length > 0) {
-      oldSiteMaps.map(async (siteMap) => {
-        try{
-        const res = await CrudService.imageDownloadBase64(siteMap.site_map);
-        setOldSiteMapImages(oldSiteMapImages => [...oldSiteMapImages, {site_map_id: siteMap.site_map, site_map_data: <img height={100} width={"auto"} src={"data:image/png;base64," + res}/> }]);
-        //console.log(res.status);
-        } catch (err) {
-       
-        }
-      });
-      //setSiteMapImage("data:image/png;base64," + res);
-
-    } else {
-      setOldSiteMapImages([]);
-    }
-
-
-  };
-
-
-
-
-
-
-/* 
-  const fetchImage = async (id) => {
-    if(id != null) {
-      const res = await CrudService.imageDownloadBase64(id);
-      return "data:image/png;base64," + res;
-    } else {
-      return null;
-    }
-  }; */
-
-
-  function SiteMapImage({image}) {
-   {
-      if(image != null){
-        return (
-          <>
-            <img src={image} alt="icons" width={400} />
-          </>);
-      } else {
-        return (
-          <>
-            <MDTypography variant="h6" color="textSecondary" fontWeight="light">
-              No Site Map
-            </MDTypography>
-          </>
-        );
-      }
-    }
-  }
 
 /* 
   const getRows = async (info) => {
@@ -269,36 +192,13 @@ const EditProjectSiteMap = () => {
 
 const dataTableData = {
       columns: [
-        { Header: "Site Map", accessor: "site_map_data", width: "25%" },
-        /* {
-          Header: "actions",
-          disableSortBy: true,
-          accessor: "",
-          Cell: (info) => {
-            return (
-              <MDBox display="flex" alignItems="center">
-                {ability.can("delete", "projects") && (
-                  <Tooltip title="Delete Project">
-                    <IconButton
-                      size="large">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
-                {ability.can("edit", "projects") && (
-                  <Tooltip title="Edit Project">
-                    <IconButton  size="large">
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </MDBox>
-            );
-          },
-        }, */
+        { Header: "Key", accessor: "key", width: "25%" },
+        { Header: "Value", accessor: "value", width: "25%" },
+        { Header: "Updated Date", accessor: "date", width: "25%" },
+        { Header: "Updated By", accessor: "user", width: "25%" },
       ],
   
-      rows: oldSiteMapImages
+      rows: tableData
     };
 
 
@@ -372,12 +272,9 @@ const enableSaveButton = () => {
             <MDBox mt={6} mb={8} textAlign="center">
               <MDBox mb={1}>
                 <MDTypography variant="h3" fontWeight="bold">
-                  Edit Project Site Map
+                  Edit Project Key Pair
                 </MDTypography>
               </MDBox>
-              <MDTypography variant="h5" fontWeight="regular" color="secondary">
-                The Site Map used for this project.
-              </MDTypography>
             </MDBox>
             {notification.value === true && (
               <MDAlert color={notification.color} mt="20px">
@@ -399,7 +296,6 @@ const enableSaveButton = () => {
                   width="100%"
                 >
                   <Grid item position="relative" style={{ paddingLeft: "0", paddingTop: "0" }}>
-                    <SiteMapImage image={siteMapImage} />
                     {/* <MDAvatar src={imageUrl ?? image} alt="profile-image" size="xl" shadow="sm" /> */}
                   </Grid>
                   <MDInput
@@ -412,19 +308,6 @@ const enableSaveButton = () => {
                   ></MDInput>
                   <MDBox sx={{ ml: "auto" }} display="flex" flexDirection="column">
                     <MDBox display="flex" justifyContent="flex-end" flexDirection="row">
-                      <MDButton
-                        variant="gradient"
-                        color="info"
-                        size="small"
-                        component="label"
-                        htmlFor="avatar"
-                        sx={{ marginRight: "1rem" }}
-                      >
-                        change
-                      </MDButton>
-                      <MDButton variant="gradient" color="info" size="small" type="submit"  disabled={isSaveDisabled} >
-                        save
-                      </MDButton>
                     </MDBox>
                     <MDButton variant="gradient" color="dark" size="small" type="submit" 
                        onClick={() =>
@@ -433,8 +316,75 @@ const enableSaveButton = () => {
                       </MDButton>
                   </MDBox>
                 </Grid>
+                <MDButton
+                  variant="gradient"
+                  color="dark"
+                  size="small"
+                  type="submit"
+                  onClick={handleOpenForm}
+                >
+                  + Add Key Pair
+                </MDButton>
+                {isFormOpen && (
+        <div style={{ marginTop: "10px" }}>
+          <form>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+            <MDTypography variant="body2" fontWeight ="bold">
+                Key:
+                <MDInput
+                  lable="Type your key"
+                  name="key"
+                  type = "string"
+                  value={formData.key}
+                  onChange={handleChange}
+                  size="small"
+                  style={{ marginLeft: "20px" }}
+
+                />
+              </MDTypography>
+              </Grid>
+              <Grid item>
+                <MDTypography variant="body2" fontWeight ="bold">
+                  Value:
+                  <MDInput
+                    lable="Type the value of key"
+                    type = "string"
+                    name="value"
+                    value={formData.value}
+                    onChange={handleChange}
+                    size="small"
+                    style={{ marginLeft: "5px" }}
+
+                />
+              </MDTypography>
+              </Grid>
+              <Grid item>
+            <MDButton
+             variant="gradient"
+             color="dark"
+             size="small"
+             type="submit"
+             onClick={handleSave}>
+              Save
+            </MDButton>
+            <MDButton
+            style={{ marginLeft: "5px" }}
+             variant="gradient"
+             color="dark"
+             size="small"
+             type="cancel"
+             onClick={handleCloseForm}>
+              Cancel
+            </MDButton>
+            </Grid>
+            </Grid>
+          </form>
+        </div>
+      )}
               </MDBox>
                  <DataTable table={dataTableData} />
+                 
             </Card>
           </Grid>
         </Grid>
@@ -444,4 +394,4 @@ const enableSaveButton = () => {
   );
 };
 
-export default EditProjectSiteMap;
+export default EditProjectKeyPair;
