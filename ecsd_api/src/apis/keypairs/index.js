@@ -4,14 +4,8 @@ import { UserModel } from "../users/schema/user.schema";
 import eq from "lodash";
 import { PersonModel } from "../person/schema/person.schema";
 import { ObjectId } from "mongodb";
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 import { ProjectModel } from "../projects/schema/project.schema";
->>>>>>> Stashed changes
-=======
-import { ProjectModel } from "../projects/schema/project.schema";
->>>>>>> Stashed changes
+
 
 export const getKeyPairRoute = async (req, res) => {
     const key = req.params.key;
@@ -60,15 +54,9 @@ export const getKeyPairRoute = async (req, res) => {
   }
 
   // filtering
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  let filters = {};
-=======
+  // let filters = {};
   let filters = {projectId};
->>>>>>> Stashed changes
-=======
-  let filters = {projectId};
->>>>>>> Stashed changes
+
   if (req.query.filter) {
     filters = req.query.filter;
   }
@@ -88,28 +76,18 @@ export const getKeyPairRoute = async (req, res) => {
 
     const allKeys = await KeyPairModel
     .find(filters)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
     .select(fieldsProject)
-=======
+
     .select(fieldsKeyPair)
->>>>>>> Stashed changes
-=======
+
     .select(fieldsKeyPair)
->>>>>>> Stashed changes
     .limit(paginationSize)
     .skip((pageNumber - 1) * paginationSize)
     .sort(sortValue);
-  
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    keysObjectArray = allProjects.map((element) => {
-=======
+
     keysObjectArray = allKeys.map((element) => {
->>>>>>> Stashed changes
-=======
-    keysObjectArray = allKeys.map((element) => {
->>>>>>> Stashed changes
+
       let jsonObj = {
         type: "keypairs",
         id: element.id,
@@ -127,17 +105,9 @@ export const getKeyPairRoute = async (req, res) => {
   export const createKeyRoute = async(req, res) => {
     const {
       key,
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-      value
-=======
       value,
       projectId
->>>>>>> Stashed changes
-=======
-      value,
-      projectId
->>>>>>> Stashed changes
+
     } = req.body.data.attributes;
 
     if (!key) {
@@ -145,14 +115,7 @@ export const getKeyPairRoute = async (req, res) => {
       .status(400)
       .send({ errors: [{ detail: "The key is required"}]});
     }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-  const existingKey = await KeyPairModel.findOne({ key: key });
-=======
-=======
->>>>>>> Stashed changes
-    //
 
   const existingKey = await KeyPairModel.findOne({ key: key }); 
   if (existingKey) {
@@ -163,10 +126,7 @@ export const getKeyPairRoute = async (req, res) => {
 
   // Change for project
   const existingProject = await ProjectModel.findOne({ _id: projectId }); 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
   if (existingKey) {
     return res
       .status(400)
@@ -177,17 +137,13 @@ export const getKeyPairRoute = async (req, res) => {
     key: key,
     value: value,
     dateCreated: Date.now(),
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    owner: {_id: owner.id}
-=======
+
+    // owner: {_id: owner.id}
     owner: {_id: req.user._id},
     project: existingProject // {_id: req.projectId} 
->>>>>>> Stashed changes
-=======
-    owner: {_id: req.user._id},
-    project: existingProject // {_id: req.projectId} 
->>>>>>> Stashed changes
+
+    // owner: {_id: req.user._id},
+    // project: existingProject // {_id: req.projectId} 
   });
   newKey.save();
   const sentData = {
@@ -201,11 +157,7 @@ export const getKeyPairRoute = async (req, res) => {
   };
   return res.status(201).send(sentData);
 };
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
+
 
 export const editKeyRoute = async(req, res) => {
   const key = req.params.key;
@@ -261,7 +213,3 @@ export const deleteKeyRoute = async(req,res) => {
   }
   };
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
