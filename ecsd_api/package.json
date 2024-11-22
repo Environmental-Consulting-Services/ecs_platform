@@ -66,6 +66,7 @@
     "superagent": "^8.1.2",
     "supertest": "^6.3.4"
   },
+  
   "jest": {
     "testEnvironment": "node",
     "modulePathIgnorePatterns": [
@@ -77,7 +78,7 @@
     "build": "NODE_ENV=production babel src --out-dir dist --copy-files ",
     "start": "NODE_ENV=production node --experimental-modules --experimental-specifier-resolution=node dist/server.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
-    "seed": "node --experimental-modules src/mongoose/seedData.js",
+    "seed": "NODE_ENV=dev node --experimental-modules src/mongoose/seedData.js",
     "seed:staging": "NODE_ENV=staging node --experimental-modules src/mongoose/seedData.js",
     "dbutil": "node --experimental-modules src/mongoose/DataLoadUtil.js",
     "clear": "node --experimental-modules src/mongoose/clearDbs.js",
