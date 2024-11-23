@@ -54,8 +54,8 @@ export const getKeyPairRoute = async (req, res) => {
   }
 
   // filtering
-  // let filters = {};
-  let filters = {projectId};
+   let filters = {};
+  // let filters = {projectId};
 
   if (req.query.filter) {
     filters = req.query.filter;
@@ -76,11 +76,6 @@ export const getKeyPairRoute = async (req, res) => {
 
     const allKeys = await KeyPairModel
     .find(filters)
-
-    .select(fieldsProject)
-
-    .select(fieldsKeyPair)
-
     .select(fieldsKeyPair)
     .limit(paginationSize)
     .skip((pageNumber - 1) * paginationSize)
