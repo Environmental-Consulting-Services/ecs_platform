@@ -50,18 +50,18 @@ import NewActionItem from "cruds/actionitem-management/new-actionitem";
 // Material Dashboard 2 PRO React layouts
 
 const crudRoutes = [
- /*  {
-    key: "new-category",
-    route: "/category-management/new-category",
-    component: <NewCategory />,
-    type: "categories",
-  },
-  {
-    key: "edit-category",
-    route: "/category-management/edit-category/:id",
-    component: <EditCategory />,
-    type: "categories",
-  }, */
+  /*  {
+     key: "new-category",
+     route: "/category-management/new-category",
+     component: <NewCategory />,
+     type: "categories",
+   },
+   {
+     key: "edit-category",
+     route: "/category-management/edit-category/:id",
+     component: <EditCategory />,
+     type: "categories",
+   }, */
   {
     key: "new-company",
     route: "/company-management/new-company",
@@ -94,7 +94,7 @@ const crudRoutes = [
   },
   {
     key: "edit-key-pair",
-    route: "/project-management/edit-key-pair/:id",
+    route: "/project-management/edit-key-pair",
     component: <EditProjectKeyPair />,
     type: "projects",
   },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Card, IconButton, Tooltip } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
@@ -12,12 +12,59 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CrudService from "services/cruds-service";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+
+
+
 
 const EditProjectKeyPair = () => {
   const [tableData, setTableData] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [newKeyValue, setNewKeyValue] = useState({ key: "", value: "" });
   const [editRowIndex, setEditRowIndex] = useState(null);
+
+  const [data, setData] = useState([]);
+
+  const formatDate = (myDate) => {
+    const date = new Date(myDate);
+
+    // Extract month, day, and year
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+
+    // Combine in mm/dd/yy format
+    return `${month}/${day}/${year}`;
+  };
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const projID = location.state?.projectId;
+  if (!projID) {
+    navigate("/project-management");
+    return null;
+  }
+  useEffect(() => {
+    const fetchKeys = async () => {
+      try {
+        const response = await CrudService.getKeysByID([projID]);
+        const keys = response.data;
+        const formatKeys = keys.map((keyPair) => ({
+          key: keyPair.attributes.key,
+          value: keyPair.attributes.value,
+          date: formatDate(keyPair.attributes.dateCreated),
+          user: keyPair.attributes.owner
+        }));
+        setTableData(formatKeys);
+      } catch (error) {
+        console.error("Error fetching keys:", error);
+      }
+    };
+
+    fetchKeys();
+  }, []);
 
   // Handle adding a new row
   const handleAddRow = () => {
@@ -26,31 +73,51 @@ const EditProjectKeyPair = () => {
   };
 
   // Save the new row
-  const handleSaveNewRow = () => {
-    if (newKeyValue.key.trim() === "" || newKeyValue.value.trim() === "") {
-      alert("Key and Value fields cannot be empty.");
+  const handleSaveNewRow = async (e) => {
+    e.preventDefault();
+
+    if (newKeyValue.key.trim().length < 1 || newKeyValue.value.trim().length < 1) {
+      setError({ name: true, textError: "The key and value fields are required" });
       return;
     }
 
-    setTableData((prevData) => [
-      ...prevData,
-      {
-        key: newKeyValue.key,
-        value: newKeyValue.value,
-        date: new Date().toLocaleString(),
-        user: "Current User",
+    const keyToSave = {
+      data: {
+        attributes: {
+          key: newKeyValue.key,
+          value: newKeyValue.value,
+          projectId: projID,
+        },
       },
-    ]);
+    };
 
-    setNewKeyValue({ key: "", value: "" });
-    setIsAdding(false);
+    try {
+      const response = await CrudService.createKey(keyToSave);
+      const savedKey = response.data.attributes;
+      setTableData((prevTableData) => [
+        ...prevTableData,
+        {
+          key: savedKey.key,
+          value: savedKey.value,
+          date: formatDate(savedKey.dateCreated),
+          user: savedKey.owner,
+        },
+      ]);
+      setNewKeyValue({ key: "", value: "" });
+      setIsAdding(false);
+    } catch (err) {
+      console.error("Error saving new key:", err);
+      if (err.hasOwnProperty("errors")) {
+        setError({ ...error, error: true, textError: err.message });
+      }
+    }
   };
 
   // Cancel the new row addition
   const handleCancelNewRow = () => {
     setNewKeyValue({ key: "", value: "" });
     setIsAdding(false);
-  };
+  }
 
   // Handle row editing
   const handleEditRow = (index) => {
@@ -62,16 +129,33 @@ const EditProjectKeyPair = () => {
   };
 
   // Save edits
-  const handleSaveEdit = (index) => {
-    const updatedData = [...tableData];
-    updatedData[index] = {
-      ...updatedData[index],
-      key: newKeyValue.key,
-      value: newKeyValue.value,
+  const handleSaveEdit = async (index) => {
+    const key = tableData[index].key;
+    const keyToEdit = {
+      data: {
+        attributes: {
+          value: newKeyValue.value,
+        },
+      },
     };
-    setTableData(updatedData);
-    setEditRowIndex(null);
-    setNewKeyValue({ key: "", value: "" });
+
+    try {
+      const response = await CrudService.editKeys(keyToEdit, key);
+      const updatedKey = response.data.attributes;
+      const updatedData = [...tableData];
+      updatedData[index] = {
+        ...updatedData[index],
+        value: updatedKey.value,
+        date: formatDate(updatedKey.dateCreated),
+      };
+
+      setTableData(updatedData);
+      setEditRowIndex(null);
+      setNewKeyValue({ key: "", value: "" });
+    } catch (err) {
+      console.error("Error updating key:", err);
+      alert("Failed to update the key. Please try again.");
+    }
   };
 
   // Cancel editing
@@ -81,9 +165,17 @@ const EditProjectKeyPair = () => {
   };
 
   // Delete a row
-  const handleDeleteRow = (index) => {
-    const updatedData = tableData.filter((_, i) => i !== index);
-    setTableData(updatedData);
+  const handleDeleteRow = async (index) => {
+    const keyToDelete = tableData[index].key;
+
+    try {
+      await CrudService.deleteKey(keyToDelete);
+      const updatedData = tableData.filter((_, i) => i !== index);
+      setTableData(updatedData);
+    } catch (err) {
+      console.error("Error deleting key:", err);
+      alert("Failed to delete the key. Please try again.");
+    }
   };
 
   const dataTableData = {
@@ -136,69 +228,69 @@ const EditProjectKeyPair = () => {
       ...tableData.map((row, index) =>
         editRowIndex === index
           ? {
-              ...row,
-              key: (
-                <MDInput
-                  value={newKeyValue.key}
-                  onChange={(e) =>
-                    setNewKeyValue({ ...newKeyValue, key: e.target.value })
-                  }
-                  size="small"
-                />
-              ),
-              value: (
-                <MDInput
-                  value={newKeyValue.value}
-                  onChange={(e) =>
-                    setNewKeyValue({ ...newKeyValue, value: e.target.value })
-                  }
-                  size="small"
-                />
-              ),
-            }
+            ...row,
+            key: (
+              <MDInput
+                value={newKeyValue.key}
+                onChange={(e) =>
+                  setNewKeyValue({ ...newKeyValue, key: e.target.value })
+                }
+                size="small"
+              />
+            ),
+            value: (
+              <MDInput
+                value={newKeyValue.value}
+                onChange={(e) =>
+                  setNewKeyValue({ ...newKeyValue, value: e.target.value })
+                }
+                size="small"
+              />
+            ),
+          }
           : row
       ),
       ...(isAdding
         ? [
-            {
-              key: (
-                <MDInput
-                  value={newKeyValue.key}
-                  onChange={(e) =>
-                    setNewKeyValue({ ...newKeyValue, key: e.target.value })
-                  }
-                  placeholder="Enter Key"
-                  size="small"
-                />
-              ),
-              value: (
-                <MDInput
-                  value={newKeyValue.value}
-                  onChange={(e) =>
-                    setNewKeyValue({ ...newKeyValue, value: e.target.value })
-                  }
-                  placeholder="Enter Value"
-                  size="small"
-                />
-              ),
-              date: "—",
-              user: "—",
-              actions: (
-                <MDBox display="flex" justifyContent="center" alignItems="center">
-                  <Tooltip title="Save">
-                    <IconButton onClick={handleSaveNewRow}>
-                      <SaveIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Cancel">
-                    <IconButton onClick={handleCancelNewRow}>
-                      <CancelIcon />
-                    </IconButton>
-                  </Tooltip>
-                </MDBox>
-              ),
-            },
-          ]
+          {
+            key: (
+              <MDInput
+                value={newKeyValue.key}
+                onChange={(e) =>
+                  setNewKeyValue({ ...newKeyValue, key: e.target.value })
+                }
+                placeholder="Enter Key"
+                size="small"
+              />
+            ),
+            value: (
+              <MDInput
+                value={newKeyValue.value}
+                onChange={(e) =>
+                  setNewKeyValue({ ...newKeyValue, value: e.target.value })
+                }
+                placeholder="Enter Value"
+                size="small"
+              />
+            ),
+            date: "—",
+            user: "—",
+            actions: (
+              <MDBox display="flex" justifyContent="center" alignItems="center">
+                <Tooltip title="Save">
+                  <IconButton onClick={handleSaveNewRow}>
+                    <SaveIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Cancel">
+                  <IconButton onClick={handleCancelNewRow}>
+                    <CancelIcon />
+                  </IconButton>
+                </Tooltip>
+              </MDBox>
+            ),
+          },
+        ]
         : []),
     ],
   };
@@ -220,7 +312,7 @@ const EditProjectKeyPair = () => {
               <MDBox p={2}>
                 <DataTable table={dataTableData} />
                 <MDBox mt={2} display="flex" justifyContent="flex-end">
-                  {!isAdding && (
+                  {!isAdding ? (
                     <MDButton
                       variant="gradient"
                       color="dark"
@@ -229,6 +321,30 @@ const EditProjectKeyPair = () => {
                     >
                       + Add Key Pair
                     </MDButton>
+                  ) : (
+                    <>
+                      <Tooltip title="Save">
+                        <MDButton
+                          variant="gradient"
+                          color="dark"
+                          size="small"
+                          onClick={handleSaveNewRow}
+                          style={{ marginRight: "10px" }}
+                        >
+                          Save
+                        </MDButton>
+                      </Tooltip>
+                      <Tooltip title="Cancel">
+                        <MDButton
+                          variant="gradient"
+                          color="dark"
+                          size="small"
+                          onClick={handleCancelNewRow}
+                        >
+                          Cancel
+                        </MDButton>
+                      </Tooltip>
+                    </>
                   )}
                 </MDBox>
               </MDBox>

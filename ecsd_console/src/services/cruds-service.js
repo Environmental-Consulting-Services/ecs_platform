@@ -26,21 +26,21 @@ class CrudService {
     return await HttpService.get(usersEndpoint);
   };
 
-  getUsersByID = async (IDs)  => {
+  getUsersByID = async (IDs) => {
     let idFilter = "";
-    if(IDs != null && IDs.length > 0){
-     IDs.map((id) => { 
-        if(id != null || id != ""){
+    if (IDs != null && IDs.length > 0) {
+      IDs.map((id) => {
+        if (id != null || id != "") {
           idFilter = idFilter + `filter[_id]=${id}&`;
           return `filter[_id]=${id}&`;
-        } 
+        }
       });
     }
 
     const usersEndpoint = `users?${idFilter}`;
     return await HttpService.get(usersEndpoint);
   };
-  
+
   deleteUser = async (id) => {
     const endpoint = `users/${id}`;
     return await HttpService.delete(endpoint);
@@ -153,12 +153,6 @@ class CrudService {
     return await HttpService.get(projectsEndpoint);
   };
 
-  getKeys = async () => {
-    const keysEndpoint = "keypairs";
-    return await HttpService.get(keysEndpoint);
-  };
-  
-
   deleteProject = async (id) => {
     const endpoint = `projects/${id}`;
     return await HttpService.delete(endpoint);
@@ -215,12 +209,12 @@ class CrudService {
     const inspectionsEndpoint = `inspections/${id}`;
     return await HttpService.patch(inspectionsEndpoint, payload);
   };
-/* 
-  updateProjectSiteMap = async (payload, id) => {
-    const projectsEndpoint = `projects/${id}/sitemaps`;
-    return await HttpService.patch(projectsEndpoint, payload);
-  }; */
-  
+  /* 
+    updateProjectSiteMap = async (payload, id) => {
+      const projectsEndpoint = `projects/${id}/sitemaps`;
+      return await HttpService.patch(projectsEndpoint, payload);
+    }; */
+
 
   // project requests
   getActionItems = async () => {
@@ -254,7 +248,7 @@ class CrudService {
     return await HttpService.get(actionitemsEndpoint);
   };
 
-  deleteActionItemNote = async (actionId, noteId ) => {
+  deleteActionItemNote = async (actionId, noteId) => {
     const endpoint = `actionitems/${actionId}/notes/${noteId}`;
     return await HttpService.delete(endpoint);
   };
@@ -395,6 +389,44 @@ class CrudService {
     return await HttpService.patch(projectsEndpoint, payload);
   };
 
+
+  // KEY PAIR
+
+  getKeysByID = async (IDs) => {
+    let idFilter = "";
+    if (IDs != null && IDs.length > 0) {
+      IDs.map((id) => {
+        if (id != null || id != "") {
+          idFilter = idFilter + `filter[project]=${id}`;
+          return `filter[project]=${id}`;
+        }
+      });
+    }
+
+    const keypairsEndpoint = `keypairs?${idFilter}`;
+    return await HttpService.get(keypairsEndpoint);
+  };
+
+  getKeys = async () => {
+    const keysEndpoint = `keypairs`;
+    return await HttpService.get(keysEndpoint);
+  };
+
+
+  createKey = async (payload) => {
+    const keysEndpoint = `keypairs`;
+    return await HttpService.post(keysEndpoint, payload);
+  };
+
+  editKeys = async (payload, key) => {
+    const keysEndpoint = `keypairs/${key}`;
+    return await HttpService.patch(keysEndpoint, payload);
+  };
+
+  deleteKey = async (key) => {
+    const keysEndpoint = `keypairs/${key}`;
+    return await HttpService.delete(keysEndpoint);
+  };
 
 
 

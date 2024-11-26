@@ -76,11 +76,6 @@ export const getKeyPairRoute = async (req, res) => {
 
     const allKeys = await KeyPairModel
     .find(filters)
-
-    .select(fieldsProject)
-
-    .select(fieldsKeyPair)
-
     .select(fieldsKeyPair)
     .limit(paginationSize)
     .skip((pageNumber - 1) * paginationSize)
@@ -198,7 +193,7 @@ export const editKeyRoute = async(req, res) => {
 export const deleteKeyRoute = async(req,res) => {
   const keyToDelete = req.params.key;
   const toDeleteKey = await KeyPairModel.findOne({key: keyToDelete });
-  if (!toDeleteKey || String(toDeleteKey.owner._id) != String(req.user._id)) {
+  if (!toDeleteKey) { //|| String(toDeleteKey.owner._id) != String(req.user._id)) {
     return res
     .status(400)
     .send({errors: [{detial: "The key does not exist, or you are not allowed"}]});

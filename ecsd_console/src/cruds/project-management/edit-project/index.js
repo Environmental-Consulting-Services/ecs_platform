@@ -1,4 +1,4 @@
- 
+
 
 import { useEffect, useState } from "react";
 
@@ -38,10 +38,10 @@ const EditProject = () => {
     city: "",
     state: "",
     zip_code: "",
-    site_map:{}
+    site_map: {}
   });
 
- 
+
   const [value, setValue] = useState("");
 
   const [error, setError] = useState({
@@ -99,8 +99,8 @@ const EditProject = () => {
     navigate(`/project-management/edit-project-site-map/${id}`);
   };
 
-  const clickEditKeyPairHandler = (id) => {
-    navigate(`/project-management/edit-key-pair/${id}`);
+  const clickEditKeyPairHandler = () => {
+    navigate(`/project-management/edit-key-pair`, { state: { projectId: id } });
   };
 
   const changeHandler = (e) => {
@@ -120,30 +120,30 @@ const EditProject = () => {
 
 
     if (project.name.trim().length < 1) {
-      setError({ name:true,  textError: "The project name is required" });
+      setError({ name: true, textError: "The project name is required" });
       return;
     }
 
     const projectToSave = {
       data: {
-              type: "projects",
-              attributes: {
-                  id: id,
-                  name: project.name,
-                  status: (projectActive) ? "active" : "inactive",
-                  address: {
-                      street_one: project.street_one,
-                      street_two: project.street_two,
-                      city: project.city,
-                      state: project.state,
-                      zip_code: project.zip_code,
-                  },
-                  owner: {_id: ownerID},
-                  primary_contact: {_id:""}
+        type: "projects",
+        attributes: {
+          id: id,
+          name: project.name,
+          status: (projectActive) ? "active" : "inactive",
+          address: {
+            street_one: project.street_one,
+            street_two: project.street_two,
+            city: project.city,
+            state: project.state,
+            zip_code: project.zip_code,
+          },
+          owner: { _id: ownerID },
+          primary_contact: { _id: "" }
 
-              }
-          }
-  };
+        }
+      }
+    };
 
     try {
       await CrudService.updateProject(projectToSave, id);
@@ -159,7 +159,7 @@ const EditProject = () => {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar breadcrumbTitle={project.name}/>
+      <DashboardNavbar breadcrumbTitle={project.name} />
       <MDBox mt={5} mb={9}>
         <Grid container justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -173,26 +173,26 @@ const EditProject = () => {
                 This information describes more about the project.
               </MDTypography>
             </MDBox>
-            
+
             <Card>
-            <MDButton
-                  variant="gradient"
-                  color="dark"
-                  size="small"
-                  type="submit" 
-                  onClick={() =>  clickEditSiteMapHandler(project.id)}
-                >
-                  + Edit Site Map
-                </MDButton>
-                <MDButton
-                  variant="gradient"
-                  color="secondary"
-                  size="small"
-                  type="submit" 
-                  onClick={() =>  clickEditKeyPairHandler(project.id)}
-                >
-                  + Edit Key Value Pair
-                </MDButton>
+              <MDButton
+                variant="gradient"
+                color="dark"
+                size="small"
+                type="submit"
+                onClick={() => clickEditSiteMapHandler(project.id)}
+              >
+                + Edit Site Map
+              </MDButton>
+              <MDButton
+                variant="gradient"
+                color="secondary"
+                size="small"
+                type="submit"
+                onClick={() => clickEditKeyPairHandler(project.id)}
+              >
+                + Edit Key Value Pair
+              </MDButton>
               <MDBox component="form" method="POST" onSubmit={submitHandler}>
                 <MDBox display="flex" flexDirection="column" px={3} my={2}>
                   <MDBox p={1}>
@@ -210,7 +210,7 @@ const EditProject = () => {
                       </MDTypography>
                     )}
                   </MDBox>
-                  
+
                   <MDBox p={1}>
                     <FormField
                       type="text"
@@ -222,7 +222,7 @@ const EditProject = () => {
                     />
                     {error.street_one && (
                       <MDTypography variant="caption" color="error" fontWeight="light">
-                         {error.textError}
+                        {error.textError}
                       </MDTypography>
                     )}
                   </MDBox>
@@ -237,7 +237,7 @@ const EditProject = () => {
                     />
                     {error.street_two && (
                       <MDTypography variant="caption" color="error" fontWeight="light">
-                       {error.textError}
+                        {error.textError}
                       </MDTypography>
                     )}
                   </MDBox>
@@ -297,7 +297,7 @@ const EditProject = () => {
                   </MDBox>
                   <MDBox display="flex" alignItems="center" mb={0.5} ml={-1.5}>
                     <MDBox mt={0.5}>
-                    <Switch name="projectActive" checked={projectActive} onChange={changeProjectActiveHandler} />
+                      <Switch name="projectActive" checked={projectActive} onChange={changeProjectActiveHandler} />
                     </MDBox>
                     <MDBox width="80%" ml={0.5}>
                       <MDTypography variant="button" fontWeight="regular" color="text">
