@@ -26,10 +26,6 @@ import CrudService from "services/cruds-service";
 import HTMLReactParser from "html-react-parser";
 import { AbilityContext } from "Can";
 import { useAbility } from "@casl/react";
-/* 
-import { generate } from '@pdfme/generator';
-import { BLANK_PDF } from '@pdfme/common';
- */
 
 
 function ProjectManagement() {
@@ -58,11 +54,19 @@ function ProjectManagement() {
       );  
 
       let Users = await CrudService.getUsersByID(userIDs);
+      let UserMap = new Map();
+      if(Users && Users.data && Users.data.length > 0){
+        let userData = Users.data;
+        userData.forEach(function(user) {
+          UserMap.set(user.id, user.attributes.first_name+" "+user.attributes.last_name)
+        });
+      }
+
 
       console.log(Users);
 
 
-      setUserNames(Users);
+      setUserNames(UserMap);
       setData(response.data);
     })();
   }, []);
@@ -128,10 +132,7 @@ function ProjectManagement() {
 
   const getRows = (info) => {
     let updatedInfo = info.map((row) => {
-
-   /*    const UserName  =  getUserName(row.attributes.owner);
-      console.log(UserName); */
-      return {
+       return {
         type: "projects",
         id: row.id,
         name: row.attributes.name,
@@ -141,65 +142,6 @@ function ProjectManagement() {
     });
     return updatedInfo;
   };
-/* 
-  //TODO: need a function to get the user entities from an array of ids
-  const getUserName = async (userId) => {
-      
-    try{
-        const resp = await CrudService.getUser(userId);
-        return resp.data.attributes.first_name + " " + resp.data.attributes.last_name;
-       
-      } catch (err) {
-        //console.error(err);
-        return userId;
-      }
-  }
- */
-/* 
-  function doPDF() {
-    generate({ template, inputs }).then((pdf) => {
-      console.log(pdf);
-
-
-      // Browser
-      const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
-      window.open(URL.createObjectURL(blob));
-    });
-  }
-
-
-
-  const inputs = [{ a: 'a2', b: 'b1', c: 'c1' }];
-
-  const template = {
-    basePdf: BLANK_PDF,
-    schemas: [
-      {
-        a: {
-          type: 'text',
-          position: { x: 40, y: 50 },
-          width: 10,
-          height: 10,
-        },
-        b: {
-          type: 'text',
-          position: { x: 10, y: 10 },
-          width: 10,
-          height: 10,
-        },
-        c: {
-          type: 'text',
-          position: { x: 20, y: 20 },
-          width: 10,
-          height: 10,
-        },
-      },
-    ],
-  };
-
-
- */
-
 
   const dataTableData = {
     columns: [
@@ -210,16 +152,11 @@ function ProjectManagement() {
         width: "25%",
         Cell: (info) => {
           
-          if(userNames && userNames.data && userNames.data.length > 0){
-           let user = userNames.data.filter((user) => {
-            if (user.id === info.cell.row.original.owner) {
-              return true;
-            }
-          });
-            
+          if(userNames.has(info.cell.row.original.owner)){
+          
           return (
             <MDTypography variant="body" >
-              {user[0].attributes.first_name+ " " + user[0].attributes.last_name}
+              {userNames.get(info.cell.row.original.owner)}
             </MDTypography>
           );
         } else {

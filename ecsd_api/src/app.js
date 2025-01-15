@@ -27,13 +27,9 @@ import cron from "node-cron";
 //import ReseedAction from "./mongoose/ReseedAction.js";
 
 import passportJWT from "passport-jwt";
-
+dotenv.config()
 const JWTStrategy = passportJWT.Strategy;
-
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app = express();
-
-
 app.use(json({ limit: '30mb' }))
 app.use(urlencoded({ limit: '30mb', extended: true }))
 

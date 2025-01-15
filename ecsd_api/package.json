@@ -79,7 +79,7 @@
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
     "seed": "node --experimental-modules src/mongoose/seedData.js",
     "seed:staging": "NODE_ENV=staging node --experimental-modules src/mongoose/seedData.js",
-    "dbutil": "node --experimental-modules src/mongoose/DataLoadUtil.js",
+    "dbutil": "NODE_ENV=dev node --experimental-modules src/mongoose/DataLoadUtil.js",
     "clear": "node --experimental-modules src/mongoose/clearDbs.js",
     "envtest": "NODE_ENV=staging nodemon --exec babel-node  --experimental-specifier-resolution=node src/envtest.js "
   },

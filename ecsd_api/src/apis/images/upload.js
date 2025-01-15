@@ -1,21 +1,13 @@
 import  {uploadFilesMiddleware}  from "./middleware/upload.js";
-import {dbConfig}  from "./config/db.js";
 import { ObjectId } from 'bson';
-
 import {MongoClient, GridFSBucket}  from "mongodb"; //.MongoClient;
-//import GridFSBucket = require("mongodb").GridFSBucket;
-
-const url = dbConfig.url;
-
+const url = process.env.FILES_DB_URL;
 const baseUrl = "http://localhost:8080/public/images/files/";
-
 const mongoClient = new MongoClient(url);
 
 export const uploadFiles = async (req, res) => {
   try {
     await uploadFilesMiddleware(req, res);
-   // console.log(req.files);
-
     if (req.files.length <= 0) {
       return res
         .status(400)
@@ -44,20 +36,7 @@ export const uploadFiles = async (req, res) => {
         sentData
       );
 
-    // console.log(req.file);
-
-    // if (req.file == undefined) {
-    //   return res.send({
-    //     message: "You must select a file.",
-    //   });
-    // }
-
-    // return res.send({
-    //   message: "File has been uploaded.",
-    // });
   } catch (error) {
-   // console.log(error);
-
     if (error.code === "LIMIT_UNEXPECTED_FILE") {
       return res.status(400).send({
         message: "Too many files to upload.",
@@ -66,10 +45,6 @@ export const uploadFiles = async (req, res) => {
     return res.status(500).send({
       message: `Error when trying upload many files: ${error}`,
     });
-
-    // return res.send({
-    //   message: "Error when trying upload image: ${error}",
-    // });
   }
 };
 
@@ -77,8 +52,8 @@ export const getListFiles = async (req, res) => {
   try {
     await mongoClient.connect();
 
-    const database = mongoClient.db(dbConfig.database);
-    const images = database.collection(dbConfig.imgBucket + ".files");
+    const database = mongoClient.db(process.env.FILES_DB);
+    const images = database.collection(process.env.IMG_BUCKET + ".files");
 
     const cursor = images.find({});
 
@@ -110,26 +85,17 @@ export const downloadBase64 = async (req, res) => {
   try {
     await mongoClient.connect();
 
-    const database = mongoClient.db(dbConfig.database);
+    const database = mongoClient.db(process.env.FILES_DB);
     const bucket = new GridFSBucket(database, {
-      bucketName: dbConfig.imgBucket,
+      bucketName: process.env.IMG_BUCKET,
     });
 
-/* 
-    const images = database.collection(dbConfig.imgBucket + ".files");
-    const cursor = images.find({"_id": new ObjectId(req.params.id)});
-
- */
 
     let downloadStream = bucket.openDownloadStream(new ObjectId(req.params.id));
     let data = '';
     downloadStream.on('data', (chunk) => {
       data += chunk.toString('base64')
   })
-
-    /* downloadStream.on("data",  (data) => {
-      return res.status(200).write(data);
-    }); */
 
     downloadStream.on("error", function (err) {
       return res.status(404).send({ message: "Cannot download the Image!" });
@@ -151,26 +117,17 @@ export const download = async (req, res) => {
   try {
     await mongoClient.connect();
 
-    const database = mongoClient.db(dbConfig.database);
+    const database = mongoClient.db(process.env.FILES_DB);
     const bucket = new GridFSBucket(database, {
-      bucketName: dbConfig.imgBucket,
+      bucketName: process.env.IMG_BUCKET,
     });
 
-/* 
-    const images = database.collection(dbConfig.imgBucket + ".files");
-    const cursor = images.find({"_id": new ObjectId(req.params.id)});
-
- */
 
     let downloadStream = bucket.openDownloadStream(new ObjectId(req.params.id));
     let data = '';
     downloadStream.on('data', (chunk) => {
       data += chunk
   })
-
-    /* downloadStream.on("data",  (data) => {
-      return res.status(200).write(data);
-    }); */
 
     downloadStream.on("error", function (err) {
       return res.status(404).send({ message: "Cannot download the Image!" });

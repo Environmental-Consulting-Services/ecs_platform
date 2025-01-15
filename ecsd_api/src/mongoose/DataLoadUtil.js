@@ -8,35 +8,85 @@ import { roleModel } from "../apis/roles/schema/role.schema.js";
 import dotenv from 'dotenv';
 import { CompanyModel } from "../apis/companies/schema/company.schema.js";
 import { ProjectModel } from "../apis/projects/schema/project.schema.js";
-import { InspectionModel } from "../apis/inspections/schema/inspection.schema.js";
-import { ActionItemModel } from "../apis/actionitems/schema/actionitem.schema.js";
+//import { InspectionModel } from "../apis/inspections/schema/inspection.schema.js";
+//import { ActionItemModel } from "../apis/actionitems/schema/actionitem.schema.js";
 import { PersonModel } from "../apis/person/schema/person.schema.js";
-import { createActionItemNoteRoute } from "../apis/actionitems/index.js";
-import { InspectionTemplateModel } from "../apis/inspectiontemplates/schema/inspectionTemplate.schema";
-import { InspectionFormModel } from "../apis/inspectionforms/schema/inspectionForm.schema";
+//import { createActionItemNoteRoute } from "../apis/actionitems/index.js";
+//import { InspectionTemplateModel } from "../apis/inspectiontemplates/schema/inspectionTemplate.schema";
+//import { InspectionFormModel } from "../apis/inspectionforms/schema/inspectionForm.schema";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
 
 async function dbUtil() {
-  //connect do db
-   dbConnect();
+  //connect do db=
+  dbConnect();
 
-   //await createProject();
+  //await createCompany();
+  await findCompany();
 
-    //await createActionItemNote();
-
-    //await createInspectionTemplate();
-
-    await setupInspection();
+  //await createProject();
+  //await createActionItemNote();
+  //await createInspectionTemplate();
+  //await setupInspection();
 
   console.log("DB seeded");
+
 }
 
 await dbUtil().then(() => {
   mongoose.connection.close();
-});
+}
 
+);
+
+
+async function findCompany() {
+
+  var person = await UserModel.findById("00000001c0ea5a6a25972ea4");
+
+  let filters = {};
+  filters = { ...filters, $or: [
+    {
+      "users.user":person
+      
+    },
+    {
+      "owner":person
+      
+    }
+  ]};
+
+  console.log(filters);
+
+  const allCompanies = await CompanyModel
+    .find(filters)
+
+  console.log(allCompanies)
+
+} 
+
+async function createCompany() {
+
+  var person = await UserModel.findById("00000001c0ea5a6a25972ea4");
+
+  console.log(person);
+
+  const company = new CompanyModel(
+    { name: "Company Model Test", 
+      status: "active", 
+      owner: person,
+      users:
+        {
+          role: "member",
+          user: person
+        },
+      created_at: new Date() }
+    );
+
+  await company.save();
+
+}
 
 async function setupInspection() {
 

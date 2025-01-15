@@ -4,11 +4,9 @@ import { UserModel } from "../users/schema/user.schema";
 import eq from "lodash";
 import { InspectionTemplateModel } from "../inspectiontemplates/schema/inspectionTemplate.schema";
 import { SurveyPDF } from "survey-pdf";
-//import { dbConnect } from "../../mongoose";
 import { MongoClient, GridFSBucket}  from "mongodb"; //.MongoClient;
 import mongoose from "mongoose";
 import {Readable } from 'stream';
-import {dbConfig}  from "../images/config/db.js";
 import React from "react";
 import str  from 'string-to-stream';
 import CrudService from "../../services/cruds-service";
@@ -22,17 +20,12 @@ const mail_api_host = process.env.MAIL_API_HOST;
 const mail_api_port = process.env.MAIL_API_PORT;
 
 
-const url = dbConfig.url;
+const url = process.env.FILES_DB_URL;
 const baseUrl = APP_URL_API+"/public/images/files/";
 const mongoClient = new MongoClient(url);
 
 import { setLicenseKey } from "survey-core";
 import crudsService from "../../services/cruds-service.js";
-
-/* 
-import pkg from 'survey-core';
-const { setLicenseKey } = pkg;
- */
 
 export const getInspectionsRoute = async (req, res) => {
   let inspectionsObjectArray = [];
@@ -317,23 +310,7 @@ export const getInspectionPDFRoute = async (req, res) => {
         return res.download(fileLoc+filename);
 
       } );
-
-      
-  /* const sentData = {
-    data: {
-      type: "inspections",
-      id: foundInspection.id,
-      attributes: {
-        pdf_file_ts: timeStamp,
-        filname: filename,
-      },
-    },
-  };
-  return res.download(fileLoc+filename); */
 };
-
-
-
 
 
 export const createInspectionRoute = async (req, res) => {
@@ -352,37 +329,6 @@ export const createInspectionRoute = async (req, res) => {
 
   } = req.body.data.attributes;
 
- /* 
-  if (!name) {
-    return res
-      .status(400)
-      .send({ errors: [{ detail: "The name is required" }] });
-  } */
-
-  /* const existingProject = await projectModel.findOne({ name: name });
-  if (existingProject) {
-    return res
-      .status(400)
-      .send({ errors: [{ detail: "The copmany already exists" }] });
-  }
-   */
-
-  //Check Users Exist
-/*   const ownerUser = await UserModel.findById(owner._id);
-  if (!ownerUser) {
-    return res
-      .status(400) 
-      .send({ errors: [{ detail: "The owner user does not exist" }] });
-  } */
-
-  //Check Owner already has THIS project
- /*  const existingProject = await ProjectModel.findOne({ owner: owner._id , name: name });
-  if (existingProject) {
-    return res
-      .status(400) 
-      .send({ errors: [{ detail: "The owner already has a project by this name" }] });
-  } */
-  
   
   let existingTemplate = await InspectionTemplateModel.findOne({ project: project });
 
