@@ -62,9 +62,9 @@
     ]
   },
   "scripts": {
-    "start:dev": "NODE_ENV=development nodemon --exec babel-node --experimental-specifier-resolution=node src/server.js",
-    "build": "NODE_ENV=production babel src --out-dir dist --copy-files",
-    "start": "NODE_ENV=production node --experimental-specifier-resolution=node dist/server.js",
+    "start:dev": "NODE_ENV=dev nodemon --exec babel-node --experimental-specifier-resolution=node --env-file=.env-dev  src/server.js",
+    "build": "NODE_ENV=prod babel src --out-dir dist --copy-files",
+    "start": "NODE_ENV=prod node --experimental-specifier-resolution=node dist/server.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
     "seed": "node src/mongoose/seedData.js",
     "clear": "node src/mongoose/clearDbs.js"

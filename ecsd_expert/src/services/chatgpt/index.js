@@ -8,7 +8,7 @@ dotenv.config();
 
 const { OPEN_AI_API_KEY, OPEN_AI_ASSISTANT_ID } = process.env;
 let pollingInterval;
-let pollingComplete = false;
+const pollingMap = new Map();
 
 // Set up OpenAI Client
 const openai = new OpenAI({
@@ -109,8 +109,8 @@ export const runAssistant = async (threadId,) => {
           // Make sure to not overwrite the original instruction, unless you want to
         }
       );
-
-    console.log(response)
+    pollingMap.set(threadId,false)
+    console.log("response received");
 
     return response;
 }
@@ -123,13 +123,16 @@ export const checkingStatus = async ( userId, threadId, runId) => {
 
     const status = runObject.status;
     //console.log(runObject)
-    //console.log('Current status: ' + status);
-    
+    console.log('Current status: ' + status);
+    let pollingComplete = !pollingMap.has(threadId);
+
     if(status == 'completed'){
       if(pollingComplete) {
+        console.log('polling complete');
         return false;
       } else {
-      pollingComplete = true;
+      console.log('polling finishing');
+      pollingMap.delete(threadId);
       clearInterval(pollingInterval);
 
         const messagesList = await openai.beta.threads.messages.list(threadId);
