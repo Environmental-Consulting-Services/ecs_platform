@@ -18,7 +18,13 @@ const companySchema = new mongoose.Schema({
   people: [
     {
       role: {type:String}, 
-      member:{ type: mongoose.Schema.Types.ObjectId, ref: 'Person'},
+      person:{ type: mongoose.Schema.Types.ObjectId, ref: 'Person'},
+    },
+  ],
+  users: [
+    {
+      role: {type:String}, 
+      user:{ type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     },
   ],
   created_at: { type: Date },

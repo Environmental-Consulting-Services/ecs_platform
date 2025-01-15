@@ -34,9 +34,15 @@ const projectSchema = new mongoose.Schema({
   people: [
             {
               role: {type:String}, 
-              member:{ type: mongoose.Schema.Types.ObjectId, ref: 'Person'},
+              person:{ type: mongoose.Schema.Types.ObjectId, ref: 'Person'},
             },
           ],
+  users: [
+    {
+      role: {type:String}, 
+      user:{ type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    },
+  ],
   type: { type: String },
   company : {type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true},
   owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},

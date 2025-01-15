@@ -2,6 +2,7 @@ import { CompanyModel } from "./schema/company.schema";
 import { AddressModel } from "../schemas/address.schema";
 import { UserModel } from "../users/schema/user.schema";
 import eq from "lodash";
+import { PersonModel } from "../person/schema/person.schema";
 
 export const getCompaniesRoute = async (req, res) => {
   let companiesObjectArray = [];
@@ -38,17 +39,18 @@ export const getCompaniesRoute = async (req, res) => {
       fieldsCompany = req.query.fields.companies.split(",");
     }
   }
-
+  const thePerson = await UserModel
+    .findById(req.user._id);
+  let person = new PersonModel({id:req.user._id });
+ 
   filters = { ...filters, $or: [
     {
-      people: req.user._id
+      "users.user": thePerson
     },
     {
-      owner: req.user._id
+      owner: thePerson
     }
   ]};
-
-
 
   const allCompanies = await CompanyModel
     .find(filters)
