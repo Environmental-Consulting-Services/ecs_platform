@@ -54,19 +54,16 @@ class _ChatState extends State<Chat> {
     var currentLength = 0;
     messagesFuture.then((value) {
       currentLength = value.length;
-    });
+    }); 
 
     messagesFuture = getMessages();
     messagesFuture.then((value) {
       if (currentLength != value.length) {
         setState(() {});
+         _scrollDown();
       }
     });
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
+
   }
 
   final TextEditingController controller = new TextEditingController();
@@ -85,12 +82,8 @@ class _ChatState extends State<Chat> {
     setState(() {
       list.addAll(elementsToAdd);
     });
+    _scrollDown();
 
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
 
     return list;
   }
@@ -103,12 +96,16 @@ class _ChatState extends State<Chat> {
     MessageService.saveMessage(messageModel);
 
     appendMessages(messagesFuture, [messageModel]);
-    setState(() {});
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
+    setState(() {
+       _scrollDown();
+    });
+   
+
+  }
+
+  void _scrollDown() {
+  _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+
   }
 
   Widget build(BuildContext context) {
@@ -143,6 +140,11 @@ class _ChatState extends State<Chat> {
         searchOnChanged: () {},
         rightOptions: false,
       ),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: _scrollDown,
+        child: Icon(Icons.arrow_downward),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       drawer: ArgonDrawer(currentPage: "chat"),
       body: Column(
         children: [
@@ -173,11 +175,8 @@ class _ChatState extends State<Chat> {
                   _sendMessage(
                     value,
                   );
-                  _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    curve: Curves.easeOut,
-                    duration: const Duration(milliseconds: 300),
-                  );
+                   _scrollDown();
+
                   controller.text = "";
                 },
                 controller: controller,
@@ -196,13 +195,7 @@ class _ChatState extends State<Chat> {
                   ),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32.0, vertical: 15.0),
-                  /* prefixIcon: Material(
-                          borderRadius: BorderRadius.circular(30.0),
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: ArgonColors.black,
-                            size: 22.0,
-                          )), */
+
                 ),
               ),
             ),
