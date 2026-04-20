@@ -172,9 +172,14 @@ const EditUser = () => {
     }
 
     try {
-      let { url } = fileState
-        ? await CrudService.imageUpload(fileState, user.id.toString())
-        : image;
+      let profileImage = image || null;
+      if (fileState) {
+        const uploadResponse = await CrudService.imageUpload(fileState, user.id.toString());
+        profileImage = uploadResponse?.url
+          ? `${window._env_.REACT_APP_IMAGES}${uploadResponse.url}`
+          : null;
+      }
+
       const newUser = {
         data: {
           id: user.id.toString(),
@@ -186,7 +191,7 @@ const EditUser = () => {
             address: user.address,
             type: user.type,
             email: user.email,
-            profile_image: fileState ? `${window._env_.REACT_APP_IMAGES}${url}` : image,
+            profile_image: profileImage,
           },
           relationships: {
             roles: {
