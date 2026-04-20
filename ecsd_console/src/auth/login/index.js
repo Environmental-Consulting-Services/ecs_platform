@@ -62,7 +62,7 @@ function Login() {
     // check rememeber me?
     e.preventDefault();
 
-    const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const mailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (inputs.email.trim().length === 0 || !inputs.email.trim().match(mailFormat)) {
       setErrors({ ...errors, emailError: true });

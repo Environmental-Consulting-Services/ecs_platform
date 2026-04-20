@@ -316,6 +316,10 @@ export const createUserRoute = async (req, res) => {
   const hashPassword = await bcrypt.hash(password, salt);
 
   const role = await roleModel.findOne({ _id: roleId });
+  const normalizedProfileImage = profile_image
+    ? `${process.env.APP_URL_API}${profile_image}`
+    : null;
+
   const newUser = new UserModel({
     first_name: first_name,
     last_name: last_name,
@@ -324,7 +328,7 @@ export const createUserRoute = async (req, res) => {
     type: type,
     email: email,
     password: hashPassword,
-    profile_image: `${process.env.APP_URL_API}${profile_image}`,
+    profile_image: normalizedProfileImage,
     created_at: Date.now(),
     updated_at: Date.now(),
     role: roleId,
