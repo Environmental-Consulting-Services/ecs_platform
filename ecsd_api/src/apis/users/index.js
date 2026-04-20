@@ -1,8 +1,7 @@
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-import { UserModel } from "./schema/user.schema";
-import { roleModel } from "../roles/schema/role.schema";
 import { permissionModel } from "../permissions/schema/permission.schema";
+import { roleModel } from "../roles/schema/role.schema";
+import { UserModel } from "./schema/user.schema";
 
 //dotenv.config();
 
