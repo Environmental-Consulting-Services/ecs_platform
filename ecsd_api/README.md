@@ -3,7 +3,7 @@
 
 ### 1. Go to ecsd_api directory
 
-### 2. Create a local MongoDB database, or on Mongo Atlas
+### 2. Create a local MongoDB database, or a MongoDB deployment hosted in GCP
 
 ### 3. Create an .env file with:
 DATABASE_URL= <the MongoDB database url>
@@ -30,4 +30,3 @@ If the code run successfully, it should print:
 
 Server listening to <port>
 DB connection
-

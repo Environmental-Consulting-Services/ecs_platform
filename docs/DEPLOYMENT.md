@@ -8,7 +8,7 @@ The SmartComplAI MVP includes:
 
 - Web frontend (React or similar)
 - Backend API (Node.js + Prisma + MongoDB)
-- MongoDB Atlas database
+- MongoDB database hosted in GCP
 - Integrations:
   - **Postmark** – for transactional emails
   - **OpenAI API** – for AI chat assistant
@@ -29,7 +29,7 @@ Ensure the following before deployment:
 - Git installed
 - Registered domain name (for production)
 - ECS-owned accounts for:
-  - **MongoDB Atlas**
+  - **Google Cloud Platform**
   - **Postmark**
   - **OpenAI**
 
@@ -55,7 +55,7 @@ cp .env.example .env
 Fill in the following values:
 
 ```env
-MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/db
+MONGODB_URI=mongodb://<user>:<pass>@<gcp-mongo-host>:27017/db?authSource=admin
 POSTMARK_API_KEY=your-postmark-api-key
 OPENAI_API_KEY=your-openai-api-key
 JWT_SECRET=your-jwt-secret
@@ -98,7 +98,7 @@ serve -s build  # Or configure Nginx to serve the `build/` directory
 
 ## 6. Database Initialization
 
-Create a MongoDB Atlas cluster and import the provided sample data:
+Create the MongoDB deployment in GCP and import the provided sample data:
 
 ```bash
 mongorestore --uri="<your-mongodb-uri>" ./data_dump/
@@ -148,7 +148,7 @@ Contact the original developer or refer to the mobile README for platform-specif
   docker logs <container-name>
   ```
 - Verify your `.env` file is complete and contains valid credentials
-- Confirm MongoDB IP whitelist settings in Atlas
+- Confirm GCP firewall rules, private networking, and MongoDB access controls
 - Check Nginx and SSL certificate configuration
 
 ---
