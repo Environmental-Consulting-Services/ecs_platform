@@ -128,7 +128,7 @@ const NewInspectionTemplate = () => {
     try {
       await CrudService.createInspectionTemplates(templateToSave);
       navigate("/inspectiontemplate-management", {
-        state: { value: true, text: "The inspection template was sucesfully created" },
+        state: { value: true, text: "The inspection template was successfully created" },
       });
     } catch (err) {
       if (err.hasOwnProperty("errors")) {
