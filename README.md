@@ -1,22 +1,68 @@
-# ecsd
+# ECSD Storm Water Management Platform
 
-ECSD Storm Water Management Platform\
-\
-\
-Prereqs: \
+## Installation
 
-For Dev: \
- Nodejs >18.0 <20.0\
-\
- To deploy to prod:\
- `     docker (if you want to build and deploy)
-    `
-\
- `     docker login ghcr.io -u <username>  (will requiore a person access token from github)\
-    `
-\
-\
-\
+Dependencies:
+
+- Docker 29.1.2
+- Ubuntu 20.04 LTS
+
+### nvm
+
+Run:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+
+### NodeJS
+
+**Dependencies:**
+
+- nvm
+
+From inside the project root directory, run:
+
+```bash
+nvm install
+```
+
+### Autoenv
+
+Installing autoenv eliminates the need to run `nvm use` every time you `cd`
+into the project.
+
+**Dependencies:**
+
+- nvm
+
+Run:
+
+```bash
+nvm use node
+```
+
+```bash
+curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/master/scripts/install.sh' | sh
+```
+
+The above command will append a line to your `~/.bashrc` file that sources
+`autoenv/activate.sh`. Add the following variables to your `~/.bashrc` file
+immediately _before_ the source line:
+
+```bash
+AUTOENV_ENABLE_LEAVE=yes
+AUTOENV_ENV_FILENAME=.autoenv
+AUTOENV_ENV_LEAVE_FILENAME=.autoenv.leave
+```
+
+## Docker Build and Deploy
+
+Prereqs:
+
+- docker (if you want to build and deploy)
+- docker login ghcr.io -u <username> (will requiore a person access token from github)
+
 Initial Setup:\
 \
 
