@@ -13,7 +13,7 @@
 nginx_conf_file="/etc/nginx/conf.d/default.conf"
 if [ -n "${NGINX_CONF}" ]; then
     if [ -f "${NGINX_CONF}" ]; then
-        nginx_conf_file=${NGINX_CONF}
+        nginx_conf_file="${NGINX_CONF}"
     fi
 fi  
 
@@ -22,7 +22,7 @@ fi
 runtime_input="/usr/share/nginx/html/runtime-env.env"
 if [ -n "${ENV_FILE_IN}" ]; then
     if [ -f "${ENV_FILE_IN}" ]; then
-        runtime_input=${ENV_FILE_IN}
+        runtime_input="${ENV_FILE_IN}"
     fi
 fi  
 
@@ -30,16 +30,14 @@ fi
 #this default may require createing a dir.
 runtime_config_file="/usr/share/nginx/html/runtime-env.js"
 if [ -n "${ENV_FILE_OUT}" ]; then
-    if [ -n "${ENV_FILE_OUT}" ]; then
-        runtime_config_file=${ENV_FILE_OUT}
-    fi
+    runtime_config_file="${ENV_FILE_OUT}"
 fi  
 
 #setup output file.
 # Recreate runtime-env config file
-rm -rf ${runtime_config_file} && touch ${runtime_config_file}
+: > "${runtime_config_file}"
 
-echo "window._env_ = {" >> ${runtime_config_file}
+echo "window._env_ = {" >> "${runtime_config_file}"
 
 
 # Read each line in .env file, each line represents key=value pairs
@@ -61,13 +59,13 @@ do
   [[ -z $value ]] && value=${varvalue}
   
   # Append configuration property to JS file
-  echo "  $varname: \"$value\"," >>  ${runtime_config_file}
+  echo "  $varname: \"$value\"," >> "${runtime_config_file}"
 
   # Replace the nginx environment variable placeholder
   if [[ $varname != "" && $value != "" ]]; then
-    sed -i 's|{'$varname'}|'"$value"'|g' $nginx_conf_file
+    sed -i 's|{'"$varname"'}|'"$value"'|g' "$nginx_conf_file"
   fi
 
-done < ${runtime_input}
+done < "${runtime_input}"
 
-echo "}" >> ${runtime_config_file}
+echo "}" >> "${runtime_config_file}"
