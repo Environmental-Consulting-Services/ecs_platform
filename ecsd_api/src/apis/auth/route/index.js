@@ -10,8 +10,19 @@ import {
 const router = express.Router();
 
 router.post("/login", async (req, res, next) => {
-  const { email, password } = req.body.data.attributes;
-  await loginRouteHandler(req, res, email, password);
+  try {
+    const { email, password } = req.body?.data?.attributes || {};
+
+    if (typeof email !== "string" || typeof password !== "string") {
+      return res.status(400).json({
+        errors: [{ detail: "Email and password are required." }],
+      });
+    }
+
+    await loginRouteHandler(req, res, email, password);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/logout", (req, res) => {
