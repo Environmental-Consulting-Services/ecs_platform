@@ -51,4 +51,4 @@ config:
       image: us-central1-docker.pkg.dev/smartcomplai/ecsd/scheduler:prod
       path: /scheduler
       public: false
-encryptionsalt: v1:tjnK8NxS5sM=:v1:qtBedoMeV61kVEIa:ucOVRBkhtnw9nsftYF0piVTFoJxWdA==
+encryptionsalt: v1:ySXKre5TaE4=:v1:BaFzGT0qKO9SLPwg:u5bfKNQ4W2BwZrPPICXlCxeCvKAWIg==
