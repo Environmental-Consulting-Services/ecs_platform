@@ -50,6 +50,10 @@ const mongoKeyFile = new random.RandomPassword("mongo-keyfile", {
   length: 756,
   special: false,
 });
+const jwtSecret = new random.RandomPassword("jwt-secret", {
+  length: 64,
+  special: false,
+});
 
 const mongo =
   infraConfig.mongo &&
@@ -92,7 +96,7 @@ const secrets = new SecretPlaceholders(
     secrets: [
     {
       name: "jwt-secret",
-      placeholderValue: "token",
+      placeholderValue: pulumi.secret(jwtSecret.result),
       accessorMembers: [
         serviceIdentities.serviceAccounts.api.member,
         serviceIdentities.serviceAccounts.expert.member,
