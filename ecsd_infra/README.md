@@ -162,6 +162,62 @@ ALIAS_TAG= npm run images:push
 PLATFORM=linux/amd64 npm run images:push api console
 ```
 
+## Redeploy Production
+
+There are two common redeploy paths.
+
+For an app-only redeploy, build and push the changed service image, then force Cloud Run to create a new revision from the mutable `:prod` tag. Pushing a new image to Artifact Registry does not automatically update a running Cloud Run revision.
+
+```bash
+cd ecsd_infra
+export PROJECT_ID=smartcomplai
+export REGION=us-central1
+
+npm run images:push api
+
+gcloud run services update ecsd-prod-api \
+  --image us-central1-docker.pkg.dev/${PROJECT_ID}/ecsd/api:prod \
+  --region ${REGION} \
+  --project ${PROJECT_ID}
+```
+
+Use the matching service/image pair for other services:
+
+| Service | Cloud Run service | Image |
+| --- | --- | --- |
+| `console` | `ecsd-prod-console` | `us-central1-docker.pkg.dev/smartcomplai/ecsd/console:prod` |
+| `api` | `ecsd-prod-api` | `us-central1-docker.pkg.dev/smartcomplai/ecsd/api:prod` |
+| `expert` | `ecsd-prod-expert` | `us-central1-docker.pkg.dev/smartcomplai/ecsd/expert:prod` |
+| `mail` | `ecsd-prod-mail` | `us-central1-docker.pkg.dev/smartcomplai/ecsd/mail:prod` |
+| `scheduler` | `ecsd-prod-scheduler` | `us-central1-docker.pkg.dev/smartcomplai/ecsd/scheduler:prod` |
+
+For an infrastructure or configuration change, run Pulumi after exporting the stack passphrase:
+
+```bash
+cd ecsd_infra
+export PULUMI_CONFIG_PASSPHRASE='<prod-stack-passphrase>'
+
+npm run build
+npm run preview
+npm run up
+```
+
+If the API baseline bootstrap code or seed expectations changed, run the baseline job after the API image and Pulumi job definition are current:
+
+```bash
+gcloud run jobs execute prod-baseline-bootstrap \
+  --region us-central1 \
+  --project smartcomplai \
+  --wait
+```
+
+Basic smoke checks after redeploy:
+
+```bash
+curl -I https://smartcomplai.ecscompliance.com
+curl -fsS -o /dev/null -w "%{http_code}\n" https://smartcomplai.ecscompliance.com/api/login
+```
+
 ## Production Baseline Bootstrap
 
 Pulumi creates a Cloud Run Job named `prod-baseline-bootstrap`. It runs the API image inside the private VPC and idempotently ensures baseline permissions, roles, and users exist without deleting existing production users.
