@@ -1,0 +1,54 @@
+config:
+  gcp:project: smartcomplai
+  gcp:region: us-central1
+  ecsd-infra:environment: prod
+  ecsd-infra:baseDomain: smartcomplai.ecscompliance.com
+  ecsd-infra:dnsZoneName: ecscompliance-com
+  ecsd-infra:artifactRegistryRepository: ecsd
+  ecsd-infra:stateBackendBucketName: smartcomplai-pulumi-state
+  ecsd-infra:stateBackendLocation: us-central1
+  ecsd-infra:loadBalancerType: disabled
+  ecsd-infra:loadBalancerRegion: us-central1
+  ecsd-infra:loadBalancerIpMode: none
+  ecsd-infra:loadBalancerIpName: ""
+  ecsd-infra:loadBalancerCertificateMode: certificate-manager
+  ecsd-infra:loadBalancerCertificateManagerCertificateIds: []
+  ecsd-infra:databaseHost: mongo-prod.internal
+  ecsd-infra:databasePort: "27017"
+  ecsd-infra:fileStorageMode: gridfs-only
+  ecsd-infra:sharedVolumeType: none
+  ecsd-infra:sharedVolumeMountPath: /usr/node/app/files
+  ecsd-infra:profileImagesMountPath: /usr/node/app/public/images/users
+  ecsd-infra:mongoReplicaSetName: rs0
+  ecsd-infra:mongoDatabaseName: ecsd
+  ecsd-infra:mongoPort: "27017"
+  ecsd-infra:mongoAppName: ecsd-app
+  ecsd-infra:mongoEnablePublicIpForBootstrap: "false"
+  ecsd-infra:mongoMembers:
+    - name: mongo-1
+      zone: us-central1-a
+      machineType: e2-small
+      bootDiskSizeGb: 20
+      dataDiskSizeGb: 40
+  ecsd-infra:services:
+    console:
+      image: us-central1-docker.pkg.dev/smartcomplai/ecsd/console:prod
+      path: /
+      public: true
+    api:
+      image: us-central1-docker.pkg.dev/smartcomplai/ecsd/api:prod
+      path: /api
+      public: true
+    expert:
+      image: us-central1-docker.pkg.dev/smartcomplai/ecsd/expert:prod
+      path: /expert
+      public: true
+    mail:
+      image: us-central1-docker.pkg.dev/smartcomplai/ecsd/mail:prod
+      path: /mail
+      public: false
+    scheduler:
+      image: us-central1-docker.pkg.dev/smartcomplai/ecsd/scheduler:prod
+      path: /scheduler
+      public: false
+encryptionsalt: v1:tjnK8NxS5sM=:v1:qtBedoMeV61kVEIa:ucOVRBkhtnw9nsftYF0piVTFoJxWdA==

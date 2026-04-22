@@ -1,0 +1,4 @@
+name: ecsd-infra
+runtime: nodejs
+description: Production-first Pulumi project for ECSD GCP infrastructure.
+
