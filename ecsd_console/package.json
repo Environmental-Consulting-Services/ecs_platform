@@ -72,6 +72,7 @@
     "stylis": "4.3.0",
     "stylis-plugin-rtl": "2.1.1",
     "survey-core": "^1.12.4",
+    "survey-creator-core": "1.12.4",
     "survey-creator-react": "^1.12.4",
     "survey-pdf": "^1.12.4",
     "survey-react-ui": "^1.12.4",
@@ -82,7 +83,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -122,5 +123,5 @@
     "prettier": "3.0.3",
     "webpack-cli": "^5.1.4"
   },
-  "homepage": "."
+  "homepage": "/"
 }

@@ -56,6 +56,26 @@ AUTOENV_ENV_FILENAME=.autoenv
 AUTOENV_ENV_LEAVE_FILENAME=.autoenv.leave
 ```
 
+### gcloud CLI
+
+Run:
+
+```bash
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz
+tar -xf google-cloud-cli-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh
+```
+
+### Pulumi
+
+Used to deploy the infrastructure to GCP.
+
+Run:
+
+```bash
+curl -fsSL https://get.pulumi.com | sh -s -- --version 3.231.0
+```
+
 ## Docker Build and Deploy
 
 Prereqs:

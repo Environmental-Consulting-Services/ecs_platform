@@ -19,11 +19,11 @@ RUN npm prune --production # Remove dev dependencies
 FROM node:${NODE_VERSION}-alpine  AS release
 #FROM gcr.io/distroless/nodejs18-debian11 AS release
 WORKDIR /usr/node/app
-COPY --from=builder /usr/node/app/node_modules ./node_modules
-COPY --from=builder /usr/node/app/dist ./dist
 COPY --chown=node:node package*.json ./
+RUN npm install --omit=dev
+COPY --from=builder /usr/node/app/dist ./dist
 USER node
 #COPY --chown=node:node ./.env ./.env
-#CMD ["node", "./dist/server.js"]
+#CMD ["node", "./dist/app.js"]
 EXPOSE 8080
-CMD ["node", "./dist/server.js"]
+CMD ["node", "./dist/app.js"]

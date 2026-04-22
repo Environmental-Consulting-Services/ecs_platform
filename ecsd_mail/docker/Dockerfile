@@ -1,7 +1,7 @@
 
 
 # ---------- Base ----------
-FROM openjdk:17-jdk-alpine AS base
+FROM eclipse-temurin:17-jdk-alpine AS base
 #ENV NODE_ENV production
 #COPY target/mail-0.0.1-SNAPSHOT.jar mail-0.0.1-SNAPSHOT.jar
 RUN addgroup -S spring && adduser -S spring -G spring
@@ -22,7 +22,7 @@ RUN ./mvnw clean package
 #RUN npm prune --production # Remove dev dependencies
 
 # ---------- Release ----------
-FROM openjdk:17-jdk-alpine  AS release
+FROM base AS release
 #FROM gcr.io/distroless/nodejs18-debian11 AS release
 WORKDIR /usr/springboot/app
 COPY --chown=spring:spring --from=builder /usr/springboot/app/target/mail-0.0.1-SNAPSHOT.jar ./mail-0.0.1-SNAPSHOT.jar

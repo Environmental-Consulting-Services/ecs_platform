@@ -78,6 +78,8 @@
     "start": "NODE_ENV=production node --experimental-modules --experimental-specifier-resolution=node dist/server.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
     "seed": "node --experimental-modules src/mongoose/seedData.js",
+    "bootstrap:baseline": "NODE_ENV=production node --experimental-modules --experimental-specifier-resolution=node dist/mongoose/bootstrapBaseline.js",
+    "bootstrap:baseline:src": "NODE_ENV=production babel-node --experimental-specifier-resolution=node src/mongoose/bootstrapBaseline.js",
     "seed:staging": "NODE_ENV=staging node --experimental-modules src/mongoose/seedData.js",
     "dbutil": "NODE_ENV=dev node --experimental-modules src/mongoose/DataLoadUtil.js",
     "clear": "node --experimental-modules src/mongoose/clearDbs.js",

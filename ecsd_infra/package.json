@@ -1,0 +1,21 @@
+{
+  "name": "ecsd-infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pulumi infrastructure for the ECSD GCP production environment",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "images:push": "./scripts/build-and-push-images.sh",
+    "preview": "pulumi preview --stack prod",
+    "up": "pulumi up --stack prod"
+  },
+  "dependencies": {
+    "@pulumi/gcp": "^8.20.0",
+    "@pulumi/pulumi": "^3.154.0",
+    "@pulumi/random": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "typescript": "^5.6.3"
+  }
+}
