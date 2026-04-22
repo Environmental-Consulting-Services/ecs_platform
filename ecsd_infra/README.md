@@ -127,6 +127,8 @@ The chosen state backend is GCS. That creates a bootstrap caveat: the bucket mus
 - create `smartcomplai-pulumi-state` once outside this stack, then `pulumi login gs://smartcomplai-pulumi-state`
 - or use a temporary backend, create the bucket with Pulumi, and then migrate state
 
+`PulumiStateBootstrapBucket` imports the existing bucket by default. Set `importExisting: false` only when using a temporary backend or a bootstrap stack that is not already logged into the target bucket.
+
 If you keep the checked-in `Pulumi.prod.yaml`, verify the four domain mappings before running the first production apply.
 
 ## Validation

@@ -16,6 +16,7 @@ export interface StateBackendBootstrapArgs {
   forceDestroy?: pulumi.Input<boolean>;
   versioning?: pulumi.Input<boolean>;
   retentionPeriodSeconds?: pulumi.Input<number>;
+  importExisting?: boolean;
 }
 
 export interface StateBackendBootstrapOutputs {
@@ -44,6 +45,7 @@ export class PulumiStateBootstrapBucket
     const config = args.config ?? infraConfig;
     const project = args.project ?? config.gcp.project;
     const location = args.location ?? config.gcp.region;
+    const importExisting = args.importExisting ?? true;
 
     this.bucket = new gcp.storage.Bucket(
       `${name}-bucket`,
@@ -76,7 +78,10 @@ export class PulumiStateBootstrapBucket
               }
             : undefined,
       },
-      { parent: this, import: args.bucketName },
+      {
+        parent: this,
+        import: importExisting ? args.bucketName : undefined,
+      },
     );
 
     this.bucketName = this.bucket.name;
