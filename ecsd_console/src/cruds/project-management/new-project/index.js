@@ -64,7 +64,7 @@ const NewProject = () => {
   const setCompanyValue = (newValue) => {
     setProject({
       ...project,
-      company: newValue.id,
+      company: newValue?.id || "",
     });
   };
 
@@ -139,6 +139,11 @@ const NewProject = () => {
       return;
     }
 
+    if (!project.company) {
+      setError({ company:true, textError: "The company is required" });
+      return;
+    }
+
     const projectToSave = {
       data: {
               type: "projects",
@@ -166,7 +171,7 @@ const NewProject = () => {
       });
     } catch (err) {
       if (err.hasOwnProperty("errors")) {
-        setError({ ...error, error: true, textError: err.message });
+        setError({ ...error, error: true, textError: err.errors?.[0]?.detail || err.message });
       }
     }
   };

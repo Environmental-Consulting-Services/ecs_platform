@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import CrudService from "services/cruds-service";
 import { AuthContext } from "context";
 
-const NewProject = () => {
+const NewInspectionTemplate = () => {
   const navigate = useNavigate();
   const [roles, setRoles] = useState([]);
   const [ownerID, setOwnerId] = useState("");
@@ -103,13 +103,13 @@ const NewProject = () => {
     e.preventDefault();
 
     if (project.name.trim().length < 1) {
-      setError({ name:true,  textError: "The project name is required" });
+      setError({ name:true,  textError: "The inspection template name is required" });
       return;
     }
 
-    const projectToSave = {
+    const templateToSave = {
       data: {
-              type: "projects",
+              type: "inspectiontemplates",
               attributes: {
                   name: project.name,
                   status: (projectActive) ? "active" : "inactive",
@@ -125,15 +125,14 @@ const NewProject = () => {
               }
           }
   };
-    console.log(projectToSave.owner);
     try {
-      await CrudService.createProject(projectToSave);
-      navigate("/project-management", {
-        state: { value: true, text: "The project was sucesfully created" },
+      await CrudService.createInspectionTemplates(templateToSave);
+      navigate("/inspectiontemplate-management", {
+        state: { value: true, text: "The inspection template was successfully created" },
       });
     } catch (err) {
       if (err.hasOwnProperty("errors")) {
-        setError({ ...error, error: true, textError: err.message });
+        setError({ ...error, error: true, textError: err.errors?.[0]?.detail || err.message });
       }
     }
   };
@@ -147,11 +146,11 @@ const NewProject = () => {
             <MDBox mt={6} mb={8} textAlign="center">
               <MDBox mb={1}>
                 <MDTypography variant="h3" fontWeight="bold">
-                  Add New Project
+                  Add New Inspection Template
                 </MDTypography>
               </MDBox>
               <MDTypography variant="h5" fontWeight="regular" color="secondary">
-                This information describes more about the project.
+                This information describes more about the inspection template.
               </MDTypography>
             </MDBox>
             <Card>
@@ -262,7 +261,7 @@ const NewProject = () => {
                     </MDBox>
                     <MDBox width="80%" ml={0.5}>
                       <MDTypography variant="button" fontWeight="regular" color="text">
-                        Active Project?
+                        Active Inspection Template?
                       </MDTypography>
                     </MDBox>
                   </MDBox>
@@ -275,7 +274,7 @@ const NewProject = () => {
                         px={2}
                         mx={2}
                         onClick={() =>
-                          navigate("/project-management", {
+                          navigate("/inspectiontemplate-management", {
                             state: { value: false, text: "" },
                           })
                         }
@@ -298,4 +297,4 @@ const NewProject = () => {
   );
 };
 
-export default NewProject;
+export default NewInspectionTemplate;
