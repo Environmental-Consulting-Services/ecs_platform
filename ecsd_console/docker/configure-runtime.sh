@@ -12,12 +12,8 @@
 #setup nginx conf 
 nginx_conf_file="/etc/nginx/conf.d/default.conf"
 if [ -n "${NGINX_CONF}" ]; then
-    echo "VAR is set to some string"
-    #check if the file exists
-    if exist ${NGINX_CONF}; then 
-        rem "file exists"
-        # Assign the nginx configuration filename
-        nginx_conf=${NGINX_CONF}
+    if [ -f "${NGINX_CONF}" ]; then
+        nginx_conf_file=${NGINX_CONF}
     fi
 fi  
 
@@ -25,12 +21,8 @@ fi
 #this default may require createing a dir.
 runtime_input="/usr/share/nginx/html/runtime-env.env"
 if [ -n "${ENV_FILE_IN}" ]; then
-    echo "ENV_FILE_IN is set to some string"
-    #check if the file exists
-    if [ -f ${ENV_FILE_IN}]; then 
-        rem "file exists"
-        # Assign the nginx configuration filename
-        runtime_env=${ENV_FILE_IN}
+    if [ -f "${ENV_FILE_IN}" ]; then
+        runtime_input=${ENV_FILE_IN}
     fi
 fi  
 
@@ -38,11 +30,7 @@ fi
 #this default may require createing a dir.
 runtime_config_file="/usr/share/nginx/html/runtime-env.js"
 if [ -n "${ENV_FILE_OUT}" ]; then
-    echo "ENV_FILE_IN is set to some string"
-    #check if the file exists
-    if exist ${ENV_FILE_OUT}; then 
-        rem "file exists"
-        # Assign the nginx configuration filename
+    if [ -n "${ENV_FILE_OUT}" ]; then
         runtime_config_file=${ENV_FILE_OUT}
     fi
 fi  
