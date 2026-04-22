@@ -1,5 +1,11 @@
 # SmartComplAI Deployment Guide
 
+## Status
+
+This document describes the current manual / Docker Compose deployment baseline. It should not be treated as the target production design for the next GCP rollout.
+
+For production planning on GCP, the repo should use a new `ecsd_infra` Pulumi project as the infrastructure source of truth. See `docs/GCP_DEPLOYMENT_PROPOSAL.md` for the current production-first plan.
+
 This document provides step-by-step instructions for deploying the SmartComplAI platform using the codebase hosted at:
 
 📦 **GitHub Repository:** [https://github.com/LlamaLogic/ecsd_platform](https://github.com/LlamaLogic/ecsd_platform)
