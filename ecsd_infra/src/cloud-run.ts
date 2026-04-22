@@ -95,7 +95,7 @@ const DEFAULT_RUNTIME_BY_SERVICE: Record<
     memory: "512Mi",
     cpuIdle: true,
     startupCpuBoost: false,
-    minInstances: 1,
+    minInstances: 0,
     maxInstances: 2,
     concurrency: 20,
     timeout: "300s",
