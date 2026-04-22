@@ -13,6 +13,7 @@ import { ApplicationNetworking } from "./src/networking";
 import { ProjectServices } from "./src/project-services";
 import { SecretPlaceholders } from "./src/secrets";
 import { PulumiStateBootstrapBucket } from "./src/state-backend";
+import { createServiceName } from "./src/naming";
 
 const stackConfig = new pulumi.Config();
 const mongoEnablePublicIpForBootstrap =
@@ -78,10 +79,10 @@ const mongo =
   );
 
 const mongoSecretIds = {
-  databaseUrl: "ecsd-prod-mongo-database-url",
-  filesDatabaseUrl: "ecsd-prod-mongo-files-database-url",
-  chatDatabaseUrl: "ecsd-prod-mongo-chat-database-url",
-  agendaDatabaseUrl: "ecsd-prod-mongo-agenda-database-url",
+  databaseUrl: createServiceName(infraConfig.environment, "mongo-database-url"),
+  filesDatabaseUrl: createServiceName(infraConfig.environment, "mongo-files-database-url"),
+  chatDatabaseUrl: createServiceName(infraConfig.environment, "mongo-chat-database-url"),
+  agendaDatabaseUrl: createServiceName(infraConfig.environment, "mongo-agenda-database-url"),
 };
 
 const secrets = new SecretPlaceholders(
