@@ -135,18 +135,26 @@ async function upsertBaselineUsers(roleByName, now) {
   const userByRoleName = new Map();
 
   for (const baselineUser of BASELINE_USERS) {
-    const existingUser = await UserModel.findOne({ email: baselineUser.email });
     const role = roleByName.get(baselineUser.roleName);
 
     if (!role) {
       throw new Error(`Missing baseline role: ${baselineUser.roleName}`);
     }
 
+    const existingUser = await UserModel.findOne({ role: role._id }).sort({ created_at: 1, _id: 1 });
+
     if (existingUser) {
-      existingUser.role = role._id;
-      existingUser.updated_at = now;
-      await existingUser.save();
       userByRoleName.set(baselineUser.roleName, existingUser);
+      continue;
+    }
+
+    const existingDefaultEmailUser = await UserModel.findOne({ email: baselineUser.email });
+
+    if (existingDefaultEmailUser) {
+      existingDefaultEmailUser.role = role._id;
+      existingDefaultEmailUser.updated_at = now;
+      await existingDefaultEmailUser.save();
+      userByRoleName.set(baselineUser.roleName, existingDefaultEmailUser);
       continue;
     }
 
