@@ -2,6 +2,28 @@
 
 ECSD is a multi-service platform with a web console, backend APIs, supporting services, mobile clients, and a GCP infrastructure project.
 
+## Prerequisites
+
+Core tools used in this repo:
+
+- Docker
+- Node.js 18 for the application services
+- `gcloud` CLI for GCP operations
+- Pulumi for infrastructure work in `ecsd_infra`
+
+This repository includes an `.nvmrc` file. If you use `nvm`:
+
+```bash
+nvm install
+nvm use
+node --version
+```
+
+Install details and environment setup are split by topic:
+
+- Docker and local stack setup: [docs/docker.md](docs/docker.md)
+- Infrastructure project workflow: [ecsd_infra/README.md](ecsd_infra/README.md)
+
 ## Docs
 
 - [docs/architecture.md](docs/architecture.md): platform inventory, topology, and service communication
@@ -17,7 +39,16 @@ The recommended local loop is:
 2. Run `ecsd_api`, `ecsd_console`, and `ecsd_expert` locally with Node.
 3. Seed local data and sign in with the seeded admin account.
 
-Use [docs/docker.md](docs/docker.md) for the actual commands and environment setup.
+Use [docs/docker.md](docs/docker.md) for the full commands and environment setup.
+
+Typical local service URLs:
+
+```text
+Console: http://localhost:3000
+API:     http://localhost:8080
+Expert:  http://localhost:8081
+MongoDB: mongodb://localhost:27017
+```
 
 ## Repo Areas
 
