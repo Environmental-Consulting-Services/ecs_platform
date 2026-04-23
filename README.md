@@ -78,8 +78,6 @@ curl -fsSL https://get.pulumi.com | sh -s -- --version 3.231.0
 
 ## Documentation
 
-The detailed operational and topology docs are now split by scope:
-
 - [docs/docker.md](docs/docker.md): Docker usage, local stack setup, image builds, and image pushes
 - [docs/deployment.md](docs/deployment.md): production deployment flow and infra follow-up work
 - [docs/architecture.md](docs/architecture.md): platform inventory, topology, and communication paths
