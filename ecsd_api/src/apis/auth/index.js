@@ -14,6 +14,7 @@ import CrudService from "../../services/cruds-service";
 const APP_URL_API = process.env.APP_URL_API;
 const mail_api_host = process.env.MAIL_API_HOST;
 const mail_api_port = process.env.MAIL_API_PORT;
+const JWT_SECRET = process.env.JWT_SECRET || "token";
 
 
 /* const transporter = nodemailer.createTransport({
@@ -40,7 +41,7 @@ const mail_api_port = process.env.MAIL_API_PORT;
       // Generate JWT token
       const token = jwt.sign(
         { id: foundUser.id, email: foundUser.email },
-        "token",
+        JWT_SECRET,
         {
           expiresIn: "24h",
         }
