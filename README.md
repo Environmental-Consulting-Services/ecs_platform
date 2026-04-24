@@ -76,104 +76,6 @@ Run:
 curl -fsSL https://get.pulumi.com | sh -s -- --version 3.231.0
 ```
 
-## Docker Build and Deploy
-
-Prereqs:
-
-- docker (if you want to build and deploy)
-- docker login ghcr.io -u <username> (will requiore a person access token from github)
-
-Initial Setup:\
-\
-
-```
-npm install\
-```
-
-\
-\
-Build ECSD:\
-\
-
-```
-docker build . -t ghcr.io/llamalogic/api -f ./api/Dockerfile\
-```
-
-```
-docker build . -t ghcr.io/llamalogic/console -f ./console/docker/Dockerfile\
-```
-
-```
-docker build . -t ghcr.io/llamalogic/nginx -f ./nginx/Dockerfile\
-```
-
-```
-docker build . -t ghcr.io/llamalogic/expert -f ./expert/Dockerfile\
-```
-
-\
-\
-Publish ECSD:\
-\
-
-```
-docker push ghcr.io/llamalogic/api\
-```
-
-```
-docker push ghcr.io/llamalogic/console\
-```
-
-```
-docker push ghcr.io/llamalogic/nginx\
-```
-
-```
-docker push ghcr.io/llamalogic/expert\
-```
-
-\
-\
-Get ECSD\
-\
-
-```
-docker pull ghcr.io/llamalogic/api:latest\
-```
-
-```
-docker pull ghcr.io/llamalogic/console:latest\
-```
-
-```
-docker pull ghcr.io/llamalogic/nginx:latest\
-```
-
-```
-docker pull ghcr.io/llamalogic/expert:latest\
-```
-
-\
-\
-Run ECSD: \
-\
-
-```
-docker run -d --name api --hostname api --network ecsd-app --env-file ./.env-api  -p 8080:8080 -t ghcr.io/llamalogic/api\
-```
-
-```
-docker run -d --name console --hostname console --network ecsd-app --env-file ./.env-app  -p 8081:80 -t ghcr.io/llamalogic/console:latest\
-```
-
-```
-docker run -d -t -p 80:80 --name nginx --hostname nginx --network ecsd-app ghcr.io/llamalogic/nginx\
-```
-
-```
-docker run -d --name expert --hostname expert --network ecsd-app --env-file ./.env-expert  -p 8082:8082 -t ghcr.io/llamalogic/expert\
-```
-
 ## Local development setup
 
 The fastest local setup is a hybrid run:
@@ -335,20 +237,9 @@ Expert:  http://localhost:8081
 MongoDB: mongodb://localhost:27017
 ```
 
-### Optional: restore handoff data
+## Documentation
 
-The sibling `../ecs_data` repository stores MongoDB backups with Git LFS. If the backup file is only a small text pointer, install/fix Git LFS and pull the real archive:
-
-```bash
-cd ../ecs_data
-git lfs pull
-```
-
-Then extract and restore the archive with MongoDB tools:
-
-```bash
-tar -xvzf db_backup/ECSD-Cluster-0-2025-01-15T18-47-59.142Z.tgz
-mongorestore --db ecsd path/to/extracted_folder
-```
-
-The exact database name must match the API `DATABASE_URL`.
+- [docs/docker.md](docs/docker.md): Docker usage, local stack setup, image builds, and image pushes
+- [docs/deployment.md](docs/deployment.md): production deployment flow and infra follow-up work
+- [docs/architecture.md](docs/architecture.md): platform inventory, topology, and communication paths
+- [ecsd_infra/README.md](ecsd_infra/README.md): Pulumi project workflow and infra-specific commands
